@@ -1,2 +1,2 @@
 # pa-igti-dfs
-Repositório do Projeto Aplicado - MBA FullStack IGTI
+Projeto Aplicado referente ao MBA IGTI - Desenvolvimento FullStack

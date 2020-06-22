@@ -1,0 +1,21 @@
+{
+  "name": "e-Catequese",
+  "version": "1.0.0",
+  "description": "MBA IGTI - Desenvolvimento FullStack - Proposta de Projeto Aplicado",
+  "main": "index.js",
+  "scripts": {
+    "test": "test-catequese",
+    "start": "DEBUG=./back-end/:* npm start"
+  },
+  "keywords": [
+    "mba-igti",
+    "e-Catequese",
+    "projeto-aplicado",
+    "reactjs",
+    "nodexpress",
+    "mongodb",
+    "fullstack"
+  ],
+  "author": "Leandro Barcellos",
+  "license": "ISC"
+}
