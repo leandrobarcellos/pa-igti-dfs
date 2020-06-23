@@ -1,0 +1,31 @@
+{
+  "nomeCtqsndo": "André Dutra Barcellos",
+  "localNascimentoCtqsndo": "Brasília - DF",
+  "dtNascimentoCtqsndo": "2015-07-09T03:00:00.000Z",
+  "enderecoCtqsndo": "AOS 8 Bloco B, 209",
+  "cepCtqsndo": "70660-082",
+  "telResCtqsndo": "",
+  "celResCtqsndo": null,
+  "emailCtqsndo": null,
+  "paroquiBatismoCtqsndo": "Arquidiocese Militar de Brasília",
+  "dadosMae": {
+    "nome": "Fernanda de Deus Dutra Barcellos",
+    "endereco": "AOS 8 Bloco B, 209",
+    "cep": "70660-082",
+    "telResidencial": "61984028431",
+    "celResidencial": null,
+    "email": "fe.ddutra@gmail.com",
+    "religiao": "Católica",
+    "praticante": "Si"
+  },
+  "dadosPai": {
+    "nome": "LEANDRO MARINHO BARCELLOS",
+    "endereco": "AOS 8 Bloco B",
+    "cep": "70660082",
+    "telResidencial": "61984476348",
+    "celResidencial": null,
+    "email": "lmb.leandro@gmail.com",
+    "religiao": "Católico",
+    "praticante": "Si"
+  }
+}
