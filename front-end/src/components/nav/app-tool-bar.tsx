@@ -28,8 +28,7 @@ class AppToolBar extends AppComponent<AppToolBarProps> {
     stylesToUse = () => makeStyles((theme: Theme) =>
         createStyles({
             root: {
-                flexGrow: 1,
-                marginBottom: 100
+                flexGrow: 1
             },
             menuButton: {
                 marginRight: theme.spacing(2),
@@ -59,16 +58,14 @@ class AppToolBar extends AppComponent<AppToolBarProps> {
             <div className={this.classes.root}>
                 <AppBar position="static">
                     <Toolbar classes={this.classes.sectionMobile} style={this.justifyContent}>
-                        <div style={{display: "flex", verticalAlign: "middle"}}>
+                        <Typography className={this.classes.title} variant="h6">
                             <IconButton edge="start" className={this.classes.menuButton}
                                         color="inherit" aria-label="menu"
                                         onClick={this.props.menuAction}>
                                 <MenuIcon/>
                             </IconButton>
-                            <Typography variant="h6" className={this.classes.title}>
-                                e-Catequese
-                            </Typography>
-                        </div>
+                            e-Catequese
+                        </Typography>
                         <div>
                             <IconButton edge="start"
                                         color="inherit" aria-label="menu">

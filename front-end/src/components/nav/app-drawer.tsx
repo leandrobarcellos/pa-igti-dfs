@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import FaceIcon from '@material-ui/icons/Face';
 import DrawerItem from "./drawer-item";
 import AppToolBar from "./app-tool-bar";
@@ -66,8 +67,11 @@ function AppDrawer(props: AppDrawerProps) {
                 <DrawerItem pKey="catequistas" route="/catequistas" text="Catequistas">
                     <SupervisorAccountIcon/>
                 </DrawerItem>
-                <DrawerItem pKey="catequisandos" route="/catequisandos" text="Catequisandos">
+                <DrawerItem pKey="catequizandos" route="/catequizandos" text="Catequisandos">
                     <PersonAddIcon/>
+                </DrawerItem>
+                <DrawerItem pKey="turmas" route="/turmas" text="Turmas">
+                    <GroupAddIcon/>
                 </DrawerItem>
             </List>
         </div>

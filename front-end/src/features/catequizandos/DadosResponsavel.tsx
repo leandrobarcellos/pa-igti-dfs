@@ -1,7 +1,7 @@
 import {Container, Grid, TextField, Typography} from "@material-ui/core";
 import React from "react";
 
-interface DadosResponsavelState {
+export interface DadosResponsavelState {
     nome: string | null,
     endereco: string | null,
     cep: string | null,
@@ -17,12 +17,16 @@ interface DadosResponsavelProps {
     title: string,
     labelNome: string,
     setState: (e: any) => void
+    value: DadosResponsavelState;
 }
 
 class DadosResponsavel extends React.Component<DadosResponsavelProps, DadosResponsavelState> {
     getTextValue = (e: any) => {
-        return e.target.value;
-    };
+        return e?.target ? e.target.value : "";
+    }
+    // getTextValue = (e: any) => {
+    //     return e ? e.target ? e.target.value : e : "";
+    // }
 
     setNome = (e: any) => {
         this.setState({nome: this.getTextValue(e)});
@@ -60,63 +64,80 @@ class DadosResponsavel extends React.Component<DadosResponsavelProps, DadosRespo
     };
 
     setPraticante = (e: any) => {
-        this.setState({praticante: this.getTextValue(e)});
-        this.props.setState(this.state);
+        this.setStateValueFor({praticante: this.getTextValue(e)});
     };
+
+    private setStateValueFor(stateValue: any) {
+        this.setState(stateValue);
+        this.props.setState(this.state);
+    }
 
     constructor(props: DadosResponsavelProps) {
         super(props);
         this.state = {
-            nome: null,
-            endereco: null,
-            cep: null,
-            telResidencial: null,
-            celResidencial: null,
-            email: null,
-            religiao: null,
-            praticante: null
+            nome: "",
+            endereco: "",
+            cep: "",
+            telResidencial: "",
+            celResidencial: "",
+            email: "",
+            religiao: "",
+            praticante: "",
         }
     }
 
+    componentDidMount() {
+        this.setState(this.props.value);
+    }
+
     render() {
+
         return (
             <Container id={this.props.id} style={{marginTop: "25px"}}>
                 <Typography variant="h5" component="h5">
                     {this.props.title}
                 </Typography>
-                <Grid container spacing={3} id="gridMae">
+                <Grid container spacing={3} id={this.props.id}>
                     <Grid item xs={12} sm={12}>
                         <TextField fullWidth={true} id={this.props.id + "Nome"} label={this.props.labelNome}
-                                   onChange={this.setNome}></TextField>
+                                   value={this.state.nome}
+                                   onChange={this.setNome}/>
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <TextField fullWidth={true} id={this.props.id + "Endereco"} label="Endereço"
-                                   onChange={this.setEndereco}></TextField>
+                                   value={this.state.endereco}
+                                   onChange={this.setEndereco}/>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField fullWidth={true} id={this.props.id + "Cep"} label="CEP"
-                                   onChange={this.setCep}></TextField>
+                                   value={this.state.cep}
+                                   onChange={this.setCep}/>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField fullWidth={true} id={this.props.id + "TelRes"}
                                    label="Telefone Residencial"
-                                   onChange={this.setTelResidencial}></TextField>
+                                   value={this.state.telResidencial}
+                                   onChange={this.setTelResidencial}/>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField fullWidth={true} id={this.props.id + "CelRes"} label="Celular"
-                                   onChange={this.setCelResidencial}></TextField>
+                                   value={this.state.celResidencial}
+                                   onChange={this.setCelResidencial}/>
                     </Grid>
                     <Grid item xs={12} sm={12}>
                         <TextField fullWidth={true} id={this.props.id + "Email"} label="E-mail"
-                                   onChange={this.setEmail}></TextField>
+                                   value={this.state.email}
+                                   onChange={this.setEmail}/>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField fullWidth={true} id={this.props.id + "Religiao"}
-                                   label="Religião" onChange={this.setReligiao}></TextField>
+                        <TextField fullWidth={true} id={this.props.id + "Religiao"} label="Religião"
+                                   value={this.state.religiao}
+                                   onChange={this.setReligiao}/>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField fullWidth={true} id={this.props.id + "Praticante"}
-                                   label="Praticante" onChange={this.setPraticante}></TextField>
+                        <TextField fullWidth={true} id={this.props.id + "Praticante"} label="Praticante"
+                                   value={this.state.praticante}
+                                   onChange={this.setPraticante}/>
                     </Grid>
                 </Grid>
             </Container>
