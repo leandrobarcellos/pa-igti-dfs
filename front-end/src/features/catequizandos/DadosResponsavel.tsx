@@ -21,12 +21,10 @@ interface DadosResponsavelProps {
 }
 
 class DadosResponsavel extends React.Component<DadosResponsavelProps, DadosResponsavelState> {
+
     getTextValue = (e: any) => {
         return e?.target ? e.target.value : "";
     }
-    // getTextValue = (e: any) => {
-    //     return e ? e.target ? e.target.value : e : "";
-    // }
 
     setNome = (e: any) => {
         this.setState({nome: this.getTextValue(e)});

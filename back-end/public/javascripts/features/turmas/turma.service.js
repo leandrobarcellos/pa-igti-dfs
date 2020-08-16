@@ -1,4 +1,4 @@
-const repository = require("../repository/catequista.repository");
+const repository = require("./turma.repository");
 
 const find = (id) => {
   return repository.find(id);
@@ -17,6 +17,12 @@ const getData = () => {
   return repository.getData();
 }
 
+const getTiposTurma = () => {
+  return repository.TiposTurma;
+}
+
+
+exports.getTiposTurma = getTiposTurma;
 exports.remove = remove;
 exports.merge = merge;
 exports.persist = persist;

@@ -1,6 +1,8 @@
 
 const myMock = {};
 
+const SimNao = [{"S": "Sim"}, {"N": "Não"}];
+
 const initDB = (entity) =>{
     myMock[entity] = {sq: 0, data: []};
 };

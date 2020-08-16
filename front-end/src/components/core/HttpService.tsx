@@ -3,8 +3,8 @@ import HttpClient from "./HttpClient";
 export class HttpService {
     private httpClient: HttpClient;
 
-    constructor(baseUrl: string) {
-        this.httpClient = new HttpClient(baseUrl);
+    constructor(basePath: string) {
+        this.httpClient = new HttpClient(basePath);
     }
 
     public persist(value: any): Promise<any> {
@@ -21,6 +21,10 @@ export class HttpService {
 
     public find(id: any): Promise<any> {
         return this.httpClient.doGet(`${id}`);
+    }
+
+    public findAll(): Promise<any> {
+        return this.httpClient.doGet("");
     }
 
 }

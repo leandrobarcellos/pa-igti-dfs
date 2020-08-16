@@ -24,15 +24,16 @@ export default class HttpClient {
     }
 
     private doFetchNoBody(endpoint: string, method: string): Promise<any> {
-        return fetch(`${basePath}/${this.baseUrl}/${endpoint}`, {
+        let fetching = fetch(`${basePath}/${this.baseUrl}/${endpoint}`, {
             method: method,
             mode: "cors",
             headers: {}
         });
+        return this.newPromiseFromFetching(fetching);
     }
 
     private doFetch(endpoint: string, method: string, value: any): Promise<any> {
-        return fetch(`${basePath}/${this.baseUrl}/${endpoint}`, {
+        let fetching = fetch(`${basePath}/${this.baseUrl}/${endpoint}`, {
             method: method,
             mode: "cors",
             body: value,
@@ -40,5 +41,39 @@ export default class HttpClient {
                 "Content-type": "application/json"
             }
         });
+        return this.newPromiseFromFetching(fetching);
+    }
+
+
+    private newPromiseFromFetching(fetching: Promise<any>) {
+        const bodyReader = (body: any) => {
+            return new Promise<any>((resolve, reject) => {
+                body.getReader().read().then((slv: any) => {
+                    let result = String.fromCharCode.apply(null, slv.value);
+                    try {
+                        result = JSON.parse(result);
+                    } catch (e) {
+                        console.error(result);
+                    }
+                    resolve(result);
+                })
+            });
+
+        }
+
+        return new Promise<any>((resolve, reject) => {
+            fetching.then(first => {
+                if (first.ok) {
+                    bodyReader(first.body).then(bResolve => resolve(bResolve))
+                } else {
+                    bodyReader(first.body).then(bResolve => reject({
+                        status: first.status,
+                        statusText: first.statusText,
+                        error: bResolve
+                    }));
+                }
+            });
+        });
+
     }
 }

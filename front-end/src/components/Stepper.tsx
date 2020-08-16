@@ -212,13 +212,7 @@ export default function CustomizedSteppers(props: any) {
 
     return (
         <div className={classes.root}>
-            {/*<Stepper alternativeLabel activeStep={activeStep}>*/}
-            {/*    {steps.map((label) => (*/}
-            {/*        <Step key={label}>*/}
-            {/*            <StepLabel>{label}</StepLabel>*/}
-            {/*        </Step>*/}
-            {/*    ))}*/}
-            {/*</Stepper>*/}
+
             <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector/>}>
                 {steps.map((label) => (
                     <Step key={label}>
@@ -226,21 +220,15 @@ export default function CustomizedSteppers(props: any) {
                     </Step>
                 ))}
             </Stepper>
-            {/*<Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector/>}>*/}
-            {/*    {steps.map((label) => (*/}
-            {/*        <Step key={label}>*/}
-            {/*            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>*/}
-            {/*        </Step>*/}
-            {/*    ))}*/}
-            {/*</Stepper>*/}
+
             <div>
                 {activeStep === steps.length ? (
                     <div>
                         <Typography className={classes.instructions}>
-                            All steps completed - you&apos;re finished
+                            Todos os passos foram concluídos.
                         </Typography>
                         <Button onClick={handleReset} className={classes.button}>
-                            Reset
+                            Reiniciar
                         </Button>
                     </div>
                 ) : (

@@ -1,4 +1,4 @@
-const repository = require("../repository/catequizando.repository");
+const repository = require("./catequizando.repository");
 
 const find = (id) => {
   return repository.find(id);

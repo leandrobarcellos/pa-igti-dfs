@@ -1,5 +1,5 @@
 const catequista = "catequista";
-const mockDb = require("./mockdb");
+const mockDb = require("../../repository/mockdb");
 
 mockDb.initDB(catequista);
 

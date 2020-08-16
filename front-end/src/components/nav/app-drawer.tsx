@@ -67,7 +67,7 @@ function AppDrawer(props: AppDrawerProps) {
                 <DrawerItem pKey="catequistas" route="/catequistas" text="Catequistas">
                     <SupervisorAccountIcon/>
                 </DrawerItem>
-                <DrawerItem pKey="catequizandos" route="/catequizandos" text="Catequisandos">
+                <DrawerItem pKey="catequizandos" route="/catequizandos" text="Catequizandos">
                     <PersonAddIcon/>
                 </DrawerItem>
                 <DrawerItem pKey="turmas" route="/turmas" text="Turmas">

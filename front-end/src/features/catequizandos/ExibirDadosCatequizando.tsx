@@ -1,4 +1,4 @@
-import {Container, Grid, Typography} from "@material-ui/core";
+import {Container, Grid, MenuItem, Select, Typography} from "@material-ui/core";
 import React from "react";
 import {CtqzndoState} from "./Catequizandos";
 
@@ -13,6 +13,20 @@ export default function ExibirDadosCatequizando(props: ExibirDadosCatequizandoPr
         return "";
     };
 
+    let getTurmaDesejada = function () {
+        let toShow = "";
+        let turmaDesejada = props?.value?.turmaDesejada;
+        if ("PE" === turmaDesejada)
+            toShow = "Pré-Eucaristia";
+        if ("EU" === turmaDesejada)
+            toShow = "Eucaristia";
+        if ("PR" === turmaDesejada)
+            toShow = "Perseverança";
+        if ("CR" === turmaDesejada)
+            toShow = "Crisma";
+        return toShow;
+    };
+
     return (
         <Container maxWidth="lg">
             <Typography variant="h5" component="h5">
@@ -21,6 +35,9 @@ export default function ExibirDadosCatequizando(props: ExibirDadosCatequizandoPr
             <Grid container spacing={3} id="dadosCatequisando">
                 <Grid item xs={12} sm={6}>
                     <h4>Nome do Catequizando</h4>{props?.value?.nomeCtqzndo}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <h4>Turma desejada</h4>{getTurmaDesejada()}
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <h4>Local Nascimento</h4>{props?.value?.localNascimentoCtqzndo}
