@@ -1,0 +1,25 @@
+{
+  "sequence": 1,
+  "rows": [
+    {
+      "id": 1,
+      "codigo": "PE",
+      "nome": "Pré-Eucaristia"
+    },
+    {
+      "id": 2,
+      "codigo": "EU",
+      "nome": "Eucaristia"
+    },
+    {
+      "id": 3,
+      "codigo": "PR",
+      "nome": "Perseverança"
+    },
+    {
+      "id": 4,
+      "codigo": "CR",
+      "nome": "Crisma"
+    }
+  ]
+}

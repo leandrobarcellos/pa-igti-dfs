@@ -1,13 +1,12 @@
-import {Container, Grid, TextField, Typography} from "@material-ui/core";
+import {Container, Grid, Typography} from "@material-ui/core";
 import React from "react";
-import {CtqzndoState} from "./Catequizandos";
-import {DadosResponsavelState} from "./DadosResponsavel";
+import {Responsavel} from "./DadosResponsavel";
 
 interface ExibirDadosResponsavelProps {
     id: string,
     title: string,
     labelNome: string,
-    value: DadosResponsavelState
+    value: Responsavel | null
 }
 
 export default function ExibirDadosResponsavel(props: ExibirDadosResponsavelProps) {
@@ -19,7 +18,7 @@ export default function ExibirDadosResponsavel(props: ExibirDadosResponsavelProp
             </Typography>
             <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
-                    <h4>{props.labelNome}</h4>{props.value.nome}
+                    <h4>{props.labelNome}</h4>{props.value?.nome}
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <Grid item xs={12} sm={6}>

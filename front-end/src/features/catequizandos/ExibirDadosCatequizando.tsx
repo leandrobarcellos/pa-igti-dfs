@@ -1,9 +1,9 @@
-import {Container, Grid, MenuItem, Select, Typography} from "@material-ui/core";
+import {Container, Grid, Typography} from "@material-ui/core";
 import React from "react";
-import {CtqzndoState} from "./Catequizandos";
+import {Catequizando} from "./Catequizandos";
 
 interface ExibirDadosCatequizandoProps {
-    value: CtqzndoState
+    value: Catequizando
 }
 
 export default function ExibirDadosCatequizando(props: ExibirDadosCatequizandoProps) {
