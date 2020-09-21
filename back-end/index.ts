@@ -5,12 +5,14 @@ import swaggerUi from "swagger-ui-express";
 import {CatequistaResource} from "./features/catequista/CatequistaResource";
 import {TurmaResource} from "./features/turma/TurmaResource";
 import {EtapaResource} from "./core/dominio/etapa/EtapaResource";
+import {CatequizandoResource} from "./features/catequizando/CatequizandoResource";
 
 const app = express();
 const port = 3000;
 const BEARER_PREFIX = "BEARER";
 const secretKey = "klsghefslgihgkdlsgh";
 const catequistaRoutes = new CatequistaResource();
+const catequizandosRoutes = new CatequizandoResource();
 const turmaRoutes = new TurmaResource();
 const etapaRoutes = new EtapaResource();
 
@@ -25,6 +27,7 @@ app.use(cors());
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup());
 app.use("/", catequistaRoutes.router);
+app.use("/", catequizandosRoutes.router);
 app.use("/", turmaRoutes.router);
 app.use("/", etapaRoutes.router);
 

@@ -5,7 +5,7 @@ import {APIException} from "../../core/exception/APIException";
 import {CatequizandoService} from "./CatequizandoService";
 import {Catequizando} from "./Catequizando";
 
-export class CatequistaResource extends Resource {
+export class CatequizandoResource extends Resource {
 
     private readonly service: CatequizandoService = new CatequizandoService();
 
@@ -63,7 +63,9 @@ export class CatequistaResource extends Resource {
     private getCatequizando(request: express.Request, response: express.Response): void {
         this.operateById<number>(request, response, (id: number) => {
             try {
-                this.doSendOk(response, this.service.findById(id), "Consulta realizada com sucesso.");
+                let object = this.service.findById(id);
+                console.log(new Date(object.dtNascimento));
+                this.doSendOk(response, object, "Consulta realizada com sucesso.");
             } catch (e) {
                 this.doSendError(response, e.status, e.message);
             }
@@ -71,11 +73,11 @@ export class CatequistaResource extends Resource {
     }
 
     protected extractId(request: express.Request): number {
-        let idCatequista = request.params.idCatequista;
-        if (Util.isUndefinedOrNaN(idCatequista)) {
+        let idCatequizando = request.params.idCatequizando;
+        if (Util.isUndefinedOrNaN(idCatequizando)) {
             throw new APIException("Não encontrado.", 404);
         }
-        return Number(idCatequista);
+        return Number(idCatequizando);
     }
 
 }

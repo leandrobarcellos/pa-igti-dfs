@@ -4,7 +4,7 @@ import {Util} from "./util/Util";
 import {APIException} from "./exception/APIException";
 
 export abstract class Resource {
-    protected readonly path;
+    protected readonly path: string;
     private readonly _router: Router = express.Router();
 
     constructor(declaredPath: string) {

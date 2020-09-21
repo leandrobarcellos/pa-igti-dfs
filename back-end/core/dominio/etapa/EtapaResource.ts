@@ -30,7 +30,6 @@ export class EtapaResource extends Resource {
 
     private getTodasEtapas(req: express.Request, res: express.Response) {
         try {
-            console.log("tentando...");
             let object = this.service.findAll();
             this.doSendOk(res, object, this.MSG_SUCESSO_CONSULTA);
         } catch (e) {
