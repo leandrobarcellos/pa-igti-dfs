@@ -19,12 +19,6 @@ class AppToolBar extends AppComponent<AppToolBarProps> {
         this.props.history.push("/");
     }
 
-    async go(): Promise<any> {
-        return await new Promise<any>((resolve, reject) => {
-            reject("quero rejeitar!");
-        });
-    }
-
     stylesToUse = () => makeStyles((theme: Theme) =>
         createStyles({
             root: {
@@ -53,7 +47,6 @@ class AppToolBar extends AppComponent<AppToolBarProps> {
     }
 
     render() {
-        this.go().then(res => console.log(res)).catch(err => console.log(err));
         return (
             <div className={this.classes.root}>
                 <AppBar position="static">

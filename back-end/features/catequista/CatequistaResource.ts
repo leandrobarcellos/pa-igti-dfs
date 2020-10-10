@@ -14,7 +14,6 @@ export class CatequistaResource extends Resource {
     }
 
     protected intializeRoutes() {
-        super.intializeRoutes();
         this.addGET((req, res) => this.getCatequistas(req, res));
         this.addGET((req, res) => this.getCatequista(req, res), "/:idCatequista");
         this.addPOST((req, res) => this.createCatequista(req, res));
@@ -23,49 +22,33 @@ export class CatequistaResource extends Resource {
     }
 
     private createCatequista(request: express.Request, response: express.Response): void {
-        try {
-            const catequista: Catequista = request.body;
-            this.service.salvarCatequista(catequista);
-            this.doSendOk(response, catequista, "Catequista incluído com sucesso.");
-        } catch (e) {
-            this.doSendError(response, e.status, e.message);
-        }
+        const catequista: Catequista = request.body;
+        console.log(request.body);
+        this.service.salvarCatequista(catequista);
+        this.doSendOk(response, catequista, "Catequista incluído com sucesso.");
     }
 
     private updateCatequista(request: express.Request, response: express.Response): void {
-        this.operateById<number>(request, response, (id: number) => {
-            try {
-                this.service.makeDeposit(id, Number(request.body.depositAmmount));
-                this.doSendOkMessage(response, "Catequista atualizado.");
-            } catch (e) {
-                this.doSendError(response, e.status, e.message);
-            }
-        })
+        const catequista: Catequista = request.body;
+        this.service.atualizarCatequista(catequista);
+        this.doSendOkMessage(response, "Catequista atualizado com sucesso.");
     }
 
     private getCatequistas(request: express.Request, response: express.Response): void {
-        try {
-            let findAll = this.service.findAll();
-            this.doSendOk(response, findAll, "Resultado da consulta.");
-        } catch (e) {
-            this.doSendError(response, e.status, e.message);
-        }
+        let findAll = this.service.findAll();
+        this.doSendOk(response, findAll, "Resultado da consulta.");
     }
 
     private deleteCatequista(request: express.Request, response: express.Response): void {
         this.operateById<number>(request, response, (accountId: number) => {
-            this.service.deleteAccount(accountId);
+            this.service.deleteCatequista(accountId);
             this.doSendOkMessage(response, "Catequista excluído com sucesso.");
         });
     }
 
     private getCatequista(request: express.Request, response: express.Response): void {
         this.operateById<number>(request, response, (id: number) => {
-            try {
-                this.doSendOk(response, this.service.findById(id), "Consulta realizada com sucesso.");
-            } catch (e) {
-                this.doSendError(response, e.status, e.message);
-            }
+            this.doSendOk(response, this.service.findById(id), "Consulta realizada com sucesso.");
         });
     }
 

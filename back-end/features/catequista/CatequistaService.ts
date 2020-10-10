@@ -17,4 +17,16 @@ export class CatequistaService {
     public findAll(): Catequista[] {
         return this.repo.findAll();
     }
+
+    salvarCatequista(catequista: Catequista): void {
+        this.repo.save(catequista);
+    }
+
+    atualizarCatequista(catequista: Catequista) {
+        this.repo.update(catequista);
+    }
+
+    deleteCatequista(catequistaId: number) {
+        this.repo.delete(catequistaId);
+    }
 }

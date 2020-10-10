@@ -149,9 +149,9 @@ export default function Catequizandos(props: any) {
 
     const handleSubmit = (e: any) => {
         if (id) {
-            service.merge(catequizando).then(res => console.log(res)).catch(err => console.log(err));
+            service.merge(catequizando).subscribe(res => console.log(res), err => console.log(err));
         } else {
-            service.persist(catequizando).then(res => console.log(res)).catch(err => console.log(err));
+            service.persist(catequizando).subscribe(res => console.log(res), err => console.log(err));
         }
     };
 

@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import AppDrawer from "./components/nav/app-drawer";
 import Catequizandos from "./features/catequizandos/Catequizandos";
 import Turmas from "./features/turmas/Turmas";
-import HCatequistas from "./features/catequistas/HCatequistas";
+import Catequistas from "./features/catequistas/Catequistas";
 
 const teste = {
     nome: "Leandro",
@@ -17,20 +17,16 @@ const teste = {
     }
 };
 
-class AppRouter extends React.Component {
+export default function AppRouter() {
 
-    render() {
-        return (
-            <Router>
-                <AppDrawer/>
-                <Switch>
-                    <Route path="/catequistas" component={HCatequistas}/>
-                    <Route path="/catequizandos" component={Catequizandos}/>
-                    <Route path="/turmas" component={Turmas}/>
-                </Switch>
-            </Router>
-        );
-    }
+    return (
+        <Router>
+            <AppDrawer/>
+            <Switch>
+                <Route path="/catequistas" component={Catequistas}/>
+                <Route path="/catequizandos/{id}/turmas" component={Catequizandos}/>
+                <Route path="/turmas" component={Turmas}/>
+            </Switch>
+        </Router>
+    );
 }
-
-export default AppRouter;

@@ -47,7 +47,7 @@ export abstract class CRUDRepository<K, T extends Entity<K>> extends Repository<
 
     private remove(found: T) {
         let index = this.db.rows.indexOf(found);
-        if (index != 1) {
+        if (index != -1) {
             this.db.rows.splice(index, 1);
         }
     }

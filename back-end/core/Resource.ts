@@ -2,6 +2,7 @@ import * as express from "express";
 import {Response, Router} from "express";
 import {Util} from "./util/Util";
 import {APIException} from "./exception/APIException";
+import {HttpUtil} from "./util/HttpUtil";
 
 export abstract class Resource {
     protected readonly path: string;
@@ -53,39 +54,15 @@ export abstract class Resource {
     }
 
     protected doSendOk(response: Response, object: any, message: string) {
-        response.header({"Content-type": "application/json"});
-        response.status(200).send({
-            "object": object,
-            "message": message
-        });
+        HttpUtil.doSendOk(response, object, message);
     };
 
     protected doSendOkMessage(response: Response, message: string) {
-        this.doSendMessage(response, 200, message);
-    };
-
-    protected doSendMessage(response: Response, status: number, message: string) {
-        response.header({"Content-type": "application/json"});
-        response.status(status).send({
-            "message": message
-        });
-    };
-
-    protected doSend(response: Response, status: number, object: any, message: string) {
-        response.header({"Content-type": "application/json"});
-        response.status(status).send({
-            "object": object,
-            "message": message
-        });
+        HttpUtil.doSendMessage(response, 200, message);
     };
 
     protected doSendError(response: Response, error: number, message: string) {
-        let status = 500;
-        response.header({"Content-type": "application/json"});
-        if (!Util.isNaN(error) && 99 < error && 600 > error) {
-            status = error;
-        }
-        this.doSendMessage(response, status, message);
+        HttpUtil.doSendError(response, error, message);
     };
 
     protected operateById<K>(req: express.Request, res: express.Response,

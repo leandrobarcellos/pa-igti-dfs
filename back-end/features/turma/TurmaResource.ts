@@ -26,33 +26,20 @@ export class TurmaResource extends Resource {
     }
 
     private createTurma(request: express.Request, response: express.Response): void {
-        try {
-            const turma: Turma = request.body;
-            this.service.incluir(turma);
-            this.doSendOk(response, turma, "Catequista incluído com sucesso.");
-        } catch (e) {
-            this.doSendError(response, e.status, e.message);
-        }
+        const turma: Turma = request.body;
+        this.service.incluir(turma);
+        this.doSendOk(response, turma, "Catequista incluído com sucesso.");
     }
 
     private updateTurma(request: express.Request, response: express.Response): void {
         this.operateById<number>(request, response, (id: number) => {
-            try {
-                this.service.alterar(request.body);
-                this.doSendOkMessage(response, "Turma atualizada.");
-            } catch (e) {
-                this.doSendError(response, e.status, e.message);
-            }
+            this.service.alterar(request.body);
+            this.doSendOkMessage(response, "Turma atualizada.");
         })
     }
 
     private getTurmas(request: express.Request, response: express.Response): void {
-        try {
-            let findAll = this.service.find();
-            this.doSendOk(response, findAll, "Resultado da consulta.");
-        } catch (e) {
-            this.doSendError(response, e.status, e.message);
-        }
+        this.doSendOk(response, this.service.find(), "Resultado da consulta.");
     }
 
     private deleteTurma(request: express.Request, response: express.Response): void {
@@ -64,11 +51,7 @@ export class TurmaResource extends Resource {
 
     private getTurma(request: express.Request, response: express.Response): void {
         this.operateById<number>(request, response, (id: number) => {
-            try {
-                this.doSendOk(response, this.service.find(id), "Consulta realizada com sucesso.");
-            } catch (e) {
-                this.doSendError(response, e.status, e.message);
-            }
+            this.doSendOk(response, this.service.find(id), "Consulta realizada com sucesso.");
         });
     }
 
@@ -83,11 +66,10 @@ export class TurmaResource extends Resource {
     private getCatequizandosPorTurma(req: express.Request, res: express.Response) {
         this.operateById<number>(req, res, (id: number) => {
             let catequizandos = this.catequizandoService.consultarCatequizandosPorIdTurma(id);
-            if (catequizandos.length > 0) {
-                this.doSendOk(res, catequizandos, "Busca realizada por sucesso.");
-            } else {
-                this.doSendError(res, 404, "Não encontrado.");
+            if (catequizandos.length == 0) {
+                throw new APIException("Não encontrado.", 404);
             }
+            this.doSendOk(res, catequizandos, "Busca realizada por sucesso.");
         });
     }
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -22,31 +22,28 @@ const useStyles = makeStyles({
 
 export default function TabelaCatequizandos(props: any) {
     const classes = useStyles();
-    const catequizandosService : CatequizandosService = new CatequizandosService();
+    const catequizandosService: CatequizandosService = new CatequizandosService();
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        catequizandosService.findAll()
-            .then(res => {
-                setData(res.object)
-            })
-            .catch(error => {
-                console.log("Cannot load user data");
-            })
-    }, [data]);
+    catequizandosService.findAll<any>()
+        .subscribe(res => {
+            setData(res.data.object);
+        }, error => {
+            console.log("Cannot load user rows");
+        });
 
     const handleDelete = (row: any) => {
         console.log(row);
         let i = 0;
         let index = -1;
         while (i < data.length && -1 === index) {
-            if(data[i]["id"] === row.id){
+            if (data[i]["id"] === row.id) {
                 index = i;
             }
             i++;
         }
-        if(index !== -1){
-            catequizandosService.remove(data[index]["id"]).then(resolve => console.log(resolve));
+        if (index !== -1) {
+            catequizandosService.remove(data[index]["id"]).subscribe(resolve => console.log(resolve));
         }
     }
 
@@ -66,7 +63,7 @@ export default function TabelaCatequizandos(props: any) {
 
     return (
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table" >
+            <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>Nome</TableCell>

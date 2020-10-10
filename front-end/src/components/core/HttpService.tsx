@@ -1,29 +1,39 @@
 import HttpClient from "./HttpClient";
+import {Observable} from "rxjs";
+
+export interface ResponseData<T> {
+    object?: T,
+    message?: string
+}
+
+export interface AppResponse<T> {
+    data: ResponseData<T>
+}
 
 export class HttpService {
-    private httpClient: HttpClient;
+    protected readonly httpClient: HttpClient;
 
     constructor(basePath: string) {
         this.httpClient = new HttpClient(basePath);
     }
 
-    public persist(value: any): Promise<any> {
-        return this.httpClient.doPost("", JSON.stringify(value));
+    public persist<T>(value: any): Observable<AppResponse<T>> {
+        return this.httpClient.doPost("", value);
     }
 
-    public merge(value: any): Promise<any> {
-        return this.httpClient.doPut("", JSON.stringify(value));
+    public merge<T>(value: any): Observable<AppResponse<T>> {
+        return this.httpClient.doPut("", value);
     }
 
-    public remove(id: any): Promise<any> {
+    public remove<T>(id: any): Observable<AppResponse<T>> {
         return this.httpClient.doDelete(`${id}`);
     }
 
-    public find(id: any): Promise<any> {
+    public find<T>(id: any): Observable<AppResponse<T>> {
         return this.httpClient.doGet(`${id}`);
     }
 
-    public findAll(): Promise<any> {
+    public findAll<T>(): Observable<AppResponse<T>> {
         return this.httpClient.doGet("");
     }
 

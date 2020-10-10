@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,7 +9,9 @@ import TableRow from '@material-ui/core/TableRow';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import Paper from '@material-ui/core/Paper';
-import CatequistasService from "./CatequistasService";
+import {Subject} from "rxjs";
+import {FormAction} from "./FormCatequista";
+import {Catequista} from "../../../../back-end/features/catequista/Catequista";
 
 const useStyles = makeStyles({
     table: {
@@ -20,35 +22,33 @@ const useStyles = makeStyles({
     }
 });
 
-export default function TabelaCatequistas(props: any) {
+export interface TabCatequistaProps {
+    rows: Catequista[],
+    onEditing: any,
+    deleteAction: Subject<FormAction<Catequista>>,
+    onDeleteComplete: () => void
+
+}
+
+export default function TabelaCatequistas(props: TabCatequistaProps) {
 
     const classes = useStyles();
-    const catequistaService: CatequistasService = new CatequistasService();
-    const [data, setData] = useState([]);
+    const [rows, setRows] = React.useState<Catequista[]>(props.rows);
 
+    let pRows = props.rows;
     useEffect(() => {
-        catequistaService.findAll()
-            .then(res => {
-                setData(res.object)
-            })
-            .catch(error => {
-                console.log("Cannot load user data");
-            })
-    }, [data]);
+        pRows = props.rows;
+        setRows(props && pRows ? pRows : []);
+    }, [rows, pRows]);
 
-
-    const handleDelete = (row: any) => {
-        let i = 0;
-        let index = -1;
-        while (i < data.length && -1 === index) {
-            if (data[i]["id"] === row.id) {
-                index = i;
+    const handleDelete = (row: Catequista) => {
+        props.deleteAction.next({
+            formData: row,
+            actionCompleted: () => {
+                alert("excluidocomsucesso");
+                props.onDeleteComplete();
             }
-            i++;
-        }
-        if (index !== -1)
-            catequistaService.remove(data[index]["id"]).then(resolve => console.log(resolve));
-
+        });
     }
 
     return (
@@ -65,14 +65,14 @@ export default function TabelaCatequistas(props: any) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map((row: any) => (
+                    {props?.rows?.map((row: any) => (
                         <TableRow key={row?.nome}>
                             <TableCell component="th" scope="row">
                                 {row.nome}
                             </TableCell>
                             <TableCell align="right">{row?.email}</TableCell>
-                            <TableCell align="right">{row?.telResidencial}</TableCell>
-                            <TableCell align="right">{row?.celResidencial}</TableCell>
+                            <TableCell align="right">{row?.endereco}</TableCell>
+                            <TableCell align="right">{row?.telefoneCelular}</TableCell>
                             <TableCell align="right">
                                 <EditIcon className={classes.actionIcon} onClick={() => props.onEditing(row)}/>
                             </TableCell>

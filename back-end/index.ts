@@ -6,11 +6,13 @@ import {CatequistaResource} from "./features/catequista/CatequistaResource";
 import {TurmaResource} from "./features/turma/TurmaResource";
 import {EtapaResource} from "./core/dominio/etapa/EtapaResource";
 import {CatequizandoResource} from "./features/catequizando/CatequizandoResource";
+import {HttpUtil} from "./core/util/HttpUtil";
 
 const app = express();
-const port = 3000;
+const port = 3333;
 const BEARER_PREFIX = "BEARER";
 const secretKey = "klsghefslgihgkdlsgh";
+
 const catequistaRoutes = new CatequistaResource();
 const catequizandosRoutes = new CatequizandoResource();
 const turmaRoutes = new TurmaResource();
@@ -26,10 +28,17 @@ app.use(json());
 app.use(cors());
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup());
-app.use("/", catequistaRoutes.router);
-app.use("/", catequizandosRoutes.router);
-app.use("/", turmaRoutes.router);
-app.use("/", etapaRoutes.router);
+app.use("/api/", catequistaRoutes.router);
+app.use("/api/", catequizandosRoutes.router);
+app.use("/api/", turmaRoutes.router);
+app.use("/api/", etapaRoutes.router);
+app.use("/", (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (err) {
+        HttpUtil.doSendError(res, err.status, err.message);
+    } else {
+        next();
+    }
+});
 
 const extrairTokenString = function (token: string) {
     if (token.toUpperCase().includes(BEARER_PREFIX)) {

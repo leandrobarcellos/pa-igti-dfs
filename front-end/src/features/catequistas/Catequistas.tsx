@@ -1,53 +1,110 @@
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import {Container, Grid, Typography} from "@material-ui/core";
-import {KeyboardDatePicker} from "@material-ui/pickers";
+import React, {useEffect, useState} from "react";
+import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography} from "@material-ui/core";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import TabelaCatequistas from "./TabelaCatequistas";
+import {Catequista} from "../../../../back-end/features/catequista/Catequista";
+import {FormCatequista} from "./FormCatequista";
+import {CatequistaPipe} from "./CatequistaPipe";
 
-class Catequistas extends React.Component {
+export default function Catequistas() {
 
+    const catequistaPipe = new CatequistaPipe();
+    const [catequista, setCatequista] = React.useState<Catequista>({} as Catequista);
+    const [showResults, setShowResults] = useState(false);
+    const [rows, setRows] = React.useState<Catequista[]>([]);
 
-    render() {
-        return (
-            <Container maxWidth="lg">
-                <Container maxWidth="lg">
-                    <Typography variant="h5" component="h5">
-                        Dados do catequista
-                    </Typography>
-                    <Grid container spacing={3} id="dadosCatequista">
-                        <Grid item xs={12} sm={12}>
-                            <TextField fullWidth={true} id="nomeCtqsndo" label="Nome do Catequista"/>
-                        </Grid>
-                        <Grid item xs={12} sm={8}>
-                            <TextField fullWidth={true} id="localNascimentoCtqsndo"
-                                       label="Local Nascimento"/>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <KeyboardDatePicker fullWidth={true} id="dtNascimentoCtqsndo"
-                                                label="Data Nascimento"
-                                                format="dd/MM/yyyy" value={new Date()}
-                                                KeyboardButtonProps={{'aria-label': 'change date'}}
-                                                onChange={() => console.log("changed")}/>
-                        </Grid>
-                        <Grid item xs={12} sm={8}>
-                            <TextField fullWidth={true} id="enderecoCtqsndo" label="Endereço"/>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField fullWidth={true} id="cepCtqsndo" label="CEP"/>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField fullWidth={true} id="telResCtqsndo" label="Telefone Residencial"/>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField fullWidth={true} id="celResCtqsndo" label="Celular"/>
-                        </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <TextField fullWidth={true} id="emailCtqsndo" label="E-mail"/>
-                        </Grid>
-                    </Grid>
-                </Container>
-            </Container>
-        );
+    useEffect(() => {
+            reloadListaCatequistas();
+            return () => {
+                catequistaPipe.unsubscribe();
+            };
+        }
+        , [catequista]
+    );
+
+    const useStyles = makeStyles((theme: Theme) =>
+        createStyles({
+            root: {
+                width: '100%',
+            },
+            button: {
+                marginRight: theme.spacing(1),
+                marginTop: 15
+            },
+            instructions: {
+                marginTop: theme.spacing(1),
+                marginBottom: theme.spacing(1),
+            },
+            heading: {
+                fontSize: theme.typography.pxToRem(15),
+                fontWeight: theme.typography.fontWeightRegular,
+            },
+        }),
+    );
+    const classes = useStyles();
+
+    const handleEditing = (entity: any) => {
+        console.log(entity);
+        setCatequista(entity);
+        setShowResults(false);
     }
-}
 
-export default Catequistas;
+    const reloadListaCatequistas = (showResults?: boolean) => {
+        catequistaPipe.findAll.next({
+            callback: (catequistas: Catequista[]) => {
+                console.log("acabei de atualizar os catequistas: ", catequistas);
+                setRows(catequistas);
+                setShowResults(showResults ? true : false);
+            }
+        });
+        ;
+    }
+
+    const onComplete = () => {
+        reloadListaCatequistas(true);
+    }
+
+    const handleChangeAccordion = () => {
+        setShowResults(!showResults);
+    }
+
+    return (
+        <Container id="12" style={{marginTop: "25px"}}>
+            <Typography variant="h5" component="h5">
+                Catequista
+            </Typography>
+            <ExpansionPanel expanded={!showResults}>
+                <ExpansionPanelSummary onClick={handleChangeAccordion}
+                                       expandIcon={<ExpandMoreIcon/>}
+                                       aria-controls="panel1a-content"
+                                       id="panel1a-header">
+                    <Typography className={classes.heading}>Formulário de cadastramento</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <FormCatequista id="form" formData={catequista}
+                                    saveAction={catequistaPipe.save}
+                                    updateAction={catequistaPipe.update}
+                                    onSaveComplete={onComplete}
+                                    onUpdateComplete={onComplete}
+                                    onCancelar={onComplete}
+                    ></FormCatequista>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel expanded={showResults}>
+                <ExpansionPanelSummary onClick={handleChangeAccordion}
+                                       expandIcon={<ExpandMoreIcon/>}
+                                       aria-controls="panel2a-content"
+                                       id="panel2a-header">
+                    <Typography className={classes.heading}>Catequistas Registrados</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <TabelaCatequistas onEditing={handleEditing}
+                                       deleteAction={catequistaPipe.delete}
+                                       rows={rows}
+                                       onDeleteComplete={onComplete}/>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        </Container>
+    );
+}
