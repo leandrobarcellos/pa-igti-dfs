@@ -13,7 +13,7 @@ export class CatequistaResource extends Resource {
         super('/catequistas');
     }
 
-    protected intializeRoutes() {
+    protected initializeRoutes() {
         this.addGET((req, res) => this.getCatequistas(req, res));
         this.addGET((req, res) => this.getCatequista(req, res), "/:idCatequista");
         this.addPOST((req, res) => this.createCatequista(req, res));

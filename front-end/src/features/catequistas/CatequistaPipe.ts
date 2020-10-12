@@ -2,19 +2,17 @@ import {CRUDPipe, FilteredSearchAction, SearchAction} from "../../components/cor
 import {Catequista} from "../../../../back-end/features/catequista/Catequista";
 import {Observable, Subject} from "rxjs";
 import {switchMap, tap} from "rxjs/operators";
-import {FormAction} from "./FormCatequista";
-import {AppResponse} from "../../components/core/HttpService";
+import {AppResponse} from "../../components/core/HttpCRUDService";
 import CatequistasService from "./CatequistasService";
+import {FormAction} from "../../components/core/FormAction";
 
 export interface FiltroCatequista {
 
 }
 
-export class CatequistaPipe extends CRUDPipe<Catequista> {
+export class CatequistaPipe extends CRUDPipe<Catequista, FiltroCatequista> {
 
     private readonly catequistaService = new CatequistasService();
-    private pipeFindAll = new Subject<SearchAction<Catequista[]>>();
-    private pipeFindById = new Subject<FilteredSearchAction<number, Catequista>>();
 
     constructor() {
         super();
@@ -31,7 +29,7 @@ export class CatequistaPipe extends CRUDPipe<Catequista> {
         );
     }
 
-    protected registerDeletePipe(del: Observable<FormAction<Catequista>>): Observable<unknown> {
+    protected registerRemovePipe(del: Observable<FormAction<Catequista>>): Observable<unknown> {
         return del.pipe(
             switchMap(
                 (next: FormAction<Catequista>) =>

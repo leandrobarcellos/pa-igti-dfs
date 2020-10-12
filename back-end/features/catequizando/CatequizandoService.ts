@@ -1,7 +1,7 @@
 import {CatequizandoRepository} from "./CatequizandoRepository";
 import {Catequizando} from "./Catequizando";
-import {ResponsavelService} from "./responsavel/ResponsavelService";
-import {Responsavel} from "./responsavel/Responsavel";
+import {ResponsavelService} from "../responsavel/ResponsavelService";
+import {Responsavel} from "../responsavel/Responsavel";
 import {APIException} from "../../core/exception/APIException";
 import {Util} from "../../core/util/Util";
 import {TurmaCatequizandoRepository} from "../turma/catequizando/TurmaCatequizandoRepository";
@@ -31,7 +31,7 @@ export class CatequizandoService {
         this.repository.save(catequizando);
     }
 
-    private salvarResponsavel(responsavel: Responsavel | null) {
+    private salvarResponsavel(responsavel?: Responsavel) {
         if (responsavel) {
             if (!responsavel.id) {
                 this.responsavelService.salvar(responsavel);
@@ -42,7 +42,7 @@ export class CatequizandoService {
         }
     }
 
-    private validarResponsavel(responsavel: Responsavel, idResponsavel: number) {
+    private validarResponsavel(responsavel?: Responsavel, idResponsavel?: number) {
         if (idResponsavel && (responsavel && responsavel.id)) {
             if (idResponsavel != responsavel.id) {
                 throw new APIException("Não foi possível definir o identificador a ser utilizado na inclusão.", 400);
@@ -74,4 +74,5 @@ export class CatequizandoService {
     public deleteCatequizando(id: number): void {
         this.repository.delete(id);
     }
+
 }

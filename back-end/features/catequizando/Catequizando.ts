@@ -1,9 +1,9 @@
 import {Entity} from "../../core/Entity";
-import {Responsavel} from "./responsavel/Responsavel";
+import {Responsavel} from "../responsavel/Responsavel";
 
 export interface Catequizando extends Entity<number> {
-    idPai: number,
-    idMae: number,
+    idPai?: number,
+    idMae?: number,
     nome: string,
     idEtapa: number,
     cidadeNascimento: string,
@@ -15,9 +15,9 @@ export interface Catequizando extends Entity<number> {
     email: string,
     paroquiaBatismo: string,
     arquidioceseBatismo: string,
-    cidadeDiocese: string,
-    ufDiocese: string,
+    cidadeDioceseBatismo: string,
+    ufDioceseBatismo: string,
     resideCom: string,
-    dadosMae: Responsavel,
-    dadosPai: Responsavel
+    dadosMae?: Responsavel,
+    dadosPai?: Responsavel
 }

@@ -1,14 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import TabelaCatequistas from "./TabelaCatequistas";
 import {Catequista} from "../../../../back-end/features/catequista/Catequista";
 import {FormCatequista} from "./FormCatequista";
 import {CatequistaPipe} from "./CatequistaPipe";
+import {AppStyle} from "../../components/core/AppStyle";
+
+
+
 
 export default function Catequistas() {
 
+    const classes = AppStyle.classes();
     const catequistaPipe = new CatequistaPipe();
     const [catequista, setCatequista] = React.useState<Catequista>({} as Catequista);
     const [showResults, setShowResults] = useState(false);
@@ -22,27 +26,6 @@ export default function Catequistas() {
         }
         , [catequista]
     );
-
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
-            root: {
-                width: '100%',
-            },
-            button: {
-                marginRight: theme.spacing(1),
-                marginTop: 15
-            },
-            instructions: {
-                marginTop: theme.spacing(1),
-                marginBottom: theme.spacing(1),
-            },
-            heading: {
-                fontSize: theme.typography.pxToRem(15),
-                fontWeight: theme.typography.fontWeightRegular,
-            },
-        }),
-    );
-    const classes = useStyles();
 
     const handleEditing = (entity: any) => {
         console.log(entity);
@@ -100,7 +83,7 @@ export default function Catequistas() {
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <TabelaCatequistas onEditing={handleEditing}
-                                       deleteAction={catequistaPipe.delete}
+                                       deleteAction={catequistaPipe.remove}
                                        rows={rows}
                                        onDeleteComplete={onComplete}/>
                 </ExpansionPanelDetails>

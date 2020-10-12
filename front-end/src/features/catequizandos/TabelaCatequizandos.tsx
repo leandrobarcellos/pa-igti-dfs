@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,9 +7,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import CatequizandosService from "./CatequizandosService";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import {TableProps} from "../../components/core/CRUDProps";
+import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
 
 const useStyles = makeStyles({
     table: {
@@ -20,33 +21,25 @@ const useStyles = makeStyles({
     }
 });
 
-export default function TabelaCatequizandos(props: any) {
+export default function TabelaCatequizandos(props: TableProps<Catequizando>) {
     const classes = useStyles();
-    const catequizandosService: CatequizandosService = new CatequizandosService();
-    const [data, setData] = useState([]);
+    const [rows, setRows] = React.useState<Catequizando[]>(props.rows);
 
-    catequizandosService.findAll<any>()
-        .subscribe(res => {
-            setData(res.data.object);
-        }, error => {
-            console.log("Cannot load user rows");
-        });
+    let pRows = props.rows;
+    useEffect(() => {
+        pRows = props.rows;
+        setRows(props && pRows ? pRows : []);
+    }, [rows, pRows]);
 
-    const handleDelete = (row: any) => {
-        console.log(row);
-        let i = 0;
-        let index = -1;
-        while (i < data.length && -1 === index) {
-            if (data[i]["id"] === row.id) {
-                index = i;
+    const handleDelete = (row: Catequizando) => {
+        props.deleteAction.next({
+            formData: row,
+            actionCompleted: () => {
+                alert("excluidocomsucesso");
+                props.onDeleteComplete();
             }
-            i++;
-        }
-        if (index !== -1) {
-            catequizandosService.remove(data[index]["id"]).subscribe(resolve => console.log(resolve));
-        }
+        });
     }
-
     const getTurmaDesejada = (row: any) => {
         let toShow = "";
         let turmaDesejada = row?.turmaDesejada;
@@ -76,7 +69,7 @@ export default function TabelaCatequizandos(props: any) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map((row: any) => (
+                    {props.rows.map((row: any) => (
                         <TableRow key={row?.nomeCtqzndo}>
                             <TableCell component="th" scope="row">
                                 {row?.nomeCtqzndo}

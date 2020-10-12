@@ -10,10 +10,10 @@ export abstract class Resource {
 
     constructor(declaredPath: string) {
         this.path = declaredPath;
-        this.intializeRoutes();
+        this.initializeRoutes();
     }
 
-    protected intializeRoutes(): void {
+    protected initializeRoutes(): void {
 
     }
 

@@ -1,14 +1,17 @@
 import {AppResponse, HttpCRUDService} from "../../components/core/HttpCRUDService";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
 import {Observable} from "rxjs";
+import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
 
 export default class CatequizandosService extends HttpCRUDService {
     constructor() {
-        super("/catequizandos");
+        super("/responsaveis");
     }
 
-    merge<T>(value: Catequizando): Observable<AppResponse<T>> {
+    merge<T>(value: Responsavel): Observable<AppResponse<T>> {
         return this.httpClient.doPut(`${value.id}`, value);
     }
 
+    findByEmail(email: string) {
+        return this.httpClient.doGet(`?q=email=${email}`);
+    }
 }

@@ -1,4 +1,4 @@
-import {Entity} from "../../../core/Entity";
+import {Entity} from "../../core/Entity";
 
 export interface Responsavel extends Entity<number> {
     nome: string,

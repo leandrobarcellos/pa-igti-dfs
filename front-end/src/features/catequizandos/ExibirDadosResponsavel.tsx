@@ -1,6 +1,6 @@
 import {Container, Grid, Typography} from "@material-ui/core";
 import React from "react";
-import {Responsavel} from "./DadosResponsavel";
+import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
 
 interface ExibirDadosResponsavelProps {
     id: string,
@@ -29,10 +29,10 @@ export default function ExibirDadosResponsavel(props: ExibirDadosResponsavelProp
                     <h4>CEP</h4>{props?.value?.cep}
                 </Grid>
                 <Grid item xs={12} sm={5}>
-                    <h4>Telefone Residencial</h4>{props?.value?.telResidencial}
+                    <h4>Telefone Residencial</h4>{props?.value?.telefoneFixo}
                 </Grid>
                 <Grid item xs={12} sm={5}>
-                    <h4>Celular</h4>{props?.value?.celResidencial}
+                    <h4>Celular</h4>{props?.value?.telefoneMovel}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <h4>E-mail</h4>{props?.value?.email}

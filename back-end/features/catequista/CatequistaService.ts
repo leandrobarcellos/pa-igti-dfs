@@ -29,4 +29,8 @@ export class CatequistaService {
     deleteCatequista(catequistaId: number) {
         this.repo.delete(catequistaId);
     }
+
+    public findByEmail(email:string) : Catequista {
+        return this.repo.findByEmail(email);
+    }
 }

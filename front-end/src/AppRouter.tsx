@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 import AppDrawer from "./components/nav/app-drawer";
-import Catequizandos from "./features/catequizandos/Catequizandos";
-import Turmas from "./features/turmas/Turmas";
-import Catequistas from "./features/catequistas/Catequistas";
+import AppSwitch from "./components/core/AppSwitch";
+import {AppUtil} from "./components/core/AppUtil";
 
 const teste = {
     nome: "Leandro",
@@ -18,15 +17,14 @@ const teste = {
 };
 
 export default function AppRouter() {
+    useEffect(() => {
+        console.log("AppRouterEffect");
+    }, [AppUtil.loggedIn()]);
 
     return (
         <Router>
-            <AppDrawer/>
-            <Switch>
-                <Route path="/catequistas" component={Catequistas}/>
-                <Route path="/catequizandos/{id}/turmas" component={Catequizandos}/>
-                <Route path="/turmas" component={Turmas}/>
-            </Switch>
+            <AppDrawer isLoggedIn={AppUtil.loggedIn()}/>
+            <AppSwitch authorized={AppUtil.loggedIn()}></AppSwitch>
         </Router>
     );
 }

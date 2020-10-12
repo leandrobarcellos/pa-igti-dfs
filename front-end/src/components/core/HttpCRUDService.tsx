@@ -12,10 +12,13 @@ export interface AppResponse<T> {
 
 export class HttpService {
     protected readonly httpClient: HttpClient;
-
     constructor(basePath: string) {
         this.httpClient = new HttpClient(basePath);
     }
+
+}
+
+export class HttpCRUDService extends HttpService{
 
     public persist<T>(value: any): Observable<AppResponse<T>> {
         return this.httpClient.doPost("", value);

@@ -14,7 +14,7 @@ export class EtapaResource extends Resource {
         this.service = new EtapaService();
     }
 
-    protected intializeRoutes() {
+    protected initializeRoutes() {
         this.addGET((req, res) => this.getTodasEtapas(req, res));
         this.addGET((req, res) => this.getEtapa(req, res), "/:idEtapa");
     }

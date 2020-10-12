@@ -1,144 +1,82 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Container,
     ExpansionPanel,
     ExpansionPanelDetails,
     ExpansionPanelSummary,
-    FormControl,
     Grid,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
     Typography
 } from "@material-ui/core";
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import {KeyboardDatePicker, MuiPickersUtilsProvider,} from '@material-ui/pickers';
-import {DadosResponsavel, Responsavel} from "./DadosResponsavel";
+import {FormResponsavel} from "../responsaveis/FormResponsavel";
 import CustomizedSteppers from "../../components/Stepper";
 import ExibirDadosCatequizando from "./ExibirDadosCatequizando";
 import ExibirDadosResponsavel from "./ExibirDadosResponsavel";
-import CatequizandosService from "./CatequizandosService";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TabelaCatequizandos from "./TabelaCatequizandos";
-import DateFnsUtils from "@date-io/date-fns";
+import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
+import {CatequizandoPipe} from "./CatequizandoPipe";
+import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
+import {AppStyle} from "../../components/core/AppStyle";
+import FormCatequizando from "./FormCatequizando";
+import {Subject} from "rxjs";
+import {ResponsavelPipe} from "../responsaveis/ResponsavelPipe";
 
-export interface Catequizando {
-    id: any,
-    nomeCtqzndo: string,
-    turmaDesejada: string,
-    localNascimentoCtqzndo: string,
-    dtNascimentoCtqzndo: Date | null,
-    enderecoCtqzndo: string,
-    cepCtqzndo: string,
-    telResCtqzndo: string,
-    celResCtqzndo: string,
-    emailCtqzndo: string,
-    paroquiBatismoCtqzndo: string,
-    arquidioceseBatismo: string,
-    cidadeDioceseCtqzndo: string,
-    ufDioceseCtqzndo: string,
-    resideCom: string,
-    dadosMae: Responsavel | null,
-    dadosPai: Responsavel | null
-}
 
 const steps = ['Dados do Catequizando', 'Dados dos Pais', 'Resumo'];
+let catequizando: Catequizando;
+
+const notificadorCatequizando = new Subject<Catequizando>();
+
+notificadorCatequizando.subscribe((c: Catequizando) => {
+    console.log("storageCatequizando: ", localStorage.getItem("catequizando"));
+    console.log("notificadorCatequizando", c);
+    catequizando = c;
+});
 
 export default function Catequizandos(props: any) {
 
+    const notificadorDadosPai = new Subject<Responsavel>();
+    const notificadorDadosMae = new Subject<Responsavel>();
+
+    const classes = AppStyle.classes();
+    const catequizandoPipe = new CatequizandoPipe();
+    const responsavelPipe = new ResponsavelPipe();
     const [showResults, setShowResults] = useState(false);
-    const [id, setId] = useState(null);
-    const [nomeCtqzndo, setNomeCtqzndo] = useState("");
-    const [turmaDesejada, setTurmaDesejada] = useState("");
-    const [localNascimentoCtqzndo, setLocalNascimentoCtqzndo] = useState("");
-    const [dtNascimentoCtqzndo, setDtNascimentoCtqzndo] = React.useState<Date | null>(null);
-    const [enderecoCtqzndo, setEnderecoCtqzndo] = useState("");
-    const [cepCtqzndo, setCepCtqzndo] = useState("");
-    const [telResCtqzndo, setTelResCtqzndo] = useState("");
-    const [celResCtqzndo, setCelResCtqzndo] = useState("");
-    const [emailCtqzndo, setEmailCtqzndo] = useState("");
-    const [paroquiBatismoCtqzndo, setParoquiBatismoCtqzndo] = useState("");
-    const [arquidioceseBatismo, setArquidioceseBatismo] = useState("");
-    const [cidadeDioceseCtqzndo, setCidadeDioceseCtqzndo] = useState("");
-    const [ufDioceseCtqzndo, setUfDioceseCtqzndo] = useState("");
-    const [resideCom, setResideCom] = useState("");
-    const [dadosMae, setDadosMae] = React.useState<Responsavel | null>(null);
-    const [dadosPai, setDadosPai] = React.useState<Responsavel | null>(null);
+    const [dadosMae, setDadosMae] = React.useState({} as Responsavel);
+    const [dadosPai, setDadosPai] = React.useState({} as Responsavel);
+    const [rows, setRows] = React.useState([] as Catequizando[]);
 
-    const catequizando: Catequizando = {
-        id,
-        nomeCtqzndo,
-        turmaDesejada,
-        localNascimentoCtqzndo,
-        dtNascimentoCtqzndo,
-        enderecoCtqzndo,
-        cepCtqzndo,
-        telResCtqzndo,
-        celResCtqzndo,
-        emailCtqzndo,
-        paroquiBatismoCtqzndo,
-        arquidioceseBatismo,
-        cidadeDioceseCtqzndo,
-        ufDioceseCtqzndo,
-        resideCom,
-        dadosMae,
-        dadosPai
-    };
-
-    const configurarForm = (value: Catequizando | null) => {
-        setId(value ? value.id : "");
-        setArquidioceseBatismo(value ? value.arquidioceseBatismo : "");
-        setCelResCtqzndo(value ? value.celResCtqzndo : "");
-        setCepCtqzndo(value ? value.cepCtqzndo : "");
-        setCidadeDioceseCtqzndo(value ? value.cidadeDioceseCtqzndo : "");
-        setDadosMae(value ? value.dadosMae : null);
-        setDadosPai(value ? value.dadosPai : null);
-        setDtNascimentoCtqzndo(value ? value.dtNascimentoCtqzndo : null);
-        setEmailCtqzndo(value ? value.emailCtqzndo : "");
-        setEnderecoCtqzndo(value ? value.enderecoCtqzndo : "");
+    const doSetCatequizando = (c: Catequizando) => {
+        console.log(c);
+        catequizando = c;
     }
 
-    const service: CatequizandosService = new CatequizandosService();
+    const onNavigate = {
+        // 0: {set: (flg: boolean) => notificadorCatequizando.next(flg)},
+        // 1: {set: (flg: boolean) => notificadorResponsavel.next(flg)},
+    } as any;
 
-    const onNext = () => {
-        localStorage.setItem("catequizando", JSON.stringify(catequizando));
+    useEffect(() => {
+
+        notificadorDadosMae.subscribe((dadosMae: Responsavel) => {
+            setDadosMae(dadosMae);
+        });
+        notificadorDadosPai.subscribe((dadosPai: Responsavel) => {
+            setDadosPai(dadosPai);
+        });
+        return () => {
+            catequizandoPipe.unsubscribe();
+        };
+    }, []);
+
+    const onNext = (step: number) => {
+        console.log(catequizando);
+        console.log("storage", localStorage.getItem("catequizando"));
+        // onNavigate[step].set({touch: true});
     };
 
-    const onPrevious = () => {
-        let item = localStorage.getItem("catequizando");
-        if (null != item)
-            configurarForm(JSON.parse(item));
-    };
-
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
-            button: {
-                margin: theme.spacing(1),
-            },
-            heading: {
-                fontSize: theme.typography.pxToRem(15),
-                fontWeight: theme.typography.fontWeightRegular,
-            },
-            formControl: {
-                margin: theme.spacing(1),
-                minWidth: "100%",
-                width: "100%",
-            },
-            selectEmpty: {
-                marginTop: theme.spacing(2),
-            },
-            selectClass: {
-                minWidth: "100%",
-                width: "100%",
-            },
-        }),
-    );
-
-    const classes = useStyles();
-
-    const getTextValue = (e: any) => {
-        return e ? e.target ? e.target.value : e : "";
+    const onPrevious = (step: number) => {
+        // onNavigate[step].set({touch: true});
     };
 
     const getFormattedDate = (dtNascimentoCtqzndo: any) => {
@@ -148,15 +86,19 @@ export default function Catequizandos(props: any) {
     };
 
     const handleSubmit = (e: any) => {
-        if (id) {
-            service.merge(catequizando).subscribe(res => console.log(res), err => console.log(err));
+        if (catequizando.id && catequizando.id > 0) {
+            catequizandoPipe.update.next({
+                formData: catequizando
+            });
         } else {
-            service.persist(catequizando).subscribe(res => console.log(res), err => console.log(err));
+            catequizandoPipe.save.next({
+                formData: catequizando
+            });
         }
     };
 
     const handleReset = (e: any) => {
-        configurarForm(null);
+        // configurarForm(null);
     };
 
     const handleChangeAccordion = (e: any) => {
@@ -164,12 +106,19 @@ export default function Catequizandos(props: any) {
     }
 
     const handleEditing = (row: Catequizando) => {
-        configurarForm(row);
+        doSetCatequizando(row);
         setShowResults(false);
     }
 
-    const setStateTarget = (e: any, toState: (v: any) => void) => {
-        toState(e.target.value);
+    const onComplete = () => {
+        catequizandoPipe.findByFilter({}, (rows) => setRows(rows))
+    }
+
+    const onCompleteResponsavel = (tipoResponsavel: "dadosPai" | "dadosMae") => {
+        if (tipoResponsavel === "dadosPai")
+            setDadosPai({} as Responsavel);
+        if (tipoResponsavel === "dadosMae")
+            setDadosMae({} as Responsavel);
     }
 
     return (
@@ -188,126 +137,50 @@ export default function Catequizandos(props: any) {
                     <CustomizedSteppers onNext={onNext} onPrevious={onPrevious} steps={steps}
                                         onFinish={handleSubmit} onReset={handleReset}>
                         <Container maxWidth="lg">
-                            <Container maxWidth="lg">
-                                <Typography variant="h5" component="h5">
-                                    Dados do catequizando
-                                </Typography>
-                                <Grid container spacing={3} id="dadosCatequizando">
-                                    <Grid item xs={12} sm={8}>
-                                        <TextField fullWidth={true} value={nomeCtqzndo} id="nomeCtqzndo"
-                                                   label="Nome do Catequizando"
-                                                   onChange={(e: any) => setStateTarget(e, setNomeCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <FormControl className={classes.formControl} fullWidth={true}>
-                                            <InputLabel id="demo-simple-select-label">Turma Desejada</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                className={classes.selectClass}
-                                                value={turmaDesejada}
-                                                onChange={(e: any) => setStateTarget(e, setTurmaDesejada)}
-                                            >
-                                                <MenuItem value="">Selecione</MenuItem>
-                                                <MenuItem value="PE">Pré-Eucaristia</MenuItem>
-                                                <MenuItem value="EU">Eucaristia</MenuItem>
-                                                <MenuItem value="PR">Perseverança</MenuItem>
-                                                <MenuItem value="CR">Crisma</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12} sm={8}>
-                                        <TextField fullWidth={true} value={localNascimentoCtqzndo}
-                                                   id="localNascimentoCtqzndo"
-                                                   label="Local Nascimento"
-                                                   onChange={(e: any) => setStateTarget(e, setLocalNascimentoCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                            <KeyboardDatePicker fullWidth={true}
-                                                                id="dtNascimentoCtqzndo"
-                                                                label="Data Nascimento"
-                                                                format="dd/MM/yyyy"
-                                                                value={dtNascimentoCtqzndo}
-                                                                onChange={setDtNascimentoCtqzndo}
-                                                                KeyboardButtonProps={{'aria-label': 'change date'}}/>
-                                        </MuiPickersUtilsProvider>
-                                    </Grid>
-                                    <Grid item xs={12} sm={8}>
-                                        <TextField fullWidth={true} value={enderecoCtqzndo}
-                                                   id="enderecoCtqzndo" label="Endereço"
-                                                   onChange={(e: any) => setStateTarget(e, setEnderecoCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <TextField fullWidth={true} value={cepCtqzndo}
-                                                   id="cepCtqzndo" label="CEP"
-                                                   onChange={(e: any) => setStateTarget(e, setCepCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth={true}
-                                                   value={telResCtqzndo}
-                                                   id="telResCtqzndo" label="Telefone Residencial"
-                                                   onChange={(e: any) => setStateTarget(e, setTelResCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth={true}
-                                                   value={celResCtqzndo}
-                                                   id="celResCtqzndo" label="Celular"
-                                                   onChange={(e: any) => setStateTarget(e, setCelResCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={12}>
-                                        <TextField fullWidth={true}
-                                                   value={emailCtqzndo}
-                                                   id="emailCtqzndo" label="E-mail"
-                                                   onChange={(e: any) => setStateTarget(e, setEmailCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={12}>
-                                        <TextField fullWidth={true}
-                                                   value={paroquiBatismoCtqzndo}
-                                                   id="paroquiBatismoCtqzndo"
-                                                   label="Paróquia onde foi batizado"
-                                                   onChange={(e: any) => setStateTarget(e, setParoquiBatismoCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth={true}
-                                                   value={arquidioceseBatismo}
-                                                   id="arqDioceseCtqzndo"
-                                                   label="Arquidiocese/Diocese"
-                                                   onChange={(e: any) => setStateTarget(e, setArquidioceseBatismo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <TextField fullWidth={true}
-                                                   value={cidadeDioceseCtqzndo}
-                                                   onChange={(e: any) => setStateTarget(e, setCidadeDioceseCtqzndo)}
-                                                   id="cidadeDioceseCtqzndo" label="Cidade"/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={2}>
-                                        <TextField fullWidth={true} id="ufDioceseCtqzndo" label="UF"
-                                                   value={ufDioceseCtqzndo}
-                                                   onChange={(e: any) => setStateTarget(e, setUfDioceseCtqzndo)}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={12}>
-                                        <TextField fullWidth={true} id="resideCom"
-                                                   value={resideCom}
-                                                   onChange={(e: any) => setStateTarget(e, setResideCom)}
-                                                   label="Catequizando reside com:"/>
-                                    </Grid>
-                                </Grid>
-                            </Container>
+                            <FormCatequizando id="fmrCatequizando"
+                                              formData={catequizando}
+                                              saveAction={catequizandoPipe.save}
+                                              updateAction={catequizandoPipe.update}
+                                              onCancelar={onComplete}
+                                              onSaveComplete={onComplete}
+                                              onUpdateComplete={onComplete}
+                                              notificador={notificadorCatequizando}
+                                              sendData={c => doSetCatequizando(c)}>
+                            </FormCatequizando>
                         </Container>
                         <Container maxWidth="lg">
                             <Grid container spacing={3} id="dadosCatequisando">
                                 <Grid item xs={12} sm={6}>
-                                    <DadosResponsavel id="gridMae" title="Dados da Mãe" labelNome="Nome da Mãe"
-                                                      value={dadosMae}
-                                                      setState={setDadosMae}>
-                                    </DadosResponsavel>
+                                    <Container id={props.id} style={{marginTop: "25px"}}>
+                                        <Typography variant="h5" component="h5">
+                                            {"Dados da Mãe"}
+                                        </Typography>
+                                    <FormResponsavel id="gridMae" title="Dados da Mãe" labelNome="Nome da Mãe"
+                                                     formData={dadosMae}
+                                                     saveAction={responsavelPipe.save}
+                                                     updateAction={responsavelPipe.update}
+                                                     onCancelar={() => onCompleteResponsavel("dadosMae")}
+                                                     onSaveComplete={() => onCompleteResponsavel("dadosMae")}
+                                                     onUpdateComplete={() => onCompleteResponsavel("dadosMae")}
+                                                     setState={setDadosMae}>
+                                    </FormResponsavel>
+                                    </Container>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <DadosResponsavel id="gridPai" title="Dados do Pai" labelNome="Nome do Pai"
-                                                      value={dadosPai}
-                                                      setState={setDadosPai}>
-                                    </DadosResponsavel>
+                                    <Container id={props.id} style={{marginTop: "25px"}}>
+                                        <Typography variant="h5" component="h5">
+                                            {"Dados do Pai"}
+                                        </Typography>
+                                        <FormResponsavel id="gridPai" title="Dados do Pai" labelNome="Nome do Pai"
+                                                         formData={dadosPai}
+                                                         saveAction={responsavelPipe.save}
+                                                         updateAction={responsavelPipe.update}
+                                                         onCancelar={() => onCompleteResponsavel("dadosPai")}
+                                                         onSaveComplete={() => onCompleteResponsavel("dadosPai")}
+                                                         onUpdateComplete={() => onCompleteResponsavel("dadosPai")}
+                                                         setState={setDadosPai}>
+                                        </FormResponsavel>
+                                    </Container>
                                 </Grid>
                             </Grid>
                         </Container>
@@ -318,11 +191,11 @@ export default function Catequizandos(props: any) {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <ExibirDadosResponsavel id="dadosMae" labelNome="Nome da Mãe"
-                                                            title="Dados da Mãe" value={catequizando.dadosMae}/>
+                                                            title="Dados da Mãe" value={dadosMae}/>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <ExibirDadosResponsavel id="dadosPai" labelNome="Nome do Pai"
-                                                            title="Dados do Pai" value={catequizando.dadosPai}/>
+                                                            title="Dados do Pai" value={dadosPai}/>
                                 </Grid>
                             </Grid>
                         </Container>
@@ -338,7 +211,10 @@ export default function Catequizandos(props: any) {
                     <Typography className={classes.heading}>Catequizandos Registrados</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <TabelaCatequizandos onEditing={handleEditing}/>
+                    <TabelaCatequizandos rows={rows}
+                                         deleteAction={catequizandoPipe.remove}
+                                         onDeleteComplete={onComplete}
+                                         onEditing={handleEditing}/>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
         </Container>

@@ -2,23 +2,9 @@ import {Grid, TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import React, {useEffect} from "react";
 import {Catequista} from "../../../../back-end/features/catequista/Catequista";
-import {Subject} from "rxjs";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
-
-export interface FormProps<T> {
-    id: string;
-    formData: T;
-    saveAction: Subject<FormAction<T>>;
-    updateAction: Subject<FormAction<T>>;
-    onCancelar: () => void,
-    onSaveComplete: () => void,
-    onUpdateComplete: () => void
-}
-
-export interface FormAction<T> {
-    formData: T;
-    actionCompleted?: () => void;
-}
+import {FormProps} from "../../components/core/FormProps";
+import {Field} from "../../components/core/Field";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -107,10 +93,6 @@ export function FormCatequista(props: FormProps<Catequista>) {
         });
     }
 
-    const fieldChange = (event: any, set: (value: any) => void): void => {
-        set(event.target.value);
-    }
-
     function handleCancelar() {
         resetForm();
         props.onCancelar();
@@ -129,33 +111,33 @@ export function FormCatequista(props: FormProps<Catequista>) {
             <Grid item xs={12} sm={12}>
                 <TextField fullWidth={true} id="Nome" label="Nome"
                            value={nome}
-                           onChange={(e) => fieldChange(e, setNome)}/>
+                           onChange={(e) => Field.change(e, setNome)}/>
             </Grid>
             <Grid item xs={12} sm={8}>
                 <TextField fullWidth={true} id="endereco" label="Endereço"
                            value={endereco}
-                           onChange={(e) => fieldChange(e, setEndereco)}/>
+                           onChange={(e) => Field.change(e, setEndereco)}/>
             </Grid>
             <Grid item xs={12} sm={4}>
-                <TextField fullWidth={true} id="cep" label="CEP"
+                <TextField fullWidth={true} id="cep" label="E-mail"
                            value={email}
-                           onChange={(e) => fieldChange(e, setEmail)}/>
+                           onChange={(e) => Field.change(e, setEmail)}/>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField fullWidth={true} id="telRes"
                            label="Telefone Residencial"
                            value={optTelefoneFixo}
-                           onChange={(e) => fieldChange(e, setOptTelefoneFixo)}/>
+                           onChange={(e) => Field.change(e, setOptTelefoneFixo)}/>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField fullWidth={true} id="celRes" label="Celular"
                            value={telefoneCelular}
-                           onChange={(e) => fieldChange(e, setTelefoneCelular)}/>
+                           onChange={(e) => Field.change(e, setTelefoneCelular)}/>
             </Grid>
             <Grid item xs={12} sm={12}>
-                <TextField fullWidth={true} id="email" label="E-mail"
+                <TextField fullWidth={true} id="email" label="Casada(o)"
                            value={casado}
-                           onChange={(e) => fieldChange(e, setCasado)}/>
+                           onChange={(e) => Field.change(e, setCasado)}/>
             </Grid>
             <Button variant="contained"
                     color="default"

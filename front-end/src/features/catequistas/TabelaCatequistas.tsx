@@ -9,9 +9,8 @@ import TableRow from '@material-ui/core/TableRow';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import Paper from '@material-ui/core/Paper';
-import {Subject} from "rxjs";
-import {FormAction} from "./FormCatequista";
 import {Catequista} from "../../../../back-end/features/catequista/Catequista";
+import {TableProps} from "../../components/core/CRUDProps";
 
 const useStyles = makeStyles({
     table: {
@@ -22,15 +21,7 @@ const useStyles = makeStyles({
     }
 });
 
-export interface TabCatequistaProps {
-    rows: Catequista[],
-    onEditing: any,
-    deleteAction: Subject<FormAction<Catequista>>,
-    onDeleteComplete: () => void
-
-}
-
-export default function TabelaCatequistas(props: TabCatequistaProps) {
+export default function TabelaCatequistas(props: TableProps<Catequista>) {
 
     const classes = useStyles();
     const [rows, setRows] = React.useState<Catequista[]>(props.rows);

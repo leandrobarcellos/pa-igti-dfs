@@ -15,7 +15,7 @@ export class TurmaResource extends Resource {
         super('/turmas');
     }
 
-    protected intializeRoutes() {
+    protected initializeRoutes() {
         this.addGET((req, res) => this.getTurmas(req, res));
         this.addGET((req, res) => this.getCatequizandosPorTurma(req, res),
             "/:idTurma/catequizandos");

@@ -7,6 +7,7 @@ import {TurmaResource} from "./features/turma/TurmaResource";
 import {EtapaResource} from "./core/dominio/etapa/EtapaResource";
 import {CatequizandoResource} from "./features/catequizando/CatequizandoResource";
 import {HttpUtil} from "./core/util/HttpUtil";
+import {LoginResource} from "./features/login/LoginResource";
 
 const app = express();
 const port = 3333;
@@ -17,6 +18,7 @@ const catequistaRoutes = new CatequistaResource();
 const catequizandosRoutes = new CatequizandoResource();
 const turmaRoutes = new TurmaResource();
 const etapaRoutes = new EtapaResource();
+const loginRoutes = new LoginResource();
 
 app.use(json());
 
@@ -32,6 +34,7 @@ app.use("/api/", catequistaRoutes.router);
 app.use("/api/", catequizandosRoutes.router);
 app.use("/api/", turmaRoutes.router);
 app.use("/api/", etapaRoutes.router);
+app.use("/api/", loginRoutes.router);
 app.use("/", (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (err) {
         HttpUtil.doSendError(res, err.status, err.message);

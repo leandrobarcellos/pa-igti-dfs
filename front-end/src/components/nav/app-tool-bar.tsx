@@ -8,6 +8,7 @@ import {AppComponent, AppProps, withRouter} from "../core/app-component";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MenuIcon from "@material-ui/icons/Menu";
 import {Typography} from "@material-ui/core";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 
 interface AppToolBarProps extends AppProps {
@@ -16,7 +17,14 @@ interface AppToolBarProps extends AppProps {
 
 class AppToolBar extends AppComponent<AppToolBarProps> {
     goHome = () => {
-        this.props.history.push("/");
+        this.props.history.push("/home");
+    }
+
+    logout = () => {
+        localStorage.removeItem("catequese:token");
+        this.props.history.push("/login");
+        window.location.reload();
+
     }
 
     stylesToUse = () => makeStyles((theme: Theme) =>
@@ -68,6 +76,11 @@ class AppToolBar extends AppComponent<AppToolBarProps> {
                                         color="inherit" aria-label="menu"
                                         onClick={() => this.goHome()}>
                                 <HomeIcon/>
+                            </IconButton>
+                            <IconButton edge="start"
+                                        color="inherit" aria-label="menu"
+                                        onClick={() => this.logout()}>
+                                <ExitToAppIcon/>
                             </IconButton>
                         </div>
                     </Toolbar>

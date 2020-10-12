@@ -16,8 +16,8 @@
       "email": "email@teste.com",
       "paroquiaBatismo": "Divino Espírito Santo",
       "arquidioceseBatismo": "Arquidiocese Militar",
-      "cidadeDiocese": "Brasília",
-      "ufDiocese": "DF",
+      "cidadeDioceseBatismo": "Brasília",
+      "ufDioceseBatismo": "DF",
       "resideCom": "Pais",
       "dadosMae": {
         "id": 1,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {makeStyles, Theme, createStyles, withStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Stepper from '@material-ui/core/Stepper';
@@ -167,32 +167,48 @@ export default function CustomizedSteppers(props: any) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getConfiguredSteps(props.steps);
+    let stepReg: any;
+
+    useEffect(() => {
+    }, []);
+
+    const makeStepReg = () => {
+        if (!stepReg) {
+            stepReg = {} as any;
+            for (let s in props.children) {
+                stepReg[s] = {
+                    title: props.steps && props.steps.length > s? props.steps[s]: "No Title Defined",
+                    content: props.children[s]
+                };
+
+            }
+        }
+    }
+
+    makeStepReg();
+
     const onNext = (step: number) => {
         if(!isLastStep()){
-            props.onNext();
+            props.onNext(step);
         } else{
-            props.onFinish();
+            props.onFinish(step);
         }
     }
     const onPrevious = (step: number) => {
-        props.onPrevious();
+        props.onPrevious(step);
     }
 
     const getStepContent = (step: number) => {
-        switch (step) {
-            case 0:
-                return props.children[0];
-            case 1:
-                return props.children[1];
-            case 2:
-                return props.children[2];
-            default:
-                return 'Unknown step';
+        let content = stepReg[step].content;
+        if(!content) {
+            content = 'Unknown step';
         }
+        return content;
     }
 
     const handleNext = () => {
-        onNext(activeStep);
+        let step = activeStep? activeStep: 0;
+        onNext(step);
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 

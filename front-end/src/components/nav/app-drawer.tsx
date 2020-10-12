@@ -3,15 +3,9 @@ import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import FaceIcon from '@material-ui/icons/Face';
 import DrawerItem from "./drawer-item";
 import AppToolBar from "./app-tool-bar";
 
@@ -29,7 +23,8 @@ const useStyles = makeStyles({
 type Anchor = typeof ANCHOR;
 
 interface AppDrawerProps {
-    children?: ReactNode
+    children?: ReactNode,
+    isLoggedIn?: boolean
 }
 
 function AppDrawer(props: AppDrawerProps) {
@@ -67,6 +62,9 @@ function AppDrawer(props: AppDrawerProps) {
                 <DrawerItem pKey="catequistas" route="/catequistas" text="Catequistas">
                     <SupervisorAccountIcon/>
                 </DrawerItem>
+                <DrawerItem pKey="responsaveis" route="/responsaveis" text="Responsáveis">
+                    <PersonAddIcon/>
+                </DrawerItem>
                 <DrawerItem pKey="catequizandos" route="/catequizandos" text="Catequizandos">
                     <PersonAddIcon/>
                 </DrawerItem>
@@ -77,6 +75,8 @@ function AppDrawer(props: AppDrawerProps) {
         </div>
     );
 
+    if(!props.isLoggedIn)
+        return (<></>);
     return (
         <div>
             <AppToolBar menuAction={toggleDrawer(true)}/>
