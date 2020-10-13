@@ -103,7 +103,7 @@ export default function FormTurma(props: FormProps<Turma>) {
                     <Select
                         labelId="demo-simple-select-helper-label"
                         id="demo-simple-select-helper"
-                        value={idEtapa}
+                        value={idCatequista}
                         onChange={e=> Field.change(e, setIdCatequista)}>
                         <MenuItem value="">
                             <em>None</em>

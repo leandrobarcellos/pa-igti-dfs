@@ -22,18 +22,30 @@ export default function Login() {
     const loginPipe = new LoginPipe();
 
     const handleLogin = (e: any) => {
+        alert("consegui chegar no click..");
         loginPipe.login.next({
             email,
             senha: "",
             callback: () => {
-                history.push("/home")
-                window.location.reload();
+                // window.location.replace(window.location.href);
+                // document.location.assign(window.location.href);
+                document.location.reload(true);
+                history.replace("/");
+                // setTimeout(() => {
+                //     window.location.reload();
+                // });
+                // try {
+                //     window.parent.location.reload();
+                //     document.location.reload();
+                // } catch (e) {
+                //     alert("bla");
+                // }
             }
         });
     }
 
     return (
-        <Container maxWidth="lg" style={{marginTop: "25px", maxWidth: "25%"}}>
+        <Container maxWidth="xl" className={classes.loginCard} style={{marginTop: "25px"}}>
             <ExpansionPanel expanded={true}>
                 <ExpansionPanelSummary aria-controls="panel1a-content"
                                        id="panel1a-header">

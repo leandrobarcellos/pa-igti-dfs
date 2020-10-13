@@ -22,9 +22,8 @@ class AppToolBar extends AppComponent<AppToolBarProps> {
 
     logout = () => {
         localStorage.removeItem("catequese:token");
-        this.props.history.push("/login");
-        window.location.reload();
-
+        sessionStorage.removeItem("catequese:token");
+        this.props.history.replace("/");
     }
 
     stylesToUse = () => makeStyles((theme: Theme) =>

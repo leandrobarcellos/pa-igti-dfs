@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useEffect} from 'react';
 import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -29,6 +29,7 @@ interface AppDrawerProps {
 
 function AppDrawer(props: AppDrawerProps) {
     const classes = useStyles();
+
     const [state, setState] = React.useState({
         top: false,
         left: false,
@@ -36,6 +37,9 @@ function AppDrawer(props: AppDrawerProps) {
         right: false,
     });
 
+    useEffect(()=>{
+
+    }, [props.isLoggedIn]);
     const toggleDrawer = (open: boolean) => (
         event: React.KeyboardEvent | React.MouseEvent,
     ) => {

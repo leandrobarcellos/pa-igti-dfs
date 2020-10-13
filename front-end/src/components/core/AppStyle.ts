@@ -1,10 +1,16 @@
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
-import {appendFileSync} from "fs";
 
 
 export class AppStyle {
     static readonly useStyles = makeStyles((theme: Theme) =>
         createStyles({
+            loginCard: {
+                maxWidth: '100%',
+                ['@media (min-width: 500px)']: { maxWidth: '25%'},
+                // [theme.breakpoints.up("lg")]: {
+                //     maxWidth: '25%'
+                // }
+            },
             root: {
                 width: '100%',
             },

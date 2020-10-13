@@ -18,14 +18,22 @@ export class LoginPipe extends AppPipe {
     }
 
     private initLoginPipe(): void {
+        alert("initLoginPipe");
         this._login.pipe(
             switchMap(loginInfo => this.loginService.login(loginInfo).pipe(
+                tap((next) => {
+                    alert("switchMap");
+                    localStorage.setItem("catequese:token", btoa(JSON.stringify(next.data.object)));
+                    sessionStorage.setItem("catequese:token", btoa(JSON.stringify(next.data.object)));
+                }),
                 tap(() => {
                     if (loginInfo.callback)
                         loginInfo.callback();
                 })
             )),
-            tap(next => localStorage.setItem("catequese:token", btoa(JSON.stringify(next.data.object)))),
+            tap(next => {
+
+            }),
             this.defaultErrorCatcher(),
             this.takeUntilDestroy()
         ).subscribe();

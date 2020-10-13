@@ -17,5 +17,8 @@
     "fullstack"
   ],
   "author": "Leandro Barcellos",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^6.6.3"
+  }
 }
