@@ -1,14 +1,14 @@
 import {of, Subject} from "rxjs";
 import {catchError, switchMap, tap} from "rxjs/operators";
-import {Catequista} from "../../../back-end/features/catequista/Catequista";
-import {CatequistaService} from "../../../back-end/features/catequista/CatequistaService";
+import {Catequista} from "./catequistas/catequista";
+import CatequistasService from "./catequistas/CatequistasService";
 
 
 export class IncrementPipe {
     private incremented = 0;
     private _incrementer = new Subject<number>();
     private _testService = new Subject<(cs: Catequista[]) => void>();
-    private cateqService = new CatequistaService();
+    private cateqService = new CatequistasService();
 
     constructor() {
         this._incrementer.pipe(

@@ -1,10 +1,10 @@
 import {AppResponse, HttpCRUDService} from "../../components/core/HttpCRUDService";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
 import {Observable} from "rxjs";
+import {Catequizando} from "./catequizando";
 
 export default class CatequizandosService extends HttpCRUDService {
     constructor() {
-        super("/catequizandos");
+        super("/catequizando");
     }
 
     merge<T>(value: Catequizando): Observable<AppResponse<T>> {

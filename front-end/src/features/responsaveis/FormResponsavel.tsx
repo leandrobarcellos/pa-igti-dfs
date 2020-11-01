@@ -1,9 +1,9 @@
 import {Grid, TextField} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
-import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
 import {Field} from "../../components/core/Field";
 import {FormProps} from "../../components/core/FormProps";
 import Button from "@material-ui/core/Button";
+import {Responsavel} from "./responsavel";
 
 interface DadosResponsavelProps extends FormProps<Responsavel> {
     title?: string,

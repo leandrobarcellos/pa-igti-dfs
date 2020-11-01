@@ -3,8 +3,8 @@ import {Observable, of, Subject} from "rxjs";
 import {switchMap, tap} from "rxjs/operators";
 import {AppResponse} from "../../components/core/HttpCRUDService";
 import {FormAction} from "../../components/core/FormAction";
-import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
 import ResponsaveisService from "./ResponsaveisService";
+import {Responsavel} from "./responsavel";
 
 export interface FiltroResponsavel {
 

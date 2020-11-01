@@ -3,9 +3,9 @@ import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FormTurma from "./FormTurma";
 import {AppStyle} from "../../components/core/AppStyle";
-import {Turma} from "../../../../back-end/features/turma/Turma";
 import {TurmaPipe} from "./TurmaPipe";
 import AppTable from "../../components/AppTable";
+import {Turma} from "./turma";
 
 export default function Turmas() {
     const classes = AppStyle.useStyles();

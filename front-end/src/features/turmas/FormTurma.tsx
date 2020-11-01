@@ -2,9 +2,6 @@ import React, {useEffect} from "react";
 import {Button, FormControl, Grid, TextField} from "@material-ui/core";
 import {Field} from "../../components/core/Field";
 import {FormProps} from "../../components/core/FormProps";
-import {Turma} from "../../../../back-end/features/turma/Turma";
-import {Etapa} from "../../../../back-end/core/dominio/etapa/Etapa";
-import {Catequista} from "../../../../back-end/features/catequista/Catequista";
 import {AppStyle} from "../../components/core/AppStyle";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -14,8 +11,11 @@ import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
 import {InputSelect} from "../../components/inputs/AppInputs";
 import {CatequistaPipe} from "../catequistas/CatequistaPipe";
 import TransferList from "../../components/core/TransferList";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
 import {EtapaPipe} from "../../util/domain/EtapaPipe";
+import {Turma} from "./turma";
+import {Catequista} from "../catequistas/catequista";
+import {Catequizando} from "../catequizandos/catequizando";
+import {Etapa} from "../../../../back-end/src/features/dominios/etapa/etapa";
 
 const etapas = [
     {

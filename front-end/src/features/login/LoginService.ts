@@ -2,8 +2,8 @@ import {AppResponse, HttpService} from "../../components/core/HttpCRUDService";
 import {Observable} from "rxjs";
 
 export interface Login {
-    email: string,
-    senha: string,
+    username: string,
+    password: string,
     callback?: () => void
 }
 

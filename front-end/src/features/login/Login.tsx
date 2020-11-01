@@ -26,8 +26,8 @@ export default function Login() {
     const handleLogin = (e: any) => {
         LOGGER.warn("testing the warn");
         loginPipe.login.next({
-            email,
-            senha: "",
+            username: email,
+            password: "secret",
             callback: () => {
                 window.location.reload();
             }

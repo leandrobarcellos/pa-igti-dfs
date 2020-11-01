@@ -1,7 +1,7 @@
 import {AppResponse, HttpCRUDService} from "../../components/core/HttpCRUDService";
 import {Observable} from "rxjs";
-import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
+import {Responsavel} from "./responsavel";
+import {Catequizando} from "../catequizandos/catequizando";
 
 export default class ResponsaveisService extends HttpCRUDService {
     constructor() {

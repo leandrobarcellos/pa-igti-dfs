@@ -1,10 +1,9 @@
-import {CRUDPipe, FilteredSearchAction} from "../../components/core/CRUDPipe";
-import {Turma} from "../../../../back-end/features/turma/Turma";
-import {Observable, Subject} from "rxjs";
+import {CRUDPipe} from "../../components/core/CRUDPipe";
+import {Observable} from "rxjs";
 import {FormAction} from "../../components/core/FormAction";
 import {TurmasService} from "./TurmasService";
 import {switchMap, tap} from "rxjs/operators";
-import {Catequista} from "../../../../back-end/features/catequista/Catequista";
+import {Turma} from "./turma";
 
 
 interface FiltroTurma {

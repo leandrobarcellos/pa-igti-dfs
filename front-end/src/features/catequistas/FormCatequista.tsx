@@ -1,9 +1,9 @@
 import {Grid} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import React, {useEffect} from "react";
-import {Catequista} from "../../../../back-end/features/catequista/Catequista";
 import {FormProps} from "../../components/core/FormProps";
 import {InputEmail, InputSelect, InputText} from "../../components/inputs/AppInputs";
+import {Catequista} from "./catequista";
 
 export function FormCatequista(props: FormProps<Catequista>) {
 

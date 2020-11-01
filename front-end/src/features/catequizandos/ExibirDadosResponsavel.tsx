@@ -1,6 +1,6 @@
 import {Container, Grid, Typography} from "@material-ui/core";
 import React from "react";
-import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
+import {Responsavel} from "../responsaveis/responsavel";
 
 interface ExibirDadosResponsavelProps {
     id: string,

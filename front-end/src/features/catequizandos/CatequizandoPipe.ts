@@ -2,10 +2,10 @@ import {CRUDPipe, FilteredSearchAction, SearchAction} from "../../components/cor
 import {Observable, Subject} from "rxjs";
 import {switchMap, tap} from "rxjs/operators";
 import {AppResponse} from "../../components/core/HttpCRUDService";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
 import CatequizandosService from "./CatequizandosService";
 import {FormAction} from "../../components/core/FormAction";
 import ResponsaveisService from "../responsaveis/ResponsaveisService";
+import {Catequizando} from "./catequizando";
 
 export interface FiltroCatequizando {
 

@@ -3,7 +3,7 @@ import {from, Observable} from "rxjs";
 
 let href = window.location.href;
 let newHref = "http:" + href.substr(href.indexOf("//"));
-newHref = newHref.substr(0, newHref.lastIndexOf(":")) + ":3333/api";
+newHref = newHref.substr(0, newHref.lastIndexOf(":")) + ":3333/e-catequese";
 const basePath = newHref;
 
 export default class HttpClient {

@@ -1,6 +1,6 @@
 import {Container, Grid, Typography} from "@material-ui/core";
 import React from "react";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
+import {Catequizando} from "./catequizando";
 
 interface ExibirDadosCatequizandoProps {
     value: Catequizando

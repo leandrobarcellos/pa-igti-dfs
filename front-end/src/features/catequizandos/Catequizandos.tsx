@@ -13,13 +13,13 @@ import ExibirDadosCatequizando from "./ExibirDadosCatequizando";
 import ExibirDadosResponsavel from "./ExibirDadosResponsavel";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TabelaCatequizandos from "./TabelaCatequizandos";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
 import {CatequizandoPipe} from "./CatequizandoPipe";
-import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
 import {AppStyle} from "../../components/core/AppStyle";
 import FormCatequizando from "./FormCatequizando";
 import {Subject} from "rxjs";
 import {ResponsavelPipe} from "../responsaveis/ResponsavelPipe";
+import {Catequizando} from "./catequizando";
+import {Responsavel} from "../responsaveis/responsavel";
 
 
 const steps = ['Dados do Catequizando', 'Dados dos Pais', 'Resumo'];
@@ -28,7 +28,7 @@ let catequizando: Catequizando;
 const notificadorCatequizando = new Subject<Catequizando>();
 
 notificadorCatequizando.subscribe((c: Catequizando) => {
-    console.log("storageCatequizando: ", localStorage.getItem("catequizando"));
+    console.log("storageCatequizando: ", localStorage.getItem("catequizandos"));
     console.log("notificadorCatequizando", c);
     catequizando = c;
 });
@@ -71,7 +71,7 @@ export default function Catequizandos(props: any) {
 
     const onNext = (step: number) => {
         console.log(catequizando);
-        console.log("storage", localStorage.getItem("catequizando"));
+        console.log("storage", localStorage.getItem("catequizandos"));
         // onNavigate[step].set({touch: true});
     };
 

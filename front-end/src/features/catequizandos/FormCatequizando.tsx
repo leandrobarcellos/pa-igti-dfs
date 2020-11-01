@@ -2,11 +2,11 @@ import {Container, Grid, TextField, Typography} from "@material-ui/core";
 import {Field} from "../../components/core/Field";
 import React, {useEffect, useState} from "react";
 import {FormProps} from "../../components/core/FormProps";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
 import {AppStyle} from "../../components/core/AppStyle";
 import {Subject} from "rxjs";
-import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
 import {InputDate, InputSelect} from "../../components/inputs/AppInputs";
+import {Catequizando} from "./catequizando";
+import {Responsavel} from "../responsaveis/responsavel";
 
 const etapas = [
     {
@@ -45,12 +45,12 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
         c = getFormData();
         props.notificador.next(c);
         let strCatequizando = JSON.stringify(c);
-        let item = localStorage.getItem("catequizando");
+        let item = localStorage.getItem("catequizandos");
         if (item) {
-            localStorage.removeItem("catequizando");
-            localStorage.setItem("catequizando", strCatequizando);
+            localStorage.removeItem("catequizandos");
+            localStorage.setItem("catequizandos", strCatequizando);
         } else {
-            localStorage.setItem("catequizando", strCatequizando);
+            localStorage.setItem("catequizandos", strCatequizando);
         }
     }
 

@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import {TableProps} from "../../components/core/CRUDProps";
-import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
+import {Catequizando} from "./catequizando";
 
 const useStyles = makeStyles({
     table: {

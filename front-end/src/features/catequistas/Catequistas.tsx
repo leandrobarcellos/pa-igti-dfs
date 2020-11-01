@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Catequista} from "../../../../back-end/features/catequista/Catequista";
 import {FormCatequista} from "./FormCatequista";
 import {CatequistaPipe} from "./CatequistaPipe";
 import {AppStyle} from "../../components/core/AppStyle";
@@ -10,6 +9,7 @@ import {concat, map, mergeMap, switchMap, tap} from "rxjs/operators";
 import {FormAction} from "../../components/core/FormAction";
 import TabelaCatequistas from "./TabelaCatequistas";
 import {flatMap} from "rxjs/internal/operators";
+import {Catequista} from "./catequista";
 
 
 export default function Catequistas() {
@@ -78,7 +78,7 @@ export default function Catequistas() {
     const reloadListaCatequistas = (showResults?: boolean) => {
         catequistaPipe.findAll.next({
             callback: (catequistas: Catequista[]) => {
-                console.log("acabei de atualizar os catequistas: ", catequistas);
+                console.log("acabei de atualizar os catequista: ", catequistas);
                 setRows(catequistas);
                 setShowResults(showResults ? true : false);
             }

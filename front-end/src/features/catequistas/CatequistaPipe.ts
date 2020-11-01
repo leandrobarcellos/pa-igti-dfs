@@ -1,11 +1,11 @@
 import {CRUDPipe, FilteredSearchAction, SearchAction} from "../../components/core/CRUDPipe";
-import {Catequista} from "../../../../back-end/features/catequista/Catequista";
-import {combineLatest, Observable, of, Subject} from "rxjs";
+import {Observable, of, Subject} from "rxjs";
 import {switchMap, tap} from "rxjs/operators";
 import {AppResponse} from "../../components/core/HttpCRUDService";
 import CatequistasService from "./CatequistasService";
 import {FormAction} from "../../components/core/FormAction";
 import {EtapasService} from "../../util/domain/EtapasService";
+import {Catequista} from "./catequista";
 
 export interface FiltroCatequista {
 

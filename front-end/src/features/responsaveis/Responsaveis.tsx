@@ -2,11 +2,11 @@ import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
 import React, {useEffect} from "react";
 import {FormResponsavel} from "./FormResponsavel";
 import {ResponsavelPipe} from "./ResponsavelPipe";
-import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {AppStyle} from "../../components/core/AppStyle";
 import AppTable from "../../components/AppTable";
 import PeopleIcon from '@material-ui/icons/People';
+import {Responsavel} from "./responsavel";
 
 
 export default function Responsaveis() {
@@ -73,7 +73,7 @@ export default function Responsaveis() {
                 {/*cep: string,*/}
                 {/*telefoneFixo: string,*/}
                 {/*telefoneMovel: string,*/}
-                {/*email: string,*/}
+                {/*username: string,*/}
                 {/*religiao: string,*/}
                 {/*praticante: 'S' | 'N'*/}
                 <ExpansionPanelDetails>
