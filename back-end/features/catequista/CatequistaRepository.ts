@@ -14,4 +14,8 @@ export class CatequistaRepository extends CRUDRepositorySequencial<Catequista> {
             throw new APIException("Catequista não encontrado com o email informado.", 404);
         return c;
     }
+
+    findByIdEtapa(idEtapa: number) {
+        return this.find(c => c.idEtapa === idEtapa);
+    }
 }

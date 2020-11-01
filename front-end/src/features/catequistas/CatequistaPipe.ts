@@ -1,10 +1,11 @@
 import {CRUDPipe, FilteredSearchAction, SearchAction} from "../../components/core/CRUDPipe";
 import {Catequista} from "../../../../back-end/features/catequista/Catequista";
-import {Observable, Subject} from "rxjs";
+import {combineLatest, Observable, of, Subject} from "rxjs";
 import {switchMap, tap} from "rxjs/operators";
 import {AppResponse} from "../../components/core/HttpCRUDService";
 import CatequistasService from "./CatequistasService";
 import {FormAction} from "../../components/core/FormAction";
+import {EtapasService} from "../../util/domain/EtapasService";
 
 export interface FiltroCatequista {
 
@@ -13,6 +14,8 @@ export interface FiltroCatequista {
 export class CatequistaPipe extends CRUDPipe<Catequista, FiltroCatequista> {
 
     private readonly catequistaService = new CatequistasService();
+    private readonly etapasService = new EtapasService();
+    private readonly _catequistasByEtapas = new Subject<FilteredSearchAction<number, Catequista[]>>();
 
     constructor() {
         super();
@@ -26,6 +29,7 @@ export class CatequistaPipe extends CRUDPipe<Catequista, FiltroCatequista> {
                     tap(() => this.callActionCompleted(next))
                 )),
             tap((c: AppResponse<Catequista>) => console.log(c)),
+            this.done()
         );
     }
 
@@ -62,7 +66,7 @@ export class CatequistaPipe extends CRUDPipe<Catequista, FiltroCatequista> {
         throw new Error("Method not implemented.");
     }
 
-    private initPipes() {
+    protected initPipes() {
         this.pipeFindAll.pipe(
             switchMap((next: SearchAction<Catequista[]>) =>
                 this.catequistaService.findAll<Catequista[]>().pipe(
@@ -77,9 +81,23 @@ export class CatequistaPipe extends CRUDPipe<Catequista, FiltroCatequista> {
                 this.catequistaService.find<Catequista>(next.filter).pipe(
                     tap(res => next.callback(res.data.object as Catequista))
                 )
-            ),
+            )
+        ).subscribe();
+        this._catequistasByEtapas.pipe(
+            switchMap(n => {
+                if (n.filter)
+                    return this.etapasService.findCatequistasByIdEtapa(n.filter).pipe(
+                        tap((res) => n.callback(res.data.object as Catequista[]))
+                    );
+                return of({});
+            }),
             this.defaultErrorCatcher(),
             this.takeUntilDestroy()
         ).subscribe();
     }
+
+    get catequistasByIdEtapa(): Subject<FilteredSearchAction<number, Catequista[]>> {
+               return this._catequistasByEtapas;
+    }
+
 }

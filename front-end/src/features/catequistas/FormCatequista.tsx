@@ -1,47 +1,15 @@
-import {Grid, TextField} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import React, {useEffect} from "react";
 import {Catequista} from "../../../../back-end/features/catequista/Catequista";
-import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {FormProps} from "../../components/core/FormProps";
-import {Field} from "../../components/core/Field";
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            width: '100%',
-        },
-        button: {
-            marginRight: theme.spacing(1),
-            marginTop: 15
-        },
-        instructions: {
-            marginTop: theme.spacing(1),
-            marginBottom: theme.spacing(1),
-        },
-        heading: {
-            fontSize: theme.typography.pxToRem(15),
-            fontWeight: theme.typography.fontWeightRegular,
-        },
-    }),
-);
-
+import {InputEmail, InputSelect, InputText} from "../../components/inputs/AppInputs";
 
 export function FormCatequista(props: FormProps<Catequista>) {
-    const classes = useStyles();
-    let catequista = props.formData;
 
     useEffect(() => {
-        catequista = props.formData;
-        setOptId(catequista && catequista.id ? catequista.id : 0);
-        setNome(catequista && catequista.nome ? catequista.nome : "");
-        setEmail(catequista && catequista.email ? catequista.email : "");
-        setOptTelefoneFixo(catequista && catequista.telefoneFixo ? catequista.telefoneFixo : "");
-        setTelefoneCelular(catequista && catequista.telefoneCelular ? catequista.telefoneCelular : "");
-        setEndereco(catequista && catequista.endereco ? catequista.endereco : "");
-        setCasado(catequista && catequista.casado ? catequista.casado : "N");
-    }, [catequista]);
-
+        configureForm(props.formData)
+    }, [props.formData]);
 
     const [optId, setOptId] = React.useState(0);
     const [nome, setNome] = React.useState("");
@@ -51,14 +19,14 @@ export function FormCatequista(props: FormProps<Catequista>) {
     const [endereco, setEndereco] = React.useState("");
     const [casado, setCasado] = React.useState("");
 
-    const resetForm = () => {
-        setOptId(0);
-        setNome("");
-        setEmail("");
-        setOptTelefoneFixo("");
-        setTelefoneCelular("");
-        setEndereco("");
-        setCasado("N");
+    const configureForm = (catequista?: Catequista) => {
+        setOptId(catequista && catequista.id ? catequista.id : 0);
+        setNome(catequista ? catequista.nome : "");
+        setEmail(catequista ? catequista.email : "");
+        setOptTelefoneFixo(catequista ? catequista.telefoneFixo : "");
+        setTelefoneCelular(catequista ? catequista.telefoneCelular : "");
+        setEndereco(catequista ? catequista.endereco : "");
+        setCasado(catequista ? catequista.casado : "N");
     }
 
     let getCatequista = function () {
@@ -77,7 +45,7 @@ export function FormCatequista(props: FormProps<Catequista>) {
         props.saveAction.next({
             formData: getCatequista() as Catequista,
             actionCompleted: () => {
-                resetForm();
+                configureForm();
                 props.onSaveComplete();
             }
         });
@@ -87,14 +55,14 @@ export function FormCatequista(props: FormProps<Catequista>) {
         props.updateAction.next({
             formData: getCatequista() as Catequista,
             actionCompleted: () => {
-                resetForm();
+                configureForm();
                 props.onUpdateComplete();
             }
         });
     }
 
     function handleCancelar() {
-        resetForm();
+        configureForm();
         props.onCancelar();
     }
 
@@ -109,35 +77,27 @@ export function FormCatequista(props: FormProps<Catequista>) {
     return (
         <Grid container spacing={3} id="gridCat">
             <Grid item xs={12} sm={12}>
-                <TextField fullWidth={true} id="Nome" label="Nome"
-                           value={nome}
-                           onChange={(e) => Field.change(e, setNome)}/>
+                <InputText id="nmCatequista" label="Nome" value={nome} set={setNome}></InputText>
             </Grid>
             <Grid item xs={12} sm={8}>
-                <TextField fullWidth={true} id="endereco" label="Endereço"
-                           value={endereco}
-                           onChange={(e) => Field.change(e, setEndereco)}/>
+                <InputText id="enderecoCatequista" label="Endereço" value={endereco} set={setEndereco}></InputText>
             </Grid>
             <Grid item xs={12} sm={4}>
-                <TextField fullWidth={true} id="cep" label="E-mail"
-                           value={email}
-                           onChange={(e) => Field.change(e, setEmail)}/>
+                <InputEmail id="emailCatequista" label="E-mail" value={email} set={setEmail}></InputEmail>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextField fullWidth={true} id="telRes"
-                           label="Telefone Residencial"
-                           value={optTelefoneFixo}
-                           onChange={(e) => Field.change(e, setOptTelefoneFixo)}/>
+                <InputText id="telRes" label="Telefone Residencial" value={optTelefoneFixo}
+                           set={setOptTelefoneFixo}></InputText>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextField fullWidth={true} id="celRes" label="Celular"
-                           value={telefoneCelular}
-                           onChange={(e) => Field.change(e, setTelefoneCelular)}/>
+                <InputText id="celRes" label="Telefone Celular" value={telefoneCelular}
+                           set={setTelefoneCelular}></InputText>
             </Grid>
             <Grid item xs={12} sm={12}>
-                <TextField fullWidth={true} id="email" label="Casada(o)"
-                           value={casado}
-                           onChange={(e) => Field.change(e, setCasado)}/>
+                <InputSelect items={[{value: "S", label: "Sim"}, {value: "N", label: "Não"}]}
+                             toValue={(i: any) => i.value}
+                             toLabel={(i: any) => i.label}
+                             id="casado" label="Casada(o)" value={casado} set={setCasado}></InputSelect>
             </Grid>
             <Button variant="contained"
                     color="default"

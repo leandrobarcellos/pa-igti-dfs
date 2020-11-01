@@ -1,7 +1,8 @@
 import {Entity} from "../../core/Entity";
 
-export interface Usuario extends Entity{
+export interface Usuario extends Entity<number>{
     email: string,
     nome?: string,
-    telefone?: string,
+    tipo: string,
+    senha: string
 }

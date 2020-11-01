@@ -38,7 +38,9 @@ export abstract class Repository<K, T extends Entity<K>> {
     }
 
     findAll(): T[] {
-        return this.db.rows;
+        let arr: T[] = [];
+        arr.push(...this.db.rows);
+        return arr;
     }
 
 }

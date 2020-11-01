@@ -8,7 +8,7 @@ export default class CatequistasService extends HttpCRUDService {
     }
 
     merge<T>(value: Catequista): Observable<AppResponse<T>> {
-        return this.httpClient.doPut(`${value.id}`, value);
+        return this.httpClient.doPut(`/${value.id}`, value);
     }
 
 }

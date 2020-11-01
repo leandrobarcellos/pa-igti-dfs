@@ -1,22 +1,28 @@
 import * as express from "express";
+import {Request, response, Response} from "express";
 import {Resource} from "../../Resource";
 import {Util} from "../../util/Util";
 import {APIException} from "../../exception/APIException";
 import {EtapaService} from "./EtapaService";
+import {CatequistaService} from "../../../features/catequista/CatequistaService";
 
 
 export class EtapaResource extends Resource {
     private readonly MSG_SUCESSO_CONSULTA = "Consulta realizada com sucesso.";
     private readonly service: EtapaService;
+    private readonly catequistaService: CatequistaService;
 
     constructor() {
         super("/etapas");
         this.service = new EtapaService();
+        this.catequistaService = new CatequistaService();
     }
 
     protected initializeRoutes() {
         this.addGET((req, res) => this.getTodasEtapas(req, res));
         this.addGET((req, res) => this.getEtapa(req, res), "/:idEtapa");
+        this.addGET((req, res) => this.getCatequistasByIdEtapa(req, res),
+            "/:idEtapa/catequistas");
     }
 
 
@@ -45,5 +51,14 @@ export class EtapaResource extends Resource {
                 this.doSendError(res, e.status, e.message);
             }
         });
+    }
+
+    private getCatequistasByIdEtapa(req: Request, res: Response) {
+        let idEtapa = req.params.idEtapa;
+        if (!Util.isUndefinedOrNaN(idEtapa)) {
+            this.doSendOk(res, this.catequistaService.findByIdEtapa(Number(idEtapa)), "Catequistas encontrados.");
+        } else {
+            this.doSendError(res, 404, "Catequistas não encontrados.");
+        }
     }
 }

@@ -20,7 +20,6 @@ export class ResponsavelPipe extends CRUDPipe<Responsavel, FiltroResponsavel> {
         this.initPipes();
     }
 
-
     protected registerUpdatePipe(update: Observable<FormAction<Responsavel>>): Observable<unknown> {
         return update.pipe(
             switchMap((next: FormAction<Responsavel>) =>
@@ -64,7 +63,7 @@ export class ResponsavelPipe extends CRUDPipe<Responsavel, FiltroResponsavel> {
         throw new Error("Method not implemented.");
     }
 
-    private initPipes() {
+    protected initPipes() {
         this.findByEmail.pipe(
             switchMap(search => {
                 if (search.filter)

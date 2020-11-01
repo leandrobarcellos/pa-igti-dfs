@@ -1,9 +1,10 @@
-import {CRUDPipe} from "../../components/core/CRUDPipe";
+import {CRUDPipe, FilteredSearchAction} from "../../components/core/CRUDPipe";
 import {Turma} from "../../../../back-end/features/turma/Turma";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {FormAction} from "../../components/core/FormAction";
 import {TurmasService} from "./TurmasService";
 import {switchMap, tap} from "rxjs/operators";
+import {Catequista} from "../../../../back-end/features/catequista/Catequista";
 
 
 interface FiltroTurma {
@@ -13,6 +14,10 @@ interface FiltroTurma {
 export class TurmaPipe extends CRUDPipe<Turma, FiltroTurma> {
 
     turmasService = new TurmasService();
+
+    constructor() {
+        super();
+    }
 
     protected registerRemovePipe(del: Observable<FormAction<Turma>>): Observable<unknown> {
         return del.pipe(
@@ -33,4 +38,7 @@ export class TurmaPipe extends CRUDPipe<Turma, FiltroTurma> {
         return update.pipe();
     }
 
+    protected initPipes(): void {
+        throw new Error("Method not implemented.");
+    }
 }

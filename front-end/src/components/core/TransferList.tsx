@@ -8,22 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import {AppStyle} from "./AppStyle";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            margin: 'auto',
-        },
-        paper: {
-            width: 200,
-            height: 230,
-            overflow: 'auto',
-        },
-        button: {
-            margin: theme.spacing(0.5, 0),
-        },
-    }),
-);
 
 function not(a: number[], b: number[]) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -34,7 +20,7 @@ function intersection(a: number[], b: number[]) {
 }
 
 export default function TransferList() {
-    const classes = useStyles();
+    const classes = AppStyle.useStyles();
     const [checked, setChecked] = React.useState<number[]>([]);
     const [left, setLeft] = React.useState<number[]>([0, 1, 2, 3]);
     const [right, setRight] = React.useState<number[]>([4, 5, 6, 7]);

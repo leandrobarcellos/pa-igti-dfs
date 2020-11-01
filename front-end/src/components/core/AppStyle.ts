@@ -4,18 +4,38 @@ import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 export class AppStyle {
     static readonly useStyles = makeStyles((theme: Theme) =>
         createStyles({
+            table: {
+                minWidth: 650,
+            },
+            actionIcon: {
+                cursor: "pointer"
+            },
+            actionColumn: {
+                width: 5
+            },
             loginCard: {
                 maxWidth: '100%',
-                ['@media (min-width: 500px)']: { maxWidth: '25%'},
-                // [theme.breakpoints.up("lg")]: {
-                //     maxWidth: '25%'
-                // }
+                ['@media (min-width: 500px)']: {maxWidth: '25%'},
+            },
+            transferList: {
+                ['@media (min-width: 500px)']: {
+                    flexDirection: 'row',
+                    justifyContent: "center",
+                    alignItems: "center"
+                }
+            },
+            transferButton: {
+                ['@media (min-width: 300px)']: {
+                    width: '15px',
+                }
             },
             root: {
                 width: '100%',
+                margin: 'auto',
             },
             button: {
                 marginRight: theme.spacing(1),
+                margin: theme.spacing(0.5, 0),
                 marginTop: 15
             },
             instructions: {
@@ -38,8 +58,27 @@ export class AppStyle {
                 minWidth: "100%",
                 width: "100%",
             },
+            paper: {
+                ['@media (min-width: 280px)']: {
+                    width: 240
+                },
+                ['@media (min-width: 320px)']: {
+                    width: 280
+                },
+                ['@media (min-width: 360px)']: {
+                    width: 320
+                },
+                ['@media (min-width: 375px)']: {
+                    width: 335
+                },
+                ['@media (min-width: 450px)']: {
+                    width: 280
+                },
+                width: 300,
+                height: 230,
+                overflow: 'auto',
+            },
         }),
     );
 
-    static readonly classes = () => AppStyle.useStyles();
 }

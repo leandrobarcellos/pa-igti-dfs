@@ -38,7 +38,7 @@ export default function Catequizandos(props: any) {
     const notificadorDadosPai = new Subject<Responsavel>();
     const notificadorDadosMae = new Subject<Responsavel>();
 
-    const classes = AppStyle.classes();
+    const classes = AppStyle.useStyles();
     const catequizandoPipe = new CatequizandoPipe();
     const responsavelPipe = new ResponsavelPipe();
     const [showResults, setShowResults] = useState(false);

@@ -14,6 +14,10 @@ export class CatequistaService {
         return this.repo.findById(accountId);
     }
 
+    public findByIdEtapa(idEtapa: number): Catequista[] {
+        return this.repo.findByIdEtapa(idEtapa);
+    }
+
     public findAll(): Catequista[] {
         return this.repo.findAll();
     }

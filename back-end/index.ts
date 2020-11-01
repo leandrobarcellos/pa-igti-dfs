@@ -1,4 +1,4 @@
-import express, {json} from "express";
+import express, {json, NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
@@ -8,6 +8,8 @@ import {EtapaResource} from "./core/dominio/etapa/EtapaResource";
 import {CatequizandoResource} from "./features/catequizando/CatequizandoResource";
 import {HttpUtil} from "./core/util/HttpUtil";
 import {LoginResource} from "./features/login/LoginResource";
+import {Authorizer} from "./core/security/Authorizer";
+import {AuthResponse, Role} from "./core/security/AuthUser";
 
 const app = express();
 const port = 3333;
@@ -19,16 +21,42 @@ const catequizandosRoutes = new CatequizandoResource();
 const turmaRoutes = new TurmaResource();
 const etapaRoutes = new EtapaResource();
 const loginRoutes = new LoginResource();
+const appAuthorizer = new Authorizer();
+
+const atob = (fromBase64: string) => Buffer.from(fromBase64, "base64").toString();
+const btoa = (toBase64: string) => Buffer.from(toBase64).toString("base64");
+const authorizer = (...allowed: string[]) => {
+    const extractAuthorizationHeader = (req: Request): string => {
+        let token = req.get("Authorization");
+        if (!token) {
+            token = req.get("authorization");
+        }
+        if (!token) {
+            throw new Error("Header Authorization não encontrado.");
+        }
+        return token;
+    }
+    return (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const token = extractAuthorizationHeader(req);
+            appAuthorizer.jwtAuthorizer((authRes: AuthResponse) => {
+                next();
+            }, (authRes: AuthResponse) => {
+                res.status(authRes.code).send(authRes.message);
+            }, token, ...allowed);
+        } catch (e) {
+            res.status(400).send(e.message);
+        }
+    };
+}
 
 app.use(json());
-
 /**
  * Olhar a doc do cors para mais detalhes sobre sua utilização:
  *
  * https://expressjs.com/en/resources/middleware/cors.html
  */
 app.use(cors());
-
 app.use("/doc", swaggerUi.serve, swaggerUi.setup());
 app.use("/api/", catequistaRoutes.router);
 app.use("/api/", catequizandosRoutes.router);
@@ -37,15 +65,23 @@ app.use("/api/", etapaRoutes.router);
 app.use("/api/", loginRoutes.router);
 app.use("/", (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (err) {
+        console.log("error", err);
         HttpUtil.doSendError(res, err.status, err.message);
     } else {
         next();
     }
 });
 
+const success = (authResponse: AuthResponse) => {
+    console.log("success")
+}
+
 const extrairTokenString = function (token: string) {
-    if (token.toUpperCase().includes(BEARER_PREFIX)) {
-        return token.substr(BEARER_PREFIX.length).trim();
+    if (token) {
+        if (token.toUpperCase().includes(BEARER_PREFIX)) {
+            return token.substr(BEARER_PREFIX.length).trim();
+        }
+        return token.trim();
     }
     return token;
 };

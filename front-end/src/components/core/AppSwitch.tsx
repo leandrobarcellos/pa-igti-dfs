@@ -6,7 +6,6 @@ import Responsaveis from "../../features/responsaveis/Responsaveis";
 import Catequizandos from "../../features/catequizandos/Catequizandos";
 import Turmas from "../../features/turmas/Turmas";
 import React from "react";
-import Home from "../../features/home/Home";
 
 export default function AppSwitch(props: {
     authorized: boolean

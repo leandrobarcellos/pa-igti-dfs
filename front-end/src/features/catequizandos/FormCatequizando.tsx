@@ -1,13 +1,35 @@
-import {Container, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography} from "@material-ui/core";
+import {Container, Grid, TextField, Typography} from "@material-ui/core";
 import {Field} from "../../components/core/Field";
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
 import React, {useEffect, useState} from "react";
 import {FormProps} from "../../components/core/FormProps";
 import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
 import {AppStyle} from "../../components/core/AppStyle";
 import {Subject} from "rxjs";
 import {Responsavel} from "../../../../back-end/features/responsavel/Responsavel";
+import {InputDate, InputSelect} from "../../components/inputs/AppInputs";
+
+const etapas = [
+    {
+        "id": 1,
+        "codigo": "PE",
+        "nome": "Pré-Eucaristia"
+    },
+    {
+        "id": 2,
+        "codigo": "EU",
+        "nome": "Eucaristia"
+    },
+    {
+        "id": 3,
+        "codigo": "PR",
+        "nome": "Perseverança"
+    },
+    {
+        "id": 4,
+        "codigo": "CR",
+        "nome": "Crisma"
+    }
+];
 
 interface FormCatequizandosProps extends FormProps<Catequizando> {
     children: any,
@@ -16,7 +38,7 @@ interface FormCatequizandosProps extends FormProps<Catequizando> {
 }
 
 export default function FormCatequizando(props: FormCatequizandosProps) {
-    const classes = AppStyle.classes();
+    const classes = AppStyle.useStyles();
     // let c = props.formData;
 
     const setCatequizando = (c:any) => {
@@ -57,7 +79,7 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
         configurarForm(props.formData);
         return () => {
         };
-    }, []);
+    }, [props.formData]);
 
     const [showResults, setShowResults] = useState(false);
     const [id, setId] = useState<number | unknown>(0);
@@ -114,22 +136,8 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
                                onChange={(e: any) => Field.change(e, setNome, () => setCatequizando(getFormData()))}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <FormControl className={classes.formControl} fullWidth={true}>
-                        <InputLabel id="demo-simple-select-label">Turma Desejada</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            className={classes.selectClass}
-                            value={idEtapa}
-                            onChange={(e: any) => Field.change(e, setIdEtapa, () => setCatequizando(getFormData()))}
-                        >
-                            <MenuItem value="">Selecione</MenuItem>
-                            <MenuItem value="PE">Pré-Eucaristia</MenuItem>
-                            <MenuItem value="EU">Eucaristia</MenuItem>
-                            <MenuItem value="PR">Perseverança</MenuItem>
-                            <MenuItem value="CR">Crisma</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <InputSelect items={etapas} toValue={(e: any)=> e?.id} toLabel={(e: any)=> e.nome}
+                                 id="etapa" label="Turma Desejada" value={idEtapa} set={setIdEtapa}></InputSelect>
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <TextField fullWidth={true} value={cidadeNascimento}
@@ -138,15 +146,9 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
                                onChange={(e: any) => Field.change(e, setCidadeNascimento, () => setCatequizando(getFormData()))}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker fullWidth={true}
-                                            id="dtNascimentoCtqzndo"
-                                            label="Data Nascimento"
-                                            format="dd/MM/yyyy"
-                                            value={dtNascimento}
-                                            onChange={e => Field.change(e, setDtNascimento, () => setCatequizando(getFormData()))}
-                                            KeyboardButtonProps={{'aria-label': 'change date'}}/>
-                    </MuiPickersUtilsProvider>
+                    <InputDate value={dtNascimento} set={setDtNascimento}
+                               format="dd/MM/yyyy"
+                               id="dtNascimentoCtqzndo" label="Data Nascimento"></InputDate>
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <TextField fullWidth={true} value={endereco}

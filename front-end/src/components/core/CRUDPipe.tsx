@@ -40,6 +40,8 @@ export abstract class AppPipe {
         ).subscribe();
     }
 
+    protected abstract initPipes(): void;
+
 }
 
 export abstract class CRUDPipe<T, F> extends AppPipe {
@@ -115,6 +117,15 @@ export abstract class CRUDPipe<T, F> extends AppPipe {
     callActionCompleted(action: FormAction<T>): void {
         if (action && action.actionCompleted) {
             action.actionCompleted();
+        }
+    }
+
+    protected done(): (source: Observable<any>) => Observable<any> {
+        return (source: Observable<any>): Observable<any> => {
+            return source.pipe(
+                this.defaultErrorCatcher(),
+                this.takeUntilDestroy()
+            );
         }
     }
 }

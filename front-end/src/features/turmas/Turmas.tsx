@@ -5,14 +5,17 @@ import FormTurma from "./FormTurma";
 import {AppStyle} from "../../components/core/AppStyle";
 import {Turma} from "../../../../back-end/features/turma/Turma";
 import {TurmaPipe} from "./TurmaPipe";
+import AppTable from "../../components/AppTable";
 
 export default function Turmas() {
-    const classes = AppStyle.classes();
+    const classes = AppStyle.useStyles();
     const [turma, setTurma] = React.useState({} as Turma);
     const turmaPipe = new TurmaPipe();
-    const onComplete = () => {
 
+    const onComplete = () => {
+        setTurma({} as Turma);
     }
+
     return (
         <Container maxWidth="lg" style={{marginTop: "25px"}}>
             <Typography variant="h5" component="h5">

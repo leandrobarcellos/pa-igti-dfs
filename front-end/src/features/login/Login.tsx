@@ -5,41 +5,31 @@ import {
     ExpansionPanelDetails,
     ExpansionPanelSummary,
     Grid,
-    TextField,
     Typography
 } from "@material-ui/core";
 import {AppStyle} from "../../components/core/AppStyle";
-import {Field} from "../../components/core/Field";
 import Button from "@material-ui/core/Button";
 import {LoginPipe} from "./LoginPipe";
 import {useHistory} from "react-router-dom";
+import {InputEmail} from "../../components/inputs/AppInputs";
+import {LoggerFactory} from "../../components/core/LoggerFactory";
+
+const LOGGER  = LoggerFactory.newInstance(Login);
 
 export default function Login() {
     const history = useHistory();
-    const classes = AppStyle.classes();
+    const classes = AppStyle.useStyles();
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const loginPipe = new LoginPipe();
 
     const handleLogin = (e: any) => {
-        alert("consegui chegar no click..");
+        LOGGER.warn("testing the warn");
         loginPipe.login.next({
             email,
             senha: "",
             callback: () => {
-                // window.location.replace(window.location.href);
-                // document.location.assign(window.location.href);
-                document.location.reload(true);
-                history.replace("/");
-                // setTimeout(() => {
-                //     window.location.reload();
-                // });
-                // try {
-                //     window.parent.location.reload();
-                //     document.location.reload();
-                // } catch (e) {
-                //     alert("bla");
-                // }
+                window.location.reload();
             }
         });
     }
@@ -54,9 +44,7 @@ export default function Login() {
                 <ExpansionPanelDetails>
                     <Grid container spacing={3} id="gridLogin">
                         <Grid item xs={12} sm={12}>
-                            <TextField fullWidth={true} id="usrEmail" label="E-mail"
-                                       value={email}
-                                       onChange={e => Field.change(e, setEmail)}/>
+                            <InputEmail id="usrEmail" label="E-mail" value={email} set={setEmail}></InputEmail>
                         </Grid>
                         <Grid item xs={12} sm={12} style={{textAlign: "center"}}>
                             <Button variant="contained"

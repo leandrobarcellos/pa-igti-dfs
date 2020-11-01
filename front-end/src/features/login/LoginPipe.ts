@@ -10,30 +10,22 @@ export class LoginPipe extends AppPipe {
 
     constructor() {
         super();
-        this.initLoginPipe();
+        this.initPipes();
     }
 
     get login(): Subject<Login> {
         return this._login;
     }
 
-    private initLoginPipe(): void {
-        alert("initLoginPipe");
+    protected initPipes(): void {
         this._login.pipe(
             switchMap(loginInfo => this.loginService.login(loginInfo).pipe(
-                tap((next) => {
-                    alert("switchMap");
-                    localStorage.setItem("catequese:token", btoa(JSON.stringify(next.data.object)));
-                    sessionStorage.setItem("catequese:token", btoa(JSON.stringify(next.data.object)));
-                }),
+                tap((next) => sessionStorage.setItem("catequese:token", btoa(JSON.stringify(next.data.object)))),
                 tap(() => {
                     if (loginInfo.callback)
                         loginInfo.callback();
                 })
             )),
-            tap(next => {
-
-            }),
             this.defaultErrorCatcher(),
             this.takeUntilDestroy()
         ).subscribe();

@@ -29,15 +29,15 @@ export class HttpCRUDService extends HttpService{
     }
 
     public remove<T>(id: any): Observable<AppResponse<T>> {
-        return this.httpClient.doDelete(`${id}`);
+        return this.httpClient.doDelete(`/${id}`);
     }
 
     public find<T>(id: any): Observable<AppResponse<T>> {
-        return this.httpClient.doGet(`${id}`);
+        return this.httpClient.doGet(`/${id}`);
     }
 
     public findAll<T>(): Observable<AppResponse<T>> {
-        return this.httpClient.doGet("");
+        return this.httpClient.doGet();
     }
 
 }

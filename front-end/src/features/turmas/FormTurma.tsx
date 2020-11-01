@@ -1,5 +1,5 @@
-import React from "react";
-import {FormControl, Grid, TextField} from "@material-ui/core";
+import React, {useEffect} from "react";
+import {Button, FormControl, Grid, TextField} from "@material-ui/core";
 import {Field} from "../../components/core/Field";
 import {FormProps} from "../../components/core/FormProps";
 import {Turma} from "../../../../back-end/features/turma/Turma";
@@ -9,10 +9,13 @@ import {AppStyle} from "../../components/core/AppStyle";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import TransferList from "../../components/core/TransferList";
 import DateFnsUtils from "@date-io/date-fns";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import Button from "@material-ui/core/Button";
+import {InputSelect} from "../../components/inputs/AppInputs";
+import {CatequistaPipe} from "../catequistas/CatequistaPipe";
+import TransferList from "../../components/core/TransferList";
+import {Catequizando} from "../../../../back-end/features/catequizando/Catequizando";
+import {EtapaPipe} from "../../util/domain/EtapaPipe";
 
 const etapas = [
     {
@@ -38,15 +41,35 @@ const etapas = [
 ];
 export default function FormTurma(props: FormProps<Turma>) {
 
-    const classes = AppStyle.classes();
+    const classes = AppStyle.useStyles();
+    const catequistaPipe = new CatequistaPipe();
+    const etapaPipe = new EtapaPipe();
+    const [catequistas, setCatequistas] = React.useState<Catequista[]>([]);
     const [id, setId] = React.useState(0);
     const [catequista, setCatequista] = React.useState({} as Catequista);
-    const [catequizandos, setCatequizandos] = React.useState([]);
+    const [catequizandos, setCatequizandos] = React.useState<Catequizando[]>([]);
     const [etapa, setEtapa] = React.useState({} as Etapa);
     const [idCatequista, setIdCatequista] = React.useState(0);
     const [idEtapa, setIdEtapa] = React.useState(0);
     const [inicio, setInicio] = React.useState<Date>(new Date());
     const [nome, setNome] = React.useState("");
+
+    useEffect(() => {
+        configurarForm(props.formData);
+        return () => {
+            catequistaPipe.unsubscribe();
+        };
+    }, []);
+
+    const configurarForm = (t: Turma) => {
+
+        setId(t && t.id? t.id : 0);
+        setIdCatequista(t? t.idCatequista: 0);
+        setIdEtapa(t? t.idEtapa: 0);
+        setNome(t? t.nome: "");
+        setCatequizandos(t? t.catequizandos : []);
+        setInicio(t? t.inicio : new Date());
+    }
 
     const turma: Turma = {
         id,
@@ -63,6 +86,17 @@ export default function FormTurma(props: FormProps<Turma>) {
     }
 
     function handleSalvar() {
+    }
+
+    const changeEtapa = (e: any) => {
+        Field.change(e, setIdEtapa);
+        catequistaPipe.catequistasByIdEtapa.next({
+            filter: idEtapa,
+            callback: (next: Catequista[]) => {
+                console.log(next);
+                setCatequistas(next);
+            }
+        })
     }
     return (
         <Grid container spacing={3} id={props.id}>
@@ -89,36 +123,19 @@ export default function FormTurma(props: FormProps<Turma>) {
                         labelId="demo-simple-select-helper-label"
                         id="demo-simple-select-helper"
                         value={idEtapa}
-                        onChange={e=> Field.change(e, setIdEtapa)}>
+                        onChange={e => changeEtapa(e)}>
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        {etapas.map(e=> (<MenuItem value={e.id}><em>{e.nome}</em></MenuItem>))}
+                        {etapas.map(e => (<MenuItem key={`${e.id}_key`} value={e.id}><em>{e.nome}</em></MenuItem>))}
                     </Select>
                 </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-helper-label">Catequista</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-helper-label"
-                        id="demo-simple-select-helper"
-                        value={idCatequista}
-                        onChange={e=> Field.change(e, setIdCatequista)}>
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={1}>
-                            <em>Um catequista</em>
-                        </MenuItem>
-                        <MenuItem value={2}>
-                            <em>Outro catequista</em>
-                        </MenuItem>
-                        <MenuItem value={3}>
-                            <em>Mais um catequista</em>
-                        </MenuItem>
-                    </Select>
-                </FormControl>
+                <InputSelect items={catequistas} toValue={c=> c.id} toLabel={c=> c.nome}
+                             id="catequista" label="Catequista"
+                             className={classes.formControl} selectClass={classes.selectClass}
+                             value={idCatequista} set={setIdCatequista}></InputSelect>
             </Grid>
             <Grid item xs={12} sm={12}>
                 <TransferList></TransferList>

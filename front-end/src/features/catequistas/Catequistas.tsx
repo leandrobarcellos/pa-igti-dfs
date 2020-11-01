@@ -1,22 +1,32 @@
 import React, {useEffect, useState} from "react";
 import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import TabelaCatequistas from "./TabelaCatequistas";
 import {Catequista} from "../../../../back-end/features/catequista/Catequista";
 import {FormCatequista} from "./FormCatequista";
 import {CatequistaPipe} from "./CatequistaPipe";
 import {AppStyle} from "../../components/core/AppStyle";
-
-
+import {combineLatest, forkJoin, Observable, of, Subject} from "rxjs";
+import {concat, map, mergeMap, switchMap, tap} from "rxjs/operators";
+import {FormAction} from "../../components/core/FormAction";
+import TabelaCatequistas from "./TabelaCatequistas";
+import {flatMap} from "rxjs/internal/operators";
 
 
 export default function Catequistas() {
 
-    const classes = AppStyle.classes();
+    const classes = AppStyle.useStyles();
     const catequistaPipe = new CatequistaPipe();
     const [catequista, setCatequista] = React.useState<Catequista>({} as Catequista);
     const [showResults, setShowResults] = useState(false);
     const [rows, setRows] = React.useState<Catequista[]>([]);
+    const updatePipe = new Subject<FormAction<Catequista>>();
+    const removePipe = new Subject<FormAction<Catequista>>();
+
+    useEffect(() => {
+        registerInsert();
+        registerUpdate();
+        registerRemove();
+    }, []);
 
     useEffect(() => {
             reloadListaCatequistas();
@@ -27,7 +37,39 @@ export default function Catequistas() {
         , [catequista]
     );
 
-    const handleEditing = (entity: any) => {
+    const registerInsert = () => {
+        console.log("registerInsert");
+        let subject = new Subject<string>();
+        subject.pipe(
+            map(str => str.split(" ")),
+            tap(str=> console.log(str)),
+        ).subscribe();
+    }
+
+
+    const registerUpdate = () => {
+        updatePipe.pipe(
+            switchMap(formAction => catequistaPipe.update.pipe(
+                tap(() => reloadListaCatequistas(true)),
+                tap(() => {
+                    if (formAction.actionCompleted) formAction.actionCompleted()
+                })
+            ))
+        ).subscribe();
+    }
+
+    const registerRemove = () => {
+        removePipe.pipe(
+            switchMap(formAction => catequistaPipe.remove.pipe(
+                tap(() => reloadListaCatequistas(true)),
+                tap(() => {
+                    if (formAction.actionCompleted) formAction.actionCompleted()
+                })
+            ))
+        ).subscribe()
+    }
+
+    const handleEditing = (entity: Catequista) => {
         console.log(entity);
         setCatequista(entity);
         setShowResults(false);

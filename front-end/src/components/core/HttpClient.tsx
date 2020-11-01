@@ -1,7 +1,10 @@
-import axios from "axios";
+import axios, {AxiosRequestConfig} from "axios";
 import {from, Observable} from "rxjs";
 
-const basePath = "http://localhost:3333/api";
+let href = window.location.href;
+let newHref = "http:" + href.substr(href.indexOf("//"));
+newHref = newHref.substr(0, newHref.lastIndexOf(":")) + ":3333/api";
+const basePath = newHref;
 
 export default class HttpClient {
     private baseUrl: string;
@@ -10,20 +13,26 @@ export default class HttpClient {
         this.baseUrl = url;
     }
 
-    public doGet(endpoint: string): Observable<any> {
-        return from(axios.get(`${basePath}${this.baseUrl}/${endpoint}`));
+    public doGet(endpoint?: string): Observable<any> {
+        return this.doRequest(axios.get, endpoint);
     }
 
-    public doPost(endpoint: string, value: any): Observable<any> {
-        return from(axios.post(`${basePath}${this.baseUrl}/${endpoint}`, value));
+    public doPost(endpoint?: string, value?: any): Observable<any> {
+        return this.doRequest(axios.post, endpoint, value);
     }
 
-    public doPut(endpoint: string, value: any): Observable<any> {
-        return from(axios.put(`${basePath}${this.baseUrl}/${endpoint}`, value));
+    public doPut(endpoint?: string, value?: any): Observable<any> {
+        return this.doRequest(axios.put, endpoint, value);
     }
 
-    public doDelete(endpoint: string): Observable<any> {
-        return from(axios.delete(`${basePath}${this.baseUrl}/${endpoint}`));
+    public doDelete(endpoint?: string): Observable<any> {
+        return this.doRequest(axios.delete, endpoint);
+    }
+
+    private doRequest(request: (url: string, data?: any, config?: AxiosRequestConfig) => Promise<any>,
+                      endpoint?: string, body?: any, config?: AxiosRequestConfig): Observable<any> {
+        if (!endpoint) endpoint = "";
+        return from(request(`${basePath}${this.baseUrl}${endpoint}`, body, config));
     }
 
     private doFetchNoBody(endpoint: string, method: string): Promise<any> {
