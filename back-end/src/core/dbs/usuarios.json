@@ -1,0 +1,28 @@
+{
+  "sequence": 3,
+  "rows": [
+    {
+      "userId": 1,
+      "username": "john",
+      "password": "changeme",
+      "roles": [
+        "ADMIN",
+        "CATEQUISTA",
+        "RESPONSAVEL"
+      ]
+    },
+    {
+      "userId": 2,
+      "username": "chris",
+      "password": "secret",
+      "roles": [
+        "CATEQUISTA"
+      ]
+    },
+    {
+      "userId": 3,
+      "username": "maria",
+      "password": "guess"
+    }
+  ]
+}
