@@ -1,9 +1,11 @@
+import {useHistory} from "react-router-dom";
 import {Grid, TextField} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import {Field} from "../../components/core/Field";
 import {FormProps} from "../../components/core/FormProps";
 import Button from "@material-ui/core/Button";
 import {Responsavel} from "./responsavel";
+import {SessionUtil} from "../../components/core/session.util";
 
 interface DadosResponsavelProps extends FormProps<Responsavel> {
     title?: string,
@@ -13,6 +15,7 @@ interface DadosResponsavelProps extends FormProps<Responsavel> {
 }
 
 export function FormResponsavel(props: DadosResponsavelProps) {
+    const history = useHistory();
     let r = props.formData;
     const [id, setId] = useState(r ? r.id : 0);
     const [nome, setNome] = useState(r ? r.nome : "");
@@ -55,6 +58,9 @@ export function FormResponsavel(props: DadosResponsavelProps) {
 
 
     function handleCancelar() {
+        if (!SessionUtil.isAuthenticated()) {
+            history.push("/login");
+        }
     }
 
     function handleSalvar() {

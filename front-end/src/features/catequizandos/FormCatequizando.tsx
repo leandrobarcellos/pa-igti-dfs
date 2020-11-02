@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {FormProps} from "../../components/core/FormProps";
 import {AppStyle} from "../../components/core/AppStyle";
 import {Subject} from "rxjs";
-import {InputDate, InputSelect} from "../../components/inputs/AppInputs";
+import {InputDate, InputEmail, InputSelect, InputText} from "../../components/inputs/AppInputs";
 import {Catequizando} from "./catequizando";
 import {Responsavel} from "../responsaveis/responsavel";
 
@@ -131,19 +131,15 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
             </Typography>
             <Grid container spacing={3} id="dadosCatequizando">
                 <Grid item xs={12} sm={8}>
-                    <TextField fullWidth={true} value={nome} id="nomeCtqzndo"
-                               label="Nome do Catequizando"
-                               onChange={(e: any) => Field.change(e, setNome, () => setCatequizando(getFormData()))}/>
+                    <InputText id="nomeCtqzndo" label="Nome do Catequizando" value={nome} set={setNome}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <InputSelect items={etapas} toValue={(e: any)=> e?.id} toLabel={(e: any)=> e.nome}
                                  id="etapa" label="Turma Desejada" value={idEtapa} set={setIdEtapa}></InputSelect>
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                    <TextField fullWidth={true} value={cidadeNascimento}
-                               id="localNascimentoCtqzndo"
-                               label="Local Nascimento"
-                               onChange={(e: any) => Field.change(e, setCidadeNascimento, () => setCatequizando(getFormData()))}/>
+                    <InputText id="localNascimentoCtqzndo" label="Local Nascimento"
+                               value={cidadeNascimento} set={setCidadeNascimento}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                     <InputDate value={dtNascimento} set={setDtNascimento}
@@ -151,63 +147,43 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
                                id="dtNascimentoCtqzndo" label="Data Nascimento"></InputDate>
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                    <TextField fullWidth={true} value={endereco}
-                               id="enderecoCtqzndo" label="Endereço"
-                               onChange={(e: any) => Field.change(e, setEndereco, () => setCatequizando(getFormData()))}/>
+                    <InputText id="enderecoCtqzndo" label="Endereço"
+                               value={endereco} set={setEndereco}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <TextField fullWidth={true} value={cep}
-                               id="cepCtqzndo" label="CEP"
-                               onChange={(e: any) => Field.change(e, setCep, () => setCatequizando(getFormData()))}/>
+                    <InputText id="cepCtqzndo" label="CEP" value={cep} set={setCep}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField fullWidth={true}
-                               value={telefoneFixo}
-                               id="telResCtqzndo" label="Telefone Residencial"
-                               onChange={(e: any) => Field.change(e, setTelefoneFixo, () => setCatequizando(getFormData()))}/>
+                    <InputText id="telResCtqzndo" label="Telefone Residencial"
+                               value={telefoneFixo} set={setTelefoneFixo}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField fullWidth={true}
-                               value={telefoneMovel}
-                               id="celResCtqzndo" label="Celular"
-                               onChange={(e: any) => Field.change(e, setTelefoneMovel, () => setCatequizando(getFormData()))}/>
+                    <InputText id="celResCtqzndo" label="Celular"
+                               value={telefoneMovel} set={setTelefoneMovel}/>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                    <TextField fullWidth={true}
-                               value={email}
-                               id="emailCtqzndo" label="E-mail"
-                               onChange={(e: any) => Field.change(e, setEmail, () => setCatequizando(getFormData()))}/>
+                    <InputEmail id="emailCtqzndo" label="E-mail"
+                               value={email} set={setEmail}/>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                    <TextField fullWidth={true}
-                               value={paroquiaBatismo}
-                               id="paroquiBatismoCtqzndo"
-                               label="Paróquia onde foi batizado"
-                               onChange={(e: any) => Field.change(e, setParoquiaBatismo, () => setCatequizando(getFormData()))}/>
+                    <InputText id="paroquiBatismoCtqzndo" label="Paróquia onde foi batizado"
+                               value={paroquiaBatismo} set={setParoquiaBatismo}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField fullWidth={true}
-                               value={arquidioceseBatismo}
-                               id="arqDioceseCtqzndo"
-                               label="Arquidiocese/Diocese"
-                               onChange={(e: any) => Field.change(e, setArquidioceseBatismo, () => setCatequizando(getFormData()))}/>
+                    <InputText id="arqDioceseCtqzndo" label="Arquidiocese/Diocese"
+                               value={arquidioceseBatismo} set={setArquidioceseBatismo}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <TextField fullWidth={true}
-                               value={cidadeDioceseBatismo}
-                               onChange={(e: any) => Field.change(e, setCidadeDioceseBatismo, () => setCatequizando(getFormData()))}
-                               id="cidadeDioceseCtqzndo" label="Cidade"/>
+                    <InputText id="cidadeDioceseCtqzndo" label="Cidade"
+                               value={cidadeDioceseBatismo} set={setCidadeDioceseBatismo}/>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                    <TextField fullWidth={true} id="ufDioceseCtqzndo" label="UF"
-                               value={ufDioceseBatismo}
-                               onChange={(e: any) => Field.change(e, setUfDioceseBatismo, () => setCatequizando(getFormData()))}/>
+                    <InputText id="ufDioceseCtqzndo" label="UF"
+                               value={ufDioceseBatismo} set={setUfDioceseBatismo}/>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                    <TextField fullWidth={true} id="resideCom"
-                               value={resideCom}
-                               onChange={(e: any) => Field.change(e, setResideCom, () => setCatequizando(getFormData()))}
-                               label="Catequizando reside com:"/>
+                    <InputText id="resideCom" label="Catequizando reside com:"
+                               value={resideCom} set={setResideCom}/>
                 </Grid>
             </Grid>
         </Container>

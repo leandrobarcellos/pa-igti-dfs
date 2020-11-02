@@ -57,7 +57,12 @@ export default function Catequizandos(props: any) {
     } as any;
 
     useEffect(() => {
+        catequizandoPipe.findAll.next({
+            callback: (value: Catequizando[]) => setRows(value)
+        })
+    }, []);
 
+    useEffect(() => {
         notificadorDadosMae.subscribe((dadosMae: Responsavel) => {
             setDadosMae(dadosMae);
         });
@@ -111,7 +116,7 @@ export default function Catequizandos(props: any) {
     }
 
     const onComplete = () => {
-        catequizandoPipe.findByFilter({}, (rows) => setRows(rows))
+
     }
 
     const onCompleteResponsavel = (tipoResponsavel: "dadosPai" | "dadosMae") => {
@@ -155,15 +160,15 @@ export default function Catequizandos(props: any) {
                                         <Typography variant="h5" component="h5">
                                             {"Dados da Mãe"}
                                         </Typography>
-                                    <FormResponsavel id="gridMae" title="Dados da Mãe" labelNome="Nome da Mãe"
-                                                     formData={dadosMae}
-                                                     saveAction={responsavelPipe.save}
-                                                     updateAction={responsavelPipe.update}
-                                                     onCancelar={() => onCompleteResponsavel("dadosMae")}
-                                                     onSaveComplete={() => onCompleteResponsavel("dadosMae")}
-                                                     onUpdateComplete={() => onCompleteResponsavel("dadosMae")}
-                                                     setState={setDadosMae}>
-                                    </FormResponsavel>
+                                        <FormResponsavel id="gridMae" title="Dados da Mãe" labelNome="Nome da Mãe"
+                                                         formData={dadosMae}
+                                                         saveAction={responsavelPipe.save}
+                                                         updateAction={responsavelPipe.update}
+                                                         onCancelar={() => onCompleteResponsavel("dadosMae")}
+                                                         onSaveComplete={() => onCompleteResponsavel("dadosMae")}
+                                                         onUpdateComplete={() => onCompleteResponsavel("dadosMae")}
+                                                         setState={setDadosMae}>
+                                        </FormResponsavel>
                                     </Container>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>

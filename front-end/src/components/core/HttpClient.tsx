@@ -1,10 +1,22 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {from, Observable} from "rxjs";
+import {SessionUtil} from "./session.util";
 
 let href = window.location.href;
 let newHref = "http:" + href.substr(href.indexOf("//"));
 newHref = newHref.substr(0, newHref.lastIndexOf(":")) + ":3333/e-catequese";
 const basePath = newHref;
+
+axios.interceptors.request.use((config: AxiosRequestConfig) => {
+    const token = SessionUtil.getToken();
+    if (!config) {
+        config = {};
+        config.headers = {};
+    }
+    if (token)
+        config.headers["Authorization"] = `Bearer ${token}`;
+    return config;
+})
 
 export default class HttpClient {
     private baseUrl: string;
@@ -30,9 +42,11 @@ export default class HttpClient {
     }
 
     private doRequest(request: (url: string, data?: any, config?: AxiosRequestConfig) => Promise<any>,
-                      endpoint?: string, body?: any, config?: AxiosRequestConfig): Observable<any> {
+                      endpoint?: string, body?: any, config?: AxiosRequestConfig | any): Observable<any> {
         if (!endpoint) endpoint = "";
-        return from(request(`${basePath}${this.baseUrl}${endpoint}`, body, config));
+        const requestPath = `${basePath}${this.baseUrl}${endpoint}`;
+        console.log("requestPath", requestPath);
+        return from(request(requestPath, body, config));
     }
 
     private doFetchNoBody(endpoint: string, method: string): Promise<any> {

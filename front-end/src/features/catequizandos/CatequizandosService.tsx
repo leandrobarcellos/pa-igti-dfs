@@ -4,11 +4,12 @@ import {Catequizando} from "./catequizando";
 
 export default class CatequizandosService extends HttpCRUDService {
     constructor() {
-        super("/catequizando");
+        super("/catequizandos");
     }
 
     merge<T>(value: Catequizando): Observable<AppResponse<T>> {
         return this.httpClient.doPut(`/${value.id}`, value);
     }
+
 
 }

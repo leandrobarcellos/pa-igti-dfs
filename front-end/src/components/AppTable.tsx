@@ -9,6 +9,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import {AppUtil} from "./core/AppUtil";
 
 export interface TableAction {
     label: string,
@@ -76,9 +77,13 @@ export default function AppTable(props: AppTableProps<any>) {
         return remove;
     }
 
+    let randomInt = function () {
+        return AppUtil.randomIntFromInterval(0, 9999);
+    };
+
     function getKey(row: any) {
         if (row && columns && columns.length > 0)
-            return row[columns[0].attribute];
+            return `${row[columns[0].attribute]}_${(randomInt())}`;
         return undefined;
     }
 
@@ -87,7 +92,7 @@ export default function AppTable(props: AppTableProps<any>) {
             <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        {columns.map(c => (<TableCell key={c.attribute} align="left">{c.label}</TableCell>))}
+                        {columns.map(c => (<TableCell key={`${c.attribute}_${(randomInt())}`} align="left">{c.label}</TableCell>))}
                         {
                             props.actions?.map(a => (<TableCell key={a.label}
                                                                 className={classes.actionColumn}
@@ -100,14 +105,14 @@ export default function AppTable(props: AppTableProps<any>) {
                         <TableRow key={getKey(row)}>
                             {
                                 columns.map(c => (
-                                    <TableCell key={`${row[c.attribute]}_row`} component="th" scope="row" align="left">
+                                    <TableCell key={`${row[c.attribute]}_row_${(randomInt())}`} component="th" scope="row" align="left">
                                         {row[c.attribute]}
                                     </TableCell>
                                 ))
                             }
                             {
                                 props.actions?.map(a => (
-                                    <TableCell key={`${a.label}_row`} className={classes.actionColumn}
+                                    <TableCell key={`${a.label}_row_${(randomInt())}`} className={classes.actionColumn}
                                                component="th" scope="row" align="right">
                                         {(<em className={classes.actionIcon}
                                               onClick={() => a.call(row)}>{(a.icon)}</em>)}

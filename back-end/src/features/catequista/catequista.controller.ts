@@ -5,7 +5,7 @@ import {RolesGuard} from "../../core/security/guards/roles.guard";
 import {Roles} from "../../core/security/guards/roles.decorator";
 
 @UseGuards(RolesGuard)
-@Controller('e-catequese/catequista')
+@Controller('e-catequese/catequistas')
 export class CatequistaController {
 
     constructor(private readonly catequistaService: CatequistaService) {
@@ -13,7 +13,9 @@ export class CatequistaController {
 
     @Get()
     async getCatequistas(@Request() req: any): Promise<any | undefined> {
-        return this.catequistaService.findAll();
+        const catequistas = this.catequistaService.findAll();
+        console.log("catequistas", catequistas);
+        return catequistas;
     }
 
     @Get('/:idCatequista')

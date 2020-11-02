@@ -76,7 +76,7 @@ export class ResponsavelPipe extends CRUDPipe<Responsavel, FiltroResponsavel> {
         this.pipeFindAll.pipe(
             switchMap((next: SearchAction<Responsavel[]>) =>
                 this.responsavelService.findAll<Responsavel[]>().pipe(
-                    tap((res) => next.callback(res.data.object as Responsavel[]))
+                    tap((res) => next.callback(res.data as Responsavel[]))
                 )
             ),
             this.defaultErrorCatcher(),

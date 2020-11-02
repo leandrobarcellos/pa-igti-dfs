@@ -24,7 +24,19 @@ export class ResponsavelService {
     }
 
 
-    findByEmail(email: any): Responsavel {
+    public findByEmail(email: any): Responsavel {
         return this.repository.findByEmail(email);
+    }
+
+    public findAll(): Responsavel[] {
+        return this.repository.findAll();
+    }
+
+    public findById(idResponsavel: number): Responsavel {
+        return this.repository.findById(idResponsavel);
+    }
+
+    public excluir(idResponsavel: number) {
+        this.repository.delete(idResponsavel);
     }
 }

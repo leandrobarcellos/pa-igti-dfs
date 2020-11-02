@@ -1,7 +1,8 @@
 import {Login, LoginService} from "./LoginService";
-import {Subject} from "rxjs";
-import {switchMap, tap} from "rxjs/operators";
+import {of, Subject} from "rxjs";
+import {catchError, switchMap, tap} from "rxjs/operators";
 import {AppPipe} from "../../components/core/CRUDPipe";
+import {SessionUtil} from "../../components/core/session.util";
 
 export class LoginPipe extends AppPipe {
     private readonly loginService = new LoginService();
@@ -20,16 +21,21 @@ export class LoginPipe extends AppPipe {
     protected initPipes(): void {
         this._login.pipe(
             switchMap(loginInfo => this.loginService.login(loginInfo).pipe(
-                tap((next) => sessionStorage.setItem("catequese:token", btoa(JSON.stringify(next.data.object)))),
+                tap((next) => SessionUtil.setToken(next.data["access_token"])),
+                tap((next) => SessionUtil.setUser(next.data["user"])),
                 tap(() => {
                     if (loginInfo.callback)
                         loginInfo.callback();
+                }),
+                catchError(err => {
+                    if (loginInfo.onError)
+                        loginInfo.onError(err);
+                    return of({});
                 })
             )),
             this.defaultErrorCatcher(),
             this.takeUntilDestroy()
         ).subscribe();
     }
-
 
 }

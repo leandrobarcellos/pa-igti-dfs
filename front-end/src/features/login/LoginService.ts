@@ -5,6 +5,7 @@ export interface Login {
     username: string,
     password: string,
     callback?: () => void
+    onError?: (err: Error) => void
 }
 
 export class LoginService extends HttpService {

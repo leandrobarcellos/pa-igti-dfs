@@ -8,7 +8,7 @@ import ResponsaveisService from "../responsaveis/ResponsaveisService";
 import {Catequizando} from "./catequizando";
 
 export interface FiltroCatequizando {
-
+    idResponsavel?: number,
 }
 
 export class CatequizandoPipe extends CRUDPipe<Catequizando, FiltroCatequizando> {
@@ -65,15 +65,15 @@ export class CatequizandoPipe extends CRUDPipe<Catequizando, FiltroCatequizando>
         return this.pipeFindById;
     }
 
-    findByFilter(filter: FiltroCatequizando, consumer: (value: Catequizando[]) => void): void {
-        throw new Error("Method not implemented.");
+    findByFilter(filter: FilteredSearchAction<FiltroCatequizando, Catequizando[]>): void {
+        this.pipeFindByFilter.next(filter)
     }
 
     protected initPipes() {
         this.pipeFindAll.pipe(
             switchMap((next: SearchAction<Catequizando[]>) =>
                 this.catequizandosService.findAll<Catequizando[]>().pipe(
-                    tap((res) => next.callback(res.data.object as Catequizando[]))
+                    tap((res) => next.callback(res.data as Catequizando[]))
                 )
             ),
             this.defaultErrorCatcher(),
@@ -91,7 +91,7 @@ export class CatequizandoPipe extends CRUDPipe<Catequizando, FiltroCatequizando>
         this._catequizandosByIdResponsavel.pipe(
             switchMap(next => this.responsaveisService.findCatequizandosByIdResponsavel(next.filter as number)
                 .pipe(
-                    tap(res => next.callback(res.data.object as Catequizando[]))
+                    tap(res => next.callback(res.data as Catequizando[]))
                 )
             ),
             this.defaultErrorCatcher(),

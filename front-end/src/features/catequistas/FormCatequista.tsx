@@ -2,7 +2,7 @@ import {Grid} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import React, {useEffect} from "react";
 import {FormProps} from "../../components/core/FormProps";
-import {InputEmail, InputSelect, InputText} from "../../components/inputs/AppInputs";
+import {InputEmail, InputNumber, InputSelect, InputText} from "../../components/inputs/AppInputs";
 import {Catequista} from "./catequista";
 
 export function FormCatequista(props: FormProps<Catequista>) {
@@ -86,12 +86,12 @@ export function FormCatequista(props: FormProps<Catequista>) {
                 <InputEmail id="emailCatequista" label="E-mail" value={email} set={setEmail}></InputEmail>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <InputText id="telRes" label="Telefone Residencial" value={optTelefoneFixo}
-                           set={setOptTelefoneFixo}></InputText>
+                <InputNumber id="telRes" label="Telefone Residencial" value={optTelefoneFixo}
+                           set={setOptTelefoneFixo}></InputNumber>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <InputText id="celRes" label="Telefone Celular" value={telefoneCelular}
-                           set={setTelefoneCelular}></InputText>
+                <InputNumber id="celRes" label="Telefone Celular" value={telefoneCelular}
+                           set={setTelefoneCelular}></InputNumber>
             </Grid>
             <Grid item xs={12} sm={12}>
                 <InputSelect items={[{value: "S", label: "Sim"}, {value: "N", label: "Não"}]}

@@ -7,6 +7,7 @@ import {AppStyle} from "../../components/core/AppStyle";
 import AppTable from "../../components/AppTable";
 import PeopleIcon from '@material-ui/icons/People';
 import {Responsavel} from "./responsavel";
+import {SessionUtil} from "../../components/core/session.util";
 
 
 export default function Responsaveis() {
@@ -24,7 +25,10 @@ export default function Responsaveis() {
                 callback: r => setResponsavel(r)
             });
         responsavelPipe.findAll.next({
-            callback: (n: Responsavel[]) => setRows(n)
+            callback: (n: Responsavel[]) => {
+                console.log("responsavelPipe.findAll.next", n);
+                setRows(n);
+            }
         })
     });
 
@@ -33,14 +37,15 @@ export default function Responsaveis() {
     }
 
     const handleChangeAccordion = () => {
-        setShowResults(!showResults);
+        if (SessionUtil.isAuthenticated())
+            setShowResults(!showResults);
     }
 
 
     return (
         <Container maxWidth="lg" style={{marginTop: "25px"}}>
             <Typography variant="h5" component="h5">
-                Responsável pelo Catequizando
+                {SessionUtil.isAuthenticated()? 'Responsável pelo Catequizando': 'Novo registro'}
             </Typography>
             <ExpansionPanel expanded={!showResults}>
                 <ExpansionPanelSummary onClick={handleChangeAccordion}
@@ -61,21 +66,13 @@ export default function Responsaveis() {
                 </ExpansionPanelDetails>
             </ExpansionPanel>
 
-            <ExpansionPanel expanded={showResults}>
+            {SessionUtil.isAuthenticated()? (<ExpansionPanel expanded={showResults}>
                 <ExpansionPanelSummary onClick={handleChangeAccordion}
                                        expandIcon={<ExpandMoreIcon/>}
                                        aria-controls="panel1a-content"
                                        id="panel1a-header">
                     <Typography className={classes.heading}>Responsáveis registrados</Typography>
                 </ExpansionPanelSummary>
-                {/*nome: string,*/}
-                {/*endereco: string,*/}
-                {/*cep: string,*/}
-                {/*telefoneFixo: string,*/}
-                {/*telefoneMovel: string,*/}
-                {/*username: string,*/}
-                {/*religiao: string,*/}
-                {/*praticante: 'S' | 'N'*/}
                 <ExpansionPanelDetails>
                     <AppTable columns={[
                         {label: "Nome", attribute: "nome"},
@@ -88,7 +85,7 @@ export default function Responsaveis() {
                               ]}
                               dataSource={rows}></AppTable>
                 </ExpansionPanelDetails>
-            </ExpansionPanel>
+            </ExpansionPanel>): (<></>)}
         </Container>
     );
 }

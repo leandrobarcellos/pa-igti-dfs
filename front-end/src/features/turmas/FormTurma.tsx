@@ -6,9 +6,7 @@ import {AppStyle} from "../../components/core/AppStyle";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import DateFnsUtils from "@date-io/date-fns";
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import {InputSelect} from "../../components/inputs/AppInputs";
+import {InputDate, InputSelect} from "../../components/inputs/AppInputs";
 import {CatequistaPipe} from "../catequistas/CatequistaPipe";
 import TransferList from "../../components/core/TransferList";
 import {EtapaPipe} from "../../util/domain/EtapaPipe";
@@ -63,12 +61,12 @@ export default function FormTurma(props: FormProps<Turma>) {
 
     const configurarForm = (t: Turma) => {
 
-        setId(t && t.id? t.id : 0);
-        setIdCatequista(t? t.idCatequista: 0);
-        setIdEtapa(t? t.idEtapa: 0);
-        setNome(t? t.nome: "");
-        setCatequizandos(t? t.catequizandos : []);
-        setInicio(t? t.inicio : new Date());
+        setId(t && t.id ? t.id : 0);
+        setIdCatequista(t ? t.idCatequista : 0);
+        setIdEtapa(t ? t.idEtapa : 0);
+        setNome(t ? t.nome : "");
+        setCatequizandos(t ? t.catequizandos : []);
+        setInicio(t ? t.inicio : new Date());
     }
 
     const turma: Turma = {
@@ -88,8 +86,13 @@ export default function FormTurma(props: FormProps<Turma>) {
     function handleSalvar() {
     }
 
-    const changeEtapa = (e: any) => {
-        Field.change(e, setIdEtapa);
+    const setDtinicio = (dtInicio: Date | null): void => {
+        if(dtInicio)
+            setInicio(dtInicio);
+    };
+
+    const changeEtapa = (value: number) => {
+        setIdEtapa(value);
         catequistaPipe.catequistasByIdEtapa.next({
             filter: idEtapa,
             callback: (next: Catequista[]) => {
@@ -98,6 +101,7 @@ export default function FormTurma(props: FormProps<Turma>) {
             }
         })
     }
+
     return (
         <Grid container spacing={3} id={props.id}>
             <Grid item xs={12} sm={6}>
@@ -106,33 +110,17 @@ export default function FormTurma(props: FormProps<Turma>) {
                            onChange={e => Field.change(e, setNome)}/>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker fullWidth={true}
-                                        id="dtNascimentoCtqzndo"
-                                        label="Data de Início"
-                                        format="dd/MM/yyyy"
-                                        value={inicio}
-                                        onChange={e => Field.change(e, setInicio)}
-                                        KeyboardButtonProps={{'aria-label': 'change date'}}/>
-                </MuiPickersUtilsProvider>
+                <InputDate id="dtNascimentoCtqzndo" label="Data de Início"
+                           format="dd/MM/yyyy" value={inicio} set={setDtinicio}/>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-helper-label">Etapa</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-helper-label"
-                        id="demo-simple-select-helper"
-                        value={idEtapa}
-                        onChange={e => changeEtapa(e)}>
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        {etapas.map(e => (<MenuItem key={`${e.id}_key`} value={e.id}><em>{e.nome}</em></MenuItem>))}
-                    </Select>
-                </FormControl>
+                <InputSelect id="selectEtapa" label="Etapa"
+                             className={classes.formControl} selectClass={classes.selectClass}
+                             items={etapas} toValue={(e:Etapa)=> e.id} toLabel={(e:Etapa)=> e.nome}
+                             value={idEtapa} set={changeEtapa}/>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <InputSelect items={catequistas} toValue={c=> c.id} toLabel={c=> c.nome}
+                <InputSelect items={catequistas} toValue={c => c.id} toLabel={c => c.nome}
                              id="catequista" label="Catequista"
                              className={classes.formControl} selectClass={classes.selectClass}
                              value={idCatequista} set={setIdCatequista}></InputSelect>

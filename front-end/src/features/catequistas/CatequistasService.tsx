@@ -4,7 +4,7 @@ import {Catequista} from "./catequista";
 
 export default class CatequistasService extends HttpCRUDService {
     constructor() {
-        super("/catequista");
+        super("/catequistas");
     }
 
     merge<T>(value: Catequista): Observable<AppResponse<T>> {

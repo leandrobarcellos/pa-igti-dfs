@@ -11,7 +11,7 @@ import {AppStyle} from "../../components/core/AppStyle";
 import Button from "@material-ui/core/Button";
 import {LoginPipe} from "./LoginPipe";
 import {useHistory} from "react-router-dom";
-import {InputEmail} from "../../components/inputs/AppInputs";
+import {InputEmail, InputPassword} from "../../components/inputs/AppInputs";
 import {LoggerFactory} from "../../components/core/LoggerFactory";
 
 const LOGGER  = LoggerFactory.newInstance(Login);
@@ -27,9 +27,13 @@ export default function Login() {
         LOGGER.warn("testing the warn");
         loginPipe.login.next({
             username: email,
-            password: "secret",
+            password,
             callback: () => {
                 window.location.reload();
+            },
+            onError: err => {
+                if(err.message && err.message.includes('401'))
+                    history.push('/responsaveis');
             }
         });
     }
@@ -45,6 +49,9 @@ export default function Login() {
                     <Grid container spacing={3} id="gridLogin">
                         <Grid item xs={12} sm={12}>
                             <InputEmail id="usrEmail" label="E-mail" value={email} set={setEmail}></InputEmail>
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <InputPassword id="usrPassword" label="Senha" value={password} set={setPassword}></InputPassword>
                         </Grid>
                         <Grid item xs={12} sm={12} style={{textAlign: "center"}}>
                             <Button variant="contained"

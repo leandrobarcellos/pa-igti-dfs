@@ -7,7 +7,7 @@ export interface ResponseData<T> {
 }
 
 export interface AppResponse<T> {
-    data: ResponseData<T>
+    data: ResponseData<T> | any
 }
 
 export class HttpService {

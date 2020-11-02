@@ -8,6 +8,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import DrawerItem from "./drawer-item";
 import AppToolBar from "./app-tool-bar";
+import {SessionUtil} from "../core/session.util";
 
 const ANCHOR = "left";
 
@@ -37,7 +38,7 @@ function AppDrawer(props: AppDrawerProps) {
         right: false,
     });
 
-    useEffect(()=>{
+    useEffect(() => {
 
     }, [props.isLoggedIn]);
     const toggleDrawer = (open: boolean) => (
@@ -55,6 +56,31 @@ function AppDrawer(props: AppDrawerProps) {
         setState({...state, [ANCHOR]: open});
     };
 
+    const drawerItemCatequistas = () => {
+        if (SessionUtil.isAdmin() || SessionUtil.isCatequista())
+            return (<DrawerItem pKey="catequistas" route="/catequistas" text="Catequistas">
+                <SupervisorAccountIcon/>
+            </DrawerItem>);
+        return (<></>);
+    }
+
+    const drawerItemResponsaveis = () => {
+        if (SessionUtil.isAdmin() || SessionUtil.isCatequista())
+            return (<DrawerItem pKey="responsaveis" route="/responsaveis" text="Responsáveis">
+                <PersonAddIcon/>
+            </DrawerItem>);
+        return (<></>);
+    }
+
+    const drawerItemTurmas = () => {
+        console.log("drawerItemTurmas", SessionUtil.getUser());
+        if (SessionUtil.isAdmin() || SessionUtil.isCatequista())
+            return (<DrawerItem pKey="turmas" route="/turmas" text="Turmas">
+                <GroupAddIcon/>
+            </DrawerItem>);
+        return (<></>);
+    }
+
     const list = (anchor: Anchor) => (
         <div
             className={clsx(classes.list, {
@@ -63,23 +89,17 @@ function AppDrawer(props: AppDrawerProps) {
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}>
             <List>
-                <DrawerItem pKey="catequistas" route="/catequistas" text="Catequistas">
-                    <SupervisorAccountIcon/>
-                </DrawerItem>
-                <DrawerItem pKey="responsaveis" route="/responsaveis" text="Responsáveis">
-                    <PersonAddIcon/>
-                </DrawerItem>
+                {drawerItemCatequistas()}
+                {drawerItemResponsaveis()}
                 <DrawerItem pKey="catequizandos" route="/catequizandos" text="Catequizandos">
                     <PersonAddIcon/>
                 </DrawerItem>
-                <DrawerItem pKey="turmas" route="/turmas" text="Turmas">
-                    <GroupAddIcon/>
-                </DrawerItem>
+                {drawerItemTurmas()}
             </List>
         </div>
     );
 
-    if(!props.isLoggedIn)
+    if (!props.isLoggedIn)
         return (<></>);
     return (
         <div>

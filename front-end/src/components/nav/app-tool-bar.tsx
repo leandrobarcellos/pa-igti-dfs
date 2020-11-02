@@ -9,6 +9,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MenuIcon from "@material-ui/icons/Menu";
 import {Typography} from "@material-ui/core";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {SessionUtil} from "../core/session.util";
 
 
 interface AppToolBarProps extends AppProps {
@@ -21,8 +22,7 @@ class AppToolBar extends AppComponent<AppToolBarProps> {
     }
 
     logout = () => {
-        localStorage.removeItem("catequese:token");
-        sessionStorage.removeItem("catequese:token");
+        SessionUtil.logout();
         document.location.reload();
     }
 

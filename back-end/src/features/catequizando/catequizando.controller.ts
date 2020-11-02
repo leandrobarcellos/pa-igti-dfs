@@ -2,7 +2,7 @@ import {Controller, Delete, Get, Post, Put, Request} from '@nestjs/common';
 import {Catequizando} from "./catequizando";
 import {CatequizandoService} from "./catequizando.service";
 
-@Controller('e-catequese/catequizando')
+@Controller('e-catequese/catequizandos')
 export class CatequizandoController {
 
     constructor(private readonly catequizandoService: CatequizandoService) {

@@ -5,7 +5,7 @@ import {Catequista} from "./catequista";
 export class CatequistaRepository extends CrudSequencialRepository<Catequista> {
 
     constructor() {
-        super("catequista");
+        super("catequistas");
     }
 
     findByEmail(email: string): Catequista {

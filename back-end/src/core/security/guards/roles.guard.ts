@@ -53,7 +53,7 @@ export class RolesGuard implements CanActivate {
         let authorization = request.get('Authorization');
         if (authorization) {
             if (authorization.toLowerCase().includes('bearer')) {
-                authorization = authorization.substr('bearer'.length).trim();
+                authorization = authorization.trim().substr('bearer'.length).trim();
             }
             authorization = authorization.trim();
         }

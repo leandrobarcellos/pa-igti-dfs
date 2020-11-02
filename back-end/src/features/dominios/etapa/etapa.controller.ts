@@ -21,7 +21,7 @@ export class EtapaController {
         return this.etapaService.findById(req.params.idEtapa);
     }
 
-    @Get('/:idEtapa/catequista')
+    @Get('/:idEtapa/catequistas')
     async getCatequistasByIdEtapa(@Request() req: any): Promise<Catequista[] | undefined> {
         return this.catequistaService.findByIdEtapa(req.params.idEtapa);
     }

@@ -43,6 +43,8 @@ export default function TabelaCatequizandos(props: TableProps<Catequizando>) {
     const getTurmaDesejada = (row: any) => {
         let toShow = "";
         let turmaDesejada = row?.turmaDesejada;
+        if(!turmaDesejada)
+            toShow = "Eucaristia";
         if ("PE" === turmaDesejada)
             toShow = "Pré-Eucaristia";
         if ("EU" === turmaDesejada)
@@ -70,13 +72,13 @@ export default function TabelaCatequizandos(props: TableProps<Catequizando>) {
                 </TableHead>
                 <TableBody>
                     {props.rows.map((row: any) => (
-                        <TableRow key={row?.nomeCtqzndo}>
+                        <TableRow key={row?.nome}>
                             <TableCell component="th" scope="row">
-                                {row?.nomeCtqzndo}
+                                {row?.nome}
                             </TableCell>
-                            <TableCell align="right">{row?.dtNascimentoCtqzndo}</TableCell>
-                            <TableCell align="right">{row?.emailCtqzndo}</TableCell>
-                            <TableCell align="right">{row?.telResCtqzndo}</TableCell>
+                            <TableCell align="right">{row?.dtNascimento}</TableCell>
+                            <TableCell align="right">{row?.email}</TableCell>
+                            <TableCell align="right">{row?.telefoneFixo}</TableCell>
                             <TableCell align="right">{getTurmaDesejada(row)}</TableCell>
                             <TableCell align="right">
                                 <EditIcon className={classes.actionIcon} onClick={() => props.onEditing(row)}/>

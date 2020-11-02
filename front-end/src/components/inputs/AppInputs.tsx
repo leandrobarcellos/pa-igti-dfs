@@ -36,10 +36,37 @@ export function AppInputs(props: AppInputProps<number>) {
     );
 }
 
+const controlShrink = (props: AppInputProps<string>, set: (b: boolean) => void) => {
+    if (props.value && null != props.value) {
+        const strValue = props.value as string;
+        set(strValue.length != 0);
+    } else {
+        set(false);
+    }
+};
+
 export function InputText(props: AppInputProps<string>) {
+    const [shrinkLabel, setShrinkLabel] = React.useState<boolean>(false);
+    useEffect(() => {
+        controlShrink(props, setShrinkLabel);
+    }, [props.value]);
     return (
         <TextField fullWidth={true} id={props.id} label={props.label} type="text"
-                   InputLabelProps={{shrink: true}}
+                   InputLabelProps={{shrink: shrinkLabel}}
+                   value={props.value}
+                   onChange={e => Field.change(e, props.set)}
+        />
+    );
+}
+
+export function InputNumber(props: AppInputProps<string>) {
+    const [shrinkLabel, setShrinkLabel] = React.useState<boolean>(false);
+    useEffect(() => {
+        controlShrink(props, setShrinkLabel);
+    }, [props.value]);
+    return (
+        <TextField fullWidth={true} id={props.id} label={props.label} type="number"
+                   InputLabelProps={{shrink: shrinkLabel}}
                    value={props.value}
                    onChange={e => Field.change(e, props.set)}
         />
@@ -47,9 +74,13 @@ export function InputText(props: AppInputProps<string>) {
 }
 
 export function InputEmail(props: AppInputProps<string>) {
+    const [shrinkLabel, setShrinkLabel] = React.useState<boolean>(false);
+    useEffect(() => {
+        controlShrink(props, setShrinkLabel);
+    }, [props.value]);
     return (
         <TextField fullWidth={true} id={props.id} label={props.label} type="email"
-                   InputLabelProps={{shrink: true}}
+                   InputLabelProps={{shrink: shrinkLabel}}
                    value={props.value}
                    onChange={e => Field.change(e, props.set)}
         />
@@ -57,9 +88,13 @@ export function InputEmail(props: AppInputProps<string>) {
 }
 
 export function InputPassword(props: AppInputProps<string>) {
+    const [shrinkLabel, setShrinkLabel] = React.useState<boolean>(false);
+    useEffect(() => {
+        controlShrink(props, setShrinkLabel);
+    }, [props.value]);
     return (
         <TextField fullWidth={true} id={props.id} label={props.label} type="password"
-                   InputLabelProps={{shrink: true}}
+                   InputLabelProps={{shrink: shrinkLabel}}
                    value={props.value}
                    onChange={e => Field.change(e, props.set)}
         />
@@ -81,8 +116,7 @@ export function InputDate(props: AppInputDateProps) {
 }
 
 export function InputSelect(props: AppInputSelectProps) {
-    useEffect(()=>{
-        console.log(props.items);
+    useEffect(() => {
     }, [props.items]);
 
     return (
@@ -95,8 +129,8 @@ export function InputSelect(props: AppInputSelectProps) {
                 value={props.value}
                 onChange={(e: any) => Field.change(e, props.set)}>
                 <MenuItem value="">Selecione</MenuItem>
-                {props?.items?.map(i=> (
-                    <MenuItem  key={`key${props.toValue(i)}`} value={props.toValue(i)}>{props.toLabel(i)}</MenuItem>
+                {props?.items?.map(i => (
+                    <MenuItem key={`key${props.toValue(i)}`} value={props.toValue(i)}>{props.toLabel(i)}</MenuItem>
                 ))}
             </Select>
         </FormControl>

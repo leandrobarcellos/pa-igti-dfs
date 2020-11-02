@@ -20,7 +20,7 @@ import {UserRepository} from "./user/user.repository";
         PassportModule,
         JwtModule.register({
             secret: jwtConstants.secret,
-            signOptions: {expiresIn: '60s'},
+            signOptions: {expiresIn: '86400s'},
         }),
     ],
     exports: [
