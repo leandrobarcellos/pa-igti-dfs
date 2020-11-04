@@ -1,6 +1,6 @@
-import {ApiException} from "../../core/exception/api.exception";
 import {CrudSequencialRepository} from "../../core/infra/crud-sequencial.repository";
 import {Catequista} from "./catequista";
+import {NotFoundException} from "@nestjs/common";
 
 export class CatequistaRepository extends CrudSequencialRepository<Catequista> {
 
@@ -11,7 +11,7 @@ export class CatequistaRepository extends CrudSequencialRepository<Catequista> {
     findByEmail(email: string): Catequista {
         const c = this.db.rows.find(p => p.email === email);
         if (!c)
-            throw new ApiException("Catequista não encontrado com o username informado.", 404);
+            throw new NotFoundException("Catequista não encontrado com o username informado.");
         return c;
     }
 

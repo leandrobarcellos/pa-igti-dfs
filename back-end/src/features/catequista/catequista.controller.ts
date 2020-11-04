@@ -1,8 +1,10 @@
-import {Controller, Delete, Get, Post, Put, Request, UseGuards} from '@nestjs/common';
+import {BadRequestException, Controller, Delete, Get, Post, Put, Request, UseGuards} from '@nestjs/common';
 import {CatequistaService} from "./catequista.service";
 import {Catequista} from "./catequista";
 import {RolesGuard} from "../../core/security/guards/roles.guard";
-import {Roles} from "../../core/security/guards/roles.decorator";
+import {RolesAllowed} from "../../core/security/guards/roles-allowed.decorator";
+import {Response} from "../../core/infra/response";
+import {response} from "express";
 
 @UseGuards(RolesGuard)
 @Controller('e-catequese/catequistas')
@@ -12,21 +14,20 @@ export class CatequistaController {
     }
 
     @Get()
-    async getCatequistas(@Request() req: any): Promise<any | undefined> {
-        const catequistas = this.catequistaService.findAll();
-        console.log("catequistas", catequistas);
-        return catequistas;
+    async getCatequistas(@Request() req: any): Promise<Catequista[] | undefined> {
+        console.log("getCatequistas");
+        return this.catequistaService.findAll();
     }
 
     @Get('/:idCatequista')
-    @Roles('ADMIN', 'CATEQUISTA')
+    @RolesAllowed('ADMIN', 'CATEQUISTA')
     async getCatequista(@Request() req: any): Promise<any | undefined> {
         console.log("req.params.idCatequista", req.params.idCatequista);
         return this.catequistaService.findById(req.params.idCatequista);
     }
 
     @Post()
-    @Roles('ADMIN')
+    @RolesAllowed('ADMIN')
     async createCatequista(@Request() req: any): Promise<any | undefined> {
         const catequista: Catequista = req.body;
         console.log(req.body);
@@ -35,7 +36,7 @@ export class CatequistaController {
     }
 
     @Put('/:idCatequista')
-    @Roles('ADMIN')
+    @RolesAllowed('ADMIN')
     async updateCatequista(@Request() req: any): Promise<any | undefined> {
         console.log("updateCatequista.req", req);
         console.log("req.idCatequista", req.params.idCatequista);
@@ -45,7 +46,7 @@ export class CatequistaController {
     }
 
     @Delete('/:idCatequista')
-    @Roles('ADMIN')
+    @RolesAllowed('ADMIN')
     async deleteCatequista(@Request() req: any): Promise<any | undefined> {
         const catequista: Catequista = req.body;
         this.catequistaService.deleteCatequista(req.params.idCatequista);

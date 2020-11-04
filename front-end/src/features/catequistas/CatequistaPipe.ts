@@ -71,7 +71,7 @@ export class CatequistaPipe extends CRUDPipe<Catequista, FiltroCatequista> {
             switchMap((next: SearchAction<Catequista[]>) =>
                 this.catequistaService.findAll<Catequista[]>().pipe(
                     tap(res=> console.log(res)),
-                    tap((res) => next.callback(res.data as Catequista[]))
+                    tap((res) => next.callback(res.data.object as Catequista[]))
                 )
             ),
             this.defaultErrorCatcher(),

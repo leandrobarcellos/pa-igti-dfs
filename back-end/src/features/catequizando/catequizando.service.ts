@@ -1,10 +1,10 @@
 import {CatequizandoRepository} from "./catequizando.repository";
 import {Catequizando} from "./catequizando";
-import {ApiException} from "../../core/exception/api.exception";
 import {Util} from "../../core/util/Util";
 import {ResponsavelService} from "../responsavel/responsavel.service";
 import {Responsavel} from "../responsavel/responsavel";
 import {TurmaCatequizandoRepository} from "../turma/turma-catequizando.repository";
+import {BadRequestException} from "@nestjs/common";
 
 export class CatequizandoService {
 
@@ -45,7 +45,7 @@ export class CatequizandoService {
     private validarResponsavel(responsavel?: Responsavel, idResponsavel?: number) {
         if (idResponsavel && (responsavel && responsavel.id)) {
             if (idResponsavel != responsavel.id) {
-                throw new ApiException("Não foi possível definir o identificador a ser utilizado na inclusão.", 400);
+                throw new BadRequestException("Não foi possível definir o identificador a ser utilizado na inclusão.");
             }
         }
     }
@@ -53,7 +53,7 @@ export class CatequizandoService {
     public atualizarCatequizando(id: number, catequizando: Catequizando): void {
         if (id && catequizando) {
             if (catequizando.id && (catequizando.id != id)) {
-                throw new ApiException("Não foi possível definir o identificador a ser utilizado na atualização", 400);
+                throw new BadRequestException("Não foi possível definir o identificador a ser utilizado na atualização");
             }
             if (!Util.isUndefinedOrNull(id)) {
                 this.repository.update(catequizando);

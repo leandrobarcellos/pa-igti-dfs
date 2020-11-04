@@ -1,6 +1,6 @@
 import {Etapa} from "./etapa";
 import {Repository} from "../../../core/infra/repository";
-import {ApiException} from "../../../core/exception/api.exception";
+import {NotFoundException} from "@nestjs/common";
 
 export class EtapaRepository extends Repository<number, Etapa> {
 
@@ -13,6 +13,6 @@ export class EtapaRepository extends Repository<number, Etapa> {
         if (found && found.length > 0) {
             return found[0];
         }
-        throw new ApiException("Não encontrado.", 404);
+        throw new NotFoundException("Não encontrado.");
     }
 }

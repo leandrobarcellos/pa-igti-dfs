@@ -3,7 +3,8 @@
   "rows": [
     {
       "userId": 1,
-      "username": "john",
+      "name": "john",
+      "email": "john",
       "password": "changeme",
       "roles": [
         "ADMIN",
@@ -13,7 +14,8 @@
     },
     {
       "userId": 2,
-      "username": "chris",
+      "name": "chris",
+      "email": "chris",
       "password": "secret",
       "roles": [
         "CATEQUISTA"
@@ -21,7 +23,8 @@
     },
     {
       "userId": 3,
-      "username": "maria",
+      "name": "maria",
+      "email": "maria",
       "password": "guess",
       "roles": [
         "RESPONSAVEL"

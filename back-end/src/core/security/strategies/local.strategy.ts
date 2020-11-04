@@ -2,7 +2,6 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from 'passport-local';
 import {SecurityService} from "../security.service";
-import {ApiException} from "../../exception/api.exception";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -11,11 +10,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async validate(usrName: string, pwd: string): Promise<any> {
-    const user = await this.securityService.validateUser(usrName, pwd);
-    console.log(`async validate(${usrName}: string, ${pwd}: string)`, user);
+  async validate(email: string, pwd: string): Promise<any> {
+    const user = await this.securityService.validateUser(email, pwd);
+    console.log(`async validate(${email}: string, ${pwd}: string)`, user);
     if (!user) {
-      throw new ApiException("Ooops! Are you lost!?", 401);
+      throw new UnauthorizedException("Ooops! Are you lost!?");
     }
     return user;
   }

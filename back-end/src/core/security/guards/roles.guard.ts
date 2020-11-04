@@ -4,6 +4,10 @@ import {JwtService} from '@nestjs/jwt';
 import {jwtConstants} from '../constants';
 import {Reflector} from '@nestjs/core';
 
+/**
+ * Guard customizado para realizar a segurança das rotas levando em conta os papéis do usuário na aplicação.
+ *
+ */
 @Injectable()
 export class RolesGuard implements CanActivate {
 
@@ -11,6 +15,12 @@ export class RolesGuard implements CanActivate {
         secret: jwtConstants.secret,
     });
 
+    /**
+     * O parâmetro reflector possibilita a obtenção de valores declarados no decorator @SetMetadata(...)
+     *
+     * @see roles-allowed.decorator.ts
+     * @param reflector
+     */
     constructor(private readonly reflector: Reflector) {
     }
 
@@ -48,6 +58,12 @@ export class RolesGuard implements CanActivate {
         }
     }
 
+    /**
+     * Extrai o token - codificado em base64 - do cabeçalho Authorization.
+     *
+     * @param context
+     * @private
+     */
     private extractAuthorizationHeader(context: ExecutionContext): string {
         const request = context.switchToHttp().getRequest();
         let authorization = request.get('Authorization');
@@ -60,6 +76,11 @@ export class RolesGuard implements CanActivate {
         return authorization;
     }
 
+    /**
+     * Extrai os papéis de usuário permitidos que foram declarados no decorator @RolesAllowed
+     * @param context
+     * @private
+     */
     private extractRoles(context: ExecutionContext): string[] {
         return this.reflector.get<string[]>('roles', context.getHandler());
     }

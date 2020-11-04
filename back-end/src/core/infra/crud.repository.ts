@@ -1,18 +1,18 @@
 import {Entity} from "./entity";
 import {Repository} from "./repository";
-import {ApiException} from "../exception/api.exception";
+import {NotFoundException} from "@nestjs/common";
 
 
 export abstract class CrudRepository<K, T extends Entity<K>> extends Repository<K, T> {
 
-    constructor(dbName: string) {
+    protected constructor(dbName: string) {
         super(dbName);
     }
 
     public findById(id?: K): T {
         const find = this.db.rows.find((o: T) => o.id == id);
         if (!find)
-            throw new ApiException("Não encontrado", 404);
+            throw new NotFoundException("Não encontrado");
         return find;
     }
 

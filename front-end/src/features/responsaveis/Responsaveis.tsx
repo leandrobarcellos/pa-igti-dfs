@@ -30,7 +30,7 @@ export default function Responsaveis() {
                 setRows(n);
             }
         })
-    });
+    }, []);
 
     const onComplete = () => {
 
