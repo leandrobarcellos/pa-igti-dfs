@@ -7,7 +7,4 @@ export abstract class CrudSequencialRepository<T extends Entity<number>> extends
         super(dbName);
     }
 
-    protected configurarNovoIdSequencial(entity: T, newId: number) {
-        entity.id = newId;
-    }
 }

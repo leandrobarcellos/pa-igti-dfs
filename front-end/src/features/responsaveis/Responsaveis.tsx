@@ -26,7 +26,7 @@ export default function Responsaveis() {
             });
         responsavelPipe.findAll.next({
             callback: (n: Responsavel[]) => {
-                console.log("responsavelPipe.findAll.next", n);
+                console.log("responsavelPipe.findAllShoes.next", n);
                 setRows(n);
             }
         })

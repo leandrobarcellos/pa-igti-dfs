@@ -9,7 +9,8 @@ export const Role = {
 export interface User extends Entity<number>{
     email: string;
     name: string;
+    surname: string;
     password?: string;
-    gender: 'M' | 'F';
-    roles: string[]
+    gender?: 'M' | 'F';
+    roles?: string[]
 }

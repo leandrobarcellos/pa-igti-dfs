@@ -23,6 +23,7 @@ export default function AppSwitch(props: {
             <Route path="/subscricao" component={Subscricao}/>
             <Route path="/catequistas" component={Catequistas}/>
             <Route path="/responsaveis" component={Responsaveis}/>
+            <Route path="/signup" component={Subscricao}/>
             <Route path="/catequizandos" component={Catequizandos}/>
             <Route path="/catequizandos/{id}/turmas" component={Catequizandos}/>
             <Route path="/turmas" component={Turmas}/>

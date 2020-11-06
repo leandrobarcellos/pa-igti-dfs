@@ -33,7 +33,13 @@ export class SessionUtil {
 
     public static getUser(): User {
         let jsonUser = sessionStorage.getItem("catequese:user") as string;
-        return JSON.parse(jsonUser);
+        let usr = undefined;
+        if(!jsonUser || jsonUser === 'undefined') {
+            SessionUtil.logout();
+        } else {
+            usr = JSON.parse(jsonUser);
+        }
+        return usr;
     }
 
     public static isAuthenticated() {

@@ -13,6 +13,9 @@ import {TurmaCatequizandoService} from "./turma/turma-catequizando.service";
 import {EtapaService} from "./dominios/etapa/etapa.service";
 import {EtapaController} from "./dominios/etapa/etapa.controller";
 import {CoreModule} from "../core/core.module";
+import { TurmaCatequizandoController } from './turma-catequizando/turma-catequizando.controller';
+import { EncontroCatequeseController } from './encontro-catequese/encontro-catequese.controller';
+import { FrequenciaCatequizandoController } from './frequencia-catequizando/frequencia-catequizando.controller';
 
 @Module({
     controllers: [
@@ -21,7 +24,10 @@ import {CoreModule} from "../core/core.module";
         CatequizandoController,
         TurmaController,
         ResponsavelController,
-        EtapaController
+        EtapaController,
+        TurmaCatequizandoController,
+        EncontroCatequeseController,
+        FrequenciaCatequizandoController
     ],
     providers: [
         CatequistaService,

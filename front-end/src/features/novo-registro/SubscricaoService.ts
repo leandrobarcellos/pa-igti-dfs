@@ -1,8 +1,15 @@
 import {HttpCRUDService} from "../../components/core/HttpCRUDService";
+import {NovaSubscricao} from "./NovaSubscricao";
+import {Observable} from "rxjs";
 
 export class SubscricaoService extends HttpCRUDService {
 
     constructor() {
-        super("/subscricao");
+        super("");
     }
+
+    novoRegistro(dados: NovaSubscricao): Observable<unknown> {
+        return this.httpClient.doPost('/signup', dados);
+    }
+
 }

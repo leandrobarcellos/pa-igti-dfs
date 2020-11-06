@@ -5,6 +5,7 @@ import {
     ExpansionPanelDetails,
     ExpansionPanelSummary,
     Grid,
+    Link,
     Typography
 } from "@material-ui/core";
 import {AppStyle} from "../../components/core/AppStyle";
@@ -14,7 +15,7 @@ import {useHistory} from "react-router-dom";
 import {InputEmail, InputPassword} from "../../components/inputs/AppInputs";
 import {LoggerFactory} from "../../components/core/LoggerFactory";
 
-const LOGGER  = LoggerFactory.newInstance(Login);
+const LOGGER = LoggerFactory.newInstance(Login);
 
 export default function Login() {
     const history = useHistory();
@@ -22,6 +23,11 @@ export default function Login() {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const loginPipe = new LoginPipe();
+
+
+    const handleSignUp = (e: any) => {
+        history.push('/signup');
+    }
 
     const handleLogin = (e: any) => {
         LOGGER.warn("testing the warn");
@@ -32,8 +38,7 @@ export default function Login() {
                 window.location.reload();
             },
             onError: err => {
-                if(err.message && err.message.includes('401'))
-                    history.push('/responsaveis');
+                console.log(err.message)
             }
         });
     }
@@ -51,7 +56,8 @@ export default function Login() {
                             <InputEmail id="usrEmail" label="E-mail" value={email} set={setEmail}></InputEmail>
                         </Grid>
                         <Grid item xs={12} sm={12}>
-                            <InputPassword id="usrPassword" label="Senha" value={password} set={setPassword}></InputPassword>
+                            <InputPassword id="usrPassword" label="Senha" value={password}
+                                           set={setPassword}></InputPassword>
                         </Grid>
                         <Grid item xs={12} sm={12} style={{textAlign: "center"}}>
                             <Button variant="contained"
@@ -61,8 +67,8 @@ export default function Login() {
                             </Button>
                         </Grid>
                     </Grid>
-
                 </ExpansionPanelDetails>
+                <Link style={{cursor: "pointer"}} onClick={handleSignUp}>Cadastre-se</Link>
             </ExpansionPanel>
         </Container>
     )

@@ -6,11 +6,7 @@ export class CatequizandoRepository extends CrudRepository<number, Catequizando>
     constructor() {
         super("catequizandos");
     }
-
-    protected configurarNovoIdSequencial(entity: Catequizando, newId: number) {
-        entity.id = newId;
-    }
-
+    
     public findByIdsCatequizandos(idsCatequizandos: number[]) {
         return this.filter(o => {
             if (o.id)

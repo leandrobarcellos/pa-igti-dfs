@@ -13,4 +13,8 @@ export class Util {
     static isUndefinedOrNull(id: any) {
         return undefined == id || null == id;
     }
+
+    static isTelefoneOk(value: string, size: number): boolean {
+        return (!value || size < value.length);
+    }
 }

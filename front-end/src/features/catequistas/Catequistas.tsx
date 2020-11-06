@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography} from "@material-ui/core";
+import {
+    Button,
+    Container,
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary,
+    Typography
+} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {FormCatequista} from "./FormCatequista";
 import {CatequistaPipe} from "./CatequistaPipe";
@@ -10,6 +17,7 @@ import {FormAction} from "../../components/core/FormAction";
 import TabelaCatequistas from "./TabelaCatequistas";
 import {flatMap} from "rxjs/internal/operators";
 import {Catequista} from "./catequista";
+import TransitionsModal from "../../components/modal/ModalConfirmacao";
 
 
 export default function Catequistas() {
@@ -19,6 +27,7 @@ export default function Catequistas() {
     const [catequista, setCatequista] = React.useState<Catequista>({} as Catequista);
     const [showResults, setShowResults] = useState(false);
     const [rows, setRows] = React.useState<Catequista[]>([]);
+    const [open, setOpen] = React.useState<boolean>(false);
     const updatePipe = new Subject<FormAction<Catequista>>();
     const removePipe = new Subject<FormAction<Catequista>>();
 
@@ -130,6 +139,10 @@ export default function Catequistas() {
                                        onDeleteComplete={onComplete}/>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
+            <Button onClick={e=> setOpen(!open)}>Modal por favor</Button>
+            <TransitionsModal title="Olá, eu sou o título" message="Qualquer lorem ipsum para servir como exemplo de mensagem."
+                              open={open}></TransitionsModal>
+
         </Container>
     );
 }

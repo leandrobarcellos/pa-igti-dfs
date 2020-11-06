@@ -5,6 +5,7 @@ import {ResponsavelService} from "../responsavel/responsavel.service";
 import {Responsavel} from "../responsavel/responsavel";
 import {TurmaCatequizandoRepository} from "../turma/turma-catequizando.repository";
 import {BadRequestException} from "@nestjs/common";
+import {FieldChecker} from "../../core/infra/field.checker";
 
 export class CatequizandoService {
 
@@ -24,41 +25,35 @@ export class CatequizandoService {
     }
 
     public salvarCatequizando(catequizando: Catequizando): void {
-        this.salvarResponsavel(catequizando.dadosMae);
-        this.salvarResponsavel(catequizando.dadosPai);
-        this.validarResponsavel(catequizando.dadosMae, catequizando.idMae);
-        this.validarResponsavel(catequizando.dadosPai, catequizando.idMae);
-        this.repository.save(catequizando);
+        const mae = this.salvarResponsavel(catequizando.dadosMae);
+        const pai = this.salvarResponsavel(catequizando.dadosPai);
+        catequizando.idPai = pai.id;
+        catequizando.idMae = mae.id;
+        const validated = this.getValidated(catequizando);
+        this.repository.save(validated);
     }
 
-    private salvarResponsavel(responsavel?: Responsavel) {
+    private salvarResponsavel(responsavel?: Responsavel): Responsavel {
+        let toReturn = {};
         if (responsavel) {
             if (!responsavel.id) {
-                this.responsavelService.salvar(responsavel);
+                toReturn = this.responsavelService.salvar(responsavel);
             } else {
                 const found = this.responsavelService.consultarPorId(responsavel.id);
-                Object.assign(responsavel, found);
+                Object.assign(toReturn, found);
             }
         }
-    }
-
-    private validarResponsavel(responsavel?: Responsavel, idResponsavel?: number) {
-        if (idResponsavel && (responsavel && responsavel.id)) {
-            if (idResponsavel != responsavel.id) {
-                throw new BadRequestException("Não foi possível definir o identificador a ser utilizado na inclusão.");
-            }
-        }
+        return toReturn as Responsavel;
     }
 
     public atualizarCatequizando(id: number, catequizando: Catequizando): void {
-        if (id && catequizando) {
-            if (catequizando.id && (catequizando.id != id)) {
+        const validated = this.getValidated(catequizando);
+        if (id && validated) {
+            if (validated.id && (validated.id != id)) {
                 throw new BadRequestException("Não foi possível definir o identificador a ser utilizado na atualização");
             }
             if (!Util.isUndefinedOrNull(id)) {
-                this.repository.update(catequizando);
-                this.responsavelService.atualizar(catequizando.dadosMae);
-                this.responsavelService.atualizar(catequizando.dadosPai);
+                this.repository.update(validated);
             }
         }
     }
@@ -75,4 +70,40 @@ export class CatequizandoService {
         this.repository.delete(id);
     }
 
+    private getValidated(catequizando: Catequizando) {
+        const {
+            id, ufDioceseBatismo, resideCom, cidadeNascimento, arquidioceseBatismo,
+            paroquiaBatismo, email, telefoneMovel, telefoneFixo, endereco, dtNascimento,
+            idEtapa, idPai, idMae, cep, nome, cidadeDioceseBatismo
+        } = catequizando;
+
+        FieldChecker.begin()
+            .checkIfNull(ufDioceseBatismo, 'Informe a UF da diocese de batismo.')
+            .checkIfNull(resideCom, 'Informe com quem o catequizando reside.')
+            .checkIfNull(cidadeNascimento, 'Informe a cidade de nascimento do catequizando.')
+            .checkIfNull(arquidioceseBatismo, 'Informe a arquidiocese de batismo.')
+            .checkIfNull(paroquiaBatismo, 'Informe a paróquia de batismo.')
+            .checkIfNull(email, 'Informe o email.')
+            .checkIfNull(endereco, 'Informe o endereço.')
+            .checkIfNull(dtNascimento, 'Informe a data de nascimento do catequizando.')
+            .checkIfNull(idEtapa, 'Informe a etapa de interesse.')
+            .checkIfNull(cep, 'Informe o CEP.')
+            .checkIfNull(nome, 'Informe o nome.')
+            .checkIfNull(cidadeDioceseBatismo, 'Informe a cidade da diocese de batismo.')
+            .validate();
+        if (!Util.isTelefoneOk(telefoneFixo, 8)
+            && Util.isTelefoneOk(telefoneMovel, 9)) {
+            throw new BadRequestException('Informe ao menos um telefone: Movel ou Fixo.');
+        }
+
+        if (!idPai && !idMae) {
+            throw new BadRequestException('O pai ou a mãe devem ser informados.');
+        }
+
+        return {
+            id, ufDioceseBatismo, resideCom, cidadeNascimento, arquidioceseBatismo,
+            paroquiaBatismo, email, telefoneMovel, telefoneFixo, endereco, dtNascimento,
+            idEtapa, idPai, idMae, cep, nome, cidadeDioceseBatismo
+        };
+    }
 }

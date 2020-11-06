@@ -10,7 +10,10 @@ interface AppInputProps<T> {
     label: string,
     value: T | unknown,
     set: (value: T) => void,
-    className?: string
+    className?: string,
+    error?:boolean,
+    helperText?:string,
+    errorText?:string
 }
 
 interface AppInputDateProps extends AppInputProps<Date> {
@@ -83,6 +86,7 @@ export function InputEmail(props: AppInputProps<string>) {
                    InputLabelProps={{shrink: shrinkLabel}}
                    value={props.value}
                    onChange={e => Field.change(e, props.set)}
+                   helperText={props.error? props.errorText: props.helperText}
         />
     );
 }
@@ -93,10 +97,11 @@ export function InputPassword(props: AppInputProps<string>) {
         controlShrink(props, setShrinkLabel);
     }, [props.value]);
     return (
-        <TextField fullWidth={true} id={props.id} label={props.label} type="password"
+        <TextField error={props.error} fullWidth={true} id={props.id} label={props.label} type="password"
                    InputLabelProps={{shrink: shrinkLabel}}
                    value={props.value}
                    onChange={e => Field.change(e, props.set)}
+                   helperText={props.error? props.errorText: props.helperText}
         />
     );
 }

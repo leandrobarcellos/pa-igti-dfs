@@ -21,8 +21,9 @@ export class LoginPipe extends AppPipe {
     protected initPipes(): void {
         this._login.pipe(
             switchMap(loginInfo => this.loginService.login(loginInfo).pipe(
-                tap((next) => SessionUtil.setToken(next.data["access_token"])),
-                tap((next) => SessionUtil.setUser(next.data["user"])),
+                tap((next) => console.log(next.data)),
+                tap((next) => SessionUtil.setToken(next.data["object"]["access_token"])),
+                tap((next) => SessionUtil.setUser(next.data["object"]["user"])),
                 tap(() => {
                     if (loginInfo.callback)
                         loginInfo.callback();

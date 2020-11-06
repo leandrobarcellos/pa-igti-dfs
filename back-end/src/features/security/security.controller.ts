@@ -1,11 +1,16 @@
 import {Controller, Post, Request, UseGuards} from '@nestjs/common';
 import {LocalGuard} from "../../core/security/guards/local.guard";
 import {SecurityService} from "../../core/security/security.service";
+import {UserService} from "../../core/security/user/user.service";
+import {User} from "../../core/security/user/user";
 
 @Controller()
 export class SecurityController {
 
-    constructor(private readonly securityService: SecurityService) {
+    constructor(
+        private readonly securityService: SecurityService,
+        private readonly userService: UserService
+    ) {
     }
 
     @Post('/e-catequese/login')
@@ -16,7 +21,22 @@ export class SecurityController {
 
     @Post('/e-catequese/signup')
     async signUp(@Request() req: any): Promise<any | undefined> {
-        console.log('async register: /new', req.body);
-        return {ok: 'Hey, I can see you!', body: req.body};
+        try {
+            const usr = req.body;
+            const toDB =
+                {
+                    email: usr.email,
+                    name: usr.nome,
+                    password: usr.senha,
+                    surname: usr.sobrenome
+                } as User;
+            console.log("this.userService.save(toDB);", toDB);
+            const user = this.userService.save(toDB);
+            console.log("this.userService.save passed!");
+            return this.securityService.login(user);
+        }catch (e) {
+            console.log("}catch (e) { "+JSON.stringify(e));
+            throw e;
+        }
     }
 }

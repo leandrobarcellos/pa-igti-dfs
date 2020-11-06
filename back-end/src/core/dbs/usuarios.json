@@ -1,5 +1,5 @@
 {
-  "sequence": 3,
+  "sequence": 8,
   "rows": [
     {
       "userId": 1,
@@ -26,6 +26,50 @@
       "name": "maria",
       "email": "maria",
       "password": "guess",
+      "roles": [
+        "RESPONSAVEL"
+      ]
+    },
+    {
+      "email": "mail@teste.com",
+      "name": "Leandro",
+      "password": "123",
+      "surname": "Barcellos",
+      "id": 4
+    },
+    {
+      "email": "mail@teste.com",
+      "name": "Leandro",
+      "password": "123",
+      "surname": "Barcellos",
+      "id": 5
+    },
+    {
+      "id": 6,
+      "name": "Leandro",
+      "surname": "Barcellos",
+      "email": "mail@teste.com",
+      "password": "123",
+      "roles": [
+        "RESPONSAVEL"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Leandro",
+      "surname": "Barcellos",
+      "email": "mail@teste.com",
+      "password": "123",
+      "roles": [
+        "RESPONSAVEL"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Leandro",
+      "surname": "Barcellos",
+      "email": "mail@teste.com",
+      "password": "123",
       "roles": [
         "RESPONSAVEL"
       ]

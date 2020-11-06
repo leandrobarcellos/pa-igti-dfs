@@ -1,8 +1,8 @@
-import {CrudSequencialRepository} from "../../core/infra/crud-sequencial.repository";
 import {Catequista} from "./catequista";
 import {NotFoundException} from "@nestjs/common";
+import {CrudRepository} from "../../core/infra/crud.repository";
 
-export class CatequistaRepository extends CrudSequencialRepository<Catequista> {
+export class CatequistaRepository extends CrudRepository<number, Catequista> {
 
     constructor() {
         super("catequistas");

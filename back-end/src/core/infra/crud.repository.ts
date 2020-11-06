@@ -26,14 +26,19 @@ export abstract class CrudRepository<K, T extends Entity<K>> extends Repository<
     }
 
     public save(entity: T): void {
-        const next = ++this.db.sequence;
-        this.configurarNovoIdSequencial(entity, next);
+        console.log("public save(entity: T)", entity);
+        this.configurarNovoIdSequencial(entity);
         this.db.rows.push(entity);
         this.updateDB();
     }
 
-    protected configurarNovoIdSequencial(entity: T, newId: number): void {
-        //novo id sequencial
+    protected configurarNovoIdSequencial(entity: T): void {
+        const e = entity as any;
+        console.log("if (typeof entity.id === 'number') {", typeof entity.id === 'number');
+        if (typeof entity.id === 'number') {
+            const next = ++this.db.sequence;
+            (entity as any).id = next;
+        }
     }
 
     public delete(id: K): void {

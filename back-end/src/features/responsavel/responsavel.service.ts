@@ -1,6 +1,7 @@
 import {ResponsavelRepository} from "./responsavel.repository";
 import {Responsavel} from "./responsavel";
-import {Injectable} from "@nestjs/common";
+import {BadRequestException, Injectable} from "@nestjs/common";
+import {FieldChecker} from "../../core/infra/field.checker";
 
 @Injectable()
 export class ResponsavelService {
@@ -10,13 +11,15 @@ export class ResponsavelService {
         this.repository = new ResponsavelRepository();
     }
 
-    public salvar(responsavel: Responsavel): void {
-        this.repository.save(responsavel);
+    public salvar(responsavel: Responsavel): Responsavel {
+        const validated = this.getValidated(responsavel);
+        this.repository.save(validated);
+        return validated;
     }
 
     public atualizar(responsavel?: Responsavel): void {
-        if (responsavel)
-            this.repository.update(responsavel);
+        const validated = this.getValidated(responsavel);
+        this.repository.update(validated);
     }
 
     public consultarPorId(id: number): Responsavel {
@@ -38,5 +41,29 @@ export class ResponsavelService {
 
     public excluir(idResponsavel: number) {
         this.repository.delete(idResponsavel);
+    }
+
+    private getValidated(responsavel: Responsavel) {
+        const {
+            id, telefoneFixo, telefoneMovel, endereco, cep,
+            email, idUsuario, nome, praticante, religiao
+        } = responsavel;
+        FieldChecker.begin()
+            .checkIfNull(endereco, 'Informe o telefone fixo.')
+            .checkIfNull(cep, 'Informe o CEP')
+            .checkIfNull(email, 'Informe um email válido')
+            .checkIfNull(idUsuario, 'Para realizar a operação é necessário um usuário válido.')
+            .checkIfNull(nome, 'Informe o nome')
+            .checkIfNull(praticante, 'Informe se o responsável é praticante ou não.')
+            .checkIfNull(religiao, 'Informe a religião do responsável.')
+            .validate();
+        if ((!telefoneFixo || 8 < telefoneFixo.length) &&
+            (!telefoneMovel || 9 < telefoneMovel.length)) {
+            throw new BadRequestException('Informe um telefone válido para Movel ou Fixo');
+        }
+        return {
+            id, telefoneFixo, telefoneMovel, endereco, cep,
+            email, idUsuario, nome, praticante, religiao
+        };
     }
 }

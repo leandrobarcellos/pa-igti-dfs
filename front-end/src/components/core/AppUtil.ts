@@ -1,4 +1,3 @@
-
 export class AppUtil {
     static loggedIn(): boolean {
         // return true;
@@ -6,7 +5,7 @@ export class AppUtil {
         if (item)
             return true;
         item = sessionStorage.getItem("catequese:token");
-        if(item)
+        if (item)
             return true;
         return false;
     }

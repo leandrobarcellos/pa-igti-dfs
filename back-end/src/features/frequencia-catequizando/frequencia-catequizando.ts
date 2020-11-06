@@ -1,13 +1,15 @@
 import {Entity} from "../../core/infra/entity";
-import {Turma} from "./turma";
 import {Catequizando} from "../catequizando/catequizando";
+import {Turma} from "../turma/turma";
 
-export interface TurmaCatequizandoPK {
+export interface FrequenciaCatequizandoPK {
     idTurma: number;
     idCatequizando: number;
+    dataEncontro: number;
 }
 
-export interface TurmaCatequizando extends Entity<TurmaCatequizandoPK> {
+export interface FrequenciaCatequizando extends Entity<FrequenciaCatequizandoPK> {
+    presente: boolean;
     turma?: Turma;
     catequizando?: Catequizando;
 }
