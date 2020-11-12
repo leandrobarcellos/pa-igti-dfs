@@ -4,6 +4,9 @@ import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 export class AppStyle {
     static readonly useStyles = makeStyles((theme: Theme) =>
         createStyles({
+            link: {
+              cursor: "pointer"
+            },
             table: {
                 minWidth: 650,
             },

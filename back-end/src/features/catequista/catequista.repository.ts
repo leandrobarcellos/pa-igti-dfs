@@ -16,6 +16,7 @@ export class CatequistaRepository extends CrudRepository<number, Catequista> {
     }
 
     findByIdEtapa(idEtapa: number) {
-        return this.filter(c => c.idEtapa === idEtapa);
+        console.log("findByIdEtapa(idEtapa: number)", idEtapa);
+        return this.filter(c => c.idEtapa == idEtapa);
     }
 }

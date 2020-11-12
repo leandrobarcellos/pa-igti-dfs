@@ -9,7 +9,7 @@ export class SubscricaoService extends HttpCRUDService {
     }
 
     novoRegistro(dados: NovaSubscricao): Observable<unknown> {
-        return this.httpClient.doPost('/signup', dados);
+        return this.httpClient.post('/signup', dados);
     }
 
 }

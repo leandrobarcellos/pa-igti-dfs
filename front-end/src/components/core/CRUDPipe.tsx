@@ -8,7 +8,7 @@ export interface SearchAction<X> {
 }
 
 export interface FilteredSearchAction<T, X> extends SearchAction<X> {
-    filter?: T
+    filter: T
 }
 
 export abstract class AppPipe {

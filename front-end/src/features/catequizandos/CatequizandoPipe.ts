@@ -8,6 +8,7 @@ import ResponsaveisService from "../responsaveis/ResponsaveisService";
 import {Catequizando} from "./catequizando";
 
 export interface FiltroCatequizando {
+    idUsuario?: number,
     idResponsavel?: number,
 }
 
@@ -16,6 +17,7 @@ export class CatequizandoPipe extends CRUDPipe<Catequizando, FiltroCatequizando>
     private readonly catequizandosService = new CatequizandosService();
     private readonly responsaveisService = new ResponsaveisService();
     private readonly _catequizandosByIdResponsavel = new Subject<FilteredSearchAction<number, Catequizando[]>>();
+    findAllByUser = new Subject<FilteredSearchAction<FiltroCatequizando, Catequizando[]>>()
 
     constructor() {
         super();
@@ -70,10 +72,20 @@ export class CatequizandoPipe extends CRUDPipe<Catequizando, FiltroCatequizando>
     }
 
     protected initPipes() {
+        this.findAllByUser.pipe(
+            switchMap(next => this.catequizandosService
+                .findAllByIdUsuario(next.filter.idUsuario as number).pipe(
+                    tap(res => next.callback(res.data.object))
+                )
+            ),
+            this.defaultErrorCatcher(),
+            this.takeUntilDestroy()
+        ).subscribe();
+
         this.pipeFindAll.pipe(
             switchMap((next: SearchAction<Catequizando[]>) =>
                 this.catequizandosService.findAll<Catequizando[]>().pipe(
-                    tap((res) => next.callback(res.data as Catequizando[]))
+                    tap((res) => next.callback(res.data.object))
                 )
             ),
             this.defaultErrorCatcher(),

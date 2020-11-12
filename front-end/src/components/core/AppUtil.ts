@@ -14,4 +14,14 @@ export class AppUtil {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
+    static getFormattedDate(date: any): string {
+        let fmt;
+        try{
+            console.log("getFormattedDate", date);
+            fmt = Intl.DateTimeFormat('pt-BR').format(new Date(date));
+        }catch (e){
+            fmt= date;
+        }
+        return fmt;
+    };
 }

@@ -1,11 +1,8 @@
 import React, {useEffect} from "react";
-import {Button, FormControl, Grid, TextField} from "@material-ui/core";
+import {Button, Grid, TextField} from "@material-ui/core";
 import {Field} from "../../components/core/Field";
 import {FormProps} from "../../components/core/FormProps";
 import {AppStyle} from "../../components/core/AppStyle";
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import {InputDate, InputSelect} from "../../components/inputs/AppInputs";
 import {CatequistaPipe} from "../catequistas/CatequistaPipe";
 import TransferList from "../../components/core/TransferList";
@@ -14,34 +11,15 @@ import {Turma} from "./turma";
 import {Catequista} from "../catequistas/catequista";
 import {Catequizando} from "../catequizandos/catequizando";
 import {Etapa} from "../../../../back-end/src/features/dominios/etapa/etapa";
+import {TurmasService} from "./TurmasService";
 
-const etapas = [
-    {
-        "id": 1,
-        "codigo": "PE",
-        "nome": "Pré-Eucaristia"
-    },
-    {
-        "id": 2,
-        "codigo": "EU",
-        "nome": "Eucaristia"
-    },
-    {
-        "id": 3,
-        "codigo": "PR",
-        "nome": "Perseverança"
-    },
-    {
-        "id": 4,
-        "codigo": "CR",
-        "nome": "Crisma"
-    }
-];
 export default function FormTurma(props: FormProps<Turma>) {
 
     const classes = AppStyle.useStyles();
     const catequistaPipe = new CatequistaPipe();
     const etapaPipe = new EtapaPipe();
+    const turmaService = new TurmasService();
+    const [etapas, setEtapas] = React.useState<Etapa[]>([]);
     const [catequistas, setCatequistas] = React.useState<Catequista[]>([]);
     const [id, setId] = React.useState(0);
     const [catequista, setCatequista] = React.useState({} as Catequista);
@@ -49,24 +27,47 @@ export default function FormTurma(props: FormProps<Turma>) {
     const [etapa, setEtapa] = React.useState({} as Etapa);
     const [idCatequista, setIdCatequista] = React.useState(0);
     const [idEtapa, setIdEtapa] = React.useState(0);
-    const [inicio, setInicio] = React.useState<Date>(new Date());
+    const [dataInicio, setDataInicio] = React.useState<Date>(new Date());
     const [nome, setNome] = React.useState("");
 
     useEffect(() => {
         configurarForm(props.formData);
+    }, [props.formData]);
+
+    useEffect(() => {
+        console.log("useEffect: etapaPipe.findAll");
+        configurarForm(props.formData);
+        etapaPipe.findAll.next({
+            callback: (value: Etapa[]) => {
+                console.log("etapaPipe.findAll.next", value);
+                setEtapas(value);
+            }
+        });
         return () => {
             catequistaPipe.unsubscribe();
+            etapaPipe.unsubscribe();
         };
     }, []);
 
-    const configurarForm = (t: Turma) => {
+    useEffect(() => {
+        if (idEtapa)
+            catequistaPipe.catequistasByIdEtapa.next({
+                filter: idEtapa,
+                callback: (next: Catequista[]) => {
+                    console.log(next);
+                    setCatequistas(next);
+                }
+            });
+    }, [idEtapa]);
 
+    const configurarForm = (t: Turma) => {
         setId(t && t.id ? t.id : 0);
-        setIdCatequista(t ? t.idCatequista : 0);
-        setIdEtapa(t ? t.idEtapa : 0);
-        setNome(t ? t.nome : "");
-        setCatequizandos(t ? t.catequizandos : []);
-        setInicio(t ? t.inicio : new Date());
+        setIdCatequista(t && t.idCatequista ? t.idCatequista : 0);
+        setIdEtapa(t && t.idEtapa ? t.idEtapa : 0);
+        setNome(t && t.nome ? t.nome : "");
+        // setCatequista(t && t.catequista ? t.catequista : {} as Catequista);
+        setCatequizandos(t && t.catequizandos ? t.catequizandos : []);
+        setDataInicio(t && t.dataInicio ? t.dataInicio : new Date());
     }
 
     const turma: Turma = {
@@ -76,31 +77,22 @@ export default function FormTurma(props: FormProps<Turma>) {
         etapa,
         idCatequista,
         idEtapa,
-        inicio,
+        dataInicio,
         nome
     }
 
     function handleCancelar() {
+        props.onCancelar();
     }
 
     function handleSalvar() {
+        turmaService.persist(turma);
     }
 
     const setDtinicio = (dtInicio: Date | null): void => {
-        if(dtInicio)
-            setInicio(dtInicio);
+        if (dtInicio)
+            setDataInicio(dtInicio);
     };
-
-    const changeEtapa = (value: number) => {
-        setIdEtapa(value);
-        catequistaPipe.catequistasByIdEtapa.next({
-            filter: idEtapa,
-            callback: (next: Catequista[]) => {
-                console.log(next);
-                setCatequistas(next);
-            }
-        })
-    }
 
     return (
         <Grid container spacing={3} id={props.id}>
@@ -111,13 +103,13 @@ export default function FormTurma(props: FormProps<Turma>) {
             </Grid>
             <Grid item xs={12} sm={6}>
                 <InputDate id="dtNascimentoCtqzndo" label="Data de Início"
-                           format="dd/MM/yyyy" value={inicio} set={setDtinicio}/>
+                           format="dd/MM/yyyy" value={dataInicio} set={setDtinicio}/>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <InputSelect id="selectEtapa" label="Etapa"
                              className={classes.formControl} selectClass={classes.selectClass}
-                             items={etapas} toValue={(e:Etapa)=> e.id} toLabel={(e:Etapa)=> e.nome}
-                             value={idEtapa} set={changeEtapa}/>
+                             items={etapas} toValue={(e: Etapa) => e.id} toLabel={(e: Etapa) => e.nome}
+                             value={idEtapa} set={setIdEtapa}/>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <InputSelect items={catequistas} toValue={c => c.id} toLabel={c => c.nome}
@@ -126,7 +118,8 @@ export default function FormTurma(props: FormProps<Turma>) {
                              value={idCatequista} set={setIdCatequista}></InputSelect>
             </Grid>
             <Grid item xs={12} sm={12}>
-                <TransferList></TransferList>
+                <TransferList idEtapa={idEtapa} toLabel={(c: Catequizando) => c.nome}
+                              set={setCatequizandos} preSelecao={catequizandos}></TransferList>
             </Grid>
             <Button variant="contained"
                     color="default"

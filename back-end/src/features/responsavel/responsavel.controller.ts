@@ -3,8 +3,9 @@ import {ResponsavelService} from "./responsavel.service";
 import {RolesAllowed} from "../../core/security/guards/roles-allowed.decorator";
 import {Catequista} from "../catequista/catequista";
 import {Responsavel} from "./responsavel";
+import {Path} from "../../core/infra/app.decorators";
 
-@Controller('e-catequese/responsaveis')
+@Path('/responsaveis')
 export class ResponsavelController {
     constructor(private readonly responsavelService: ResponsavelService) {
     }

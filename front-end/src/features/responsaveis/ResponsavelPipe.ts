@@ -5,15 +5,19 @@ import {AppResponse} from "../../components/core/HttpCRUDService";
 import {FormAction} from "../../components/core/FormAction";
 import ResponsaveisService from "./ResponsaveisService";
 import {Responsavel} from "./responsavel";
+import {UsuariosService} from "../../util/domain/UsuariosService";
 
 export interface FiltroResponsavel {
-
+    idUsuario?: number;
+    email?: string;
 }
 
 export class ResponsavelPipe extends CRUDPipe<Responsavel, FiltroResponsavel> {
 
     private readonly responsavelService = new ResponsaveisService();
-    findByEmail = new Subject<FilteredSearchAction<string, any>>();
+    private readonly usuarioService = new UsuariosService();
+    readonly findByEmail = new Subject<FilteredSearchAction<string, any>>();
+    readonly findAllByIdUsuario = new Subject<FilteredSearchAction<FiltroResponsavel, any>>();
 
     constructor() {
         super();
@@ -60,10 +64,16 @@ export class ResponsavelPipe extends CRUDPipe<Responsavel, FiltroResponsavel> {
     }
 
     findByFilter(filter: FiltroResponsavel, consumer: (value: Responsavel[]) => void): void {
-        throw new Error("Method not implemented.");
+
     }
 
     protected initPipes() {
+        this.findAllByIdUsuario.pipe(
+            switchMap(action => this.responsavelService
+                .findResponsaveisByIdUsuario(action.filter.idUsuario as number).pipe(
+                    tap(res => action.callback(res.data.object))
+                ))
+        ).subscribe();
         this.findByEmail.pipe(
             switchMap(search => {
                 if (search.filter)
@@ -76,7 +86,7 @@ export class ResponsavelPipe extends CRUDPipe<Responsavel, FiltroResponsavel> {
         this.pipeFindAll.pipe(
             switchMap((next: SearchAction<Responsavel[]>) =>
                 this.responsavelService.findAll<Responsavel[]>().pipe(
-                    tap((res) => next.callback(res.data as Responsavel[]))
+                    tap((res) => next.callback(res.data.object))
                 )
             ),
             this.defaultErrorCatcher(),

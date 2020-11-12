@@ -21,6 +21,7 @@ export class UserService {
             validated.roles = [Role.RESPONSAVEL];
         }
         const byEmail = this.userRepo.findByEmail(user.email);
+        console.log("this.userRepo.findByEmail(user.email);", byEmail);
         if (byEmail && byEmail.id)
             throw new BadRequestException("E-mail já registrado.");
         this.userRepo.save(validated);

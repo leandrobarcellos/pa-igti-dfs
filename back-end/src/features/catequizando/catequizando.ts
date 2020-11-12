@@ -1,5 +1,6 @@
 import {Entity} from "../../core/infra/entity";
 import {Responsavel} from "../responsavel/responsavel";
+import {Etapa} from "../dominios/etapa/etapa";
 
 export interface Catequizando extends Entity<number> {
     idPai?: number,
@@ -19,5 +20,6 @@ export interface Catequizando extends Entity<number> {
     ufDioceseBatismo: string,
     resideCom: string,
     dadosMae?: Responsavel,
-    dadosPai?: Responsavel
+    dadosPai?: Responsavel,
+    etapa?: Etapa
 }

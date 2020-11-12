@@ -12,32 +12,35 @@ export interface AppResponse<T> {
 
 export class HttpService {
     protected readonly httpClient: HttpClient;
-    constructor(basePath: string) {
+
+    constructor(basePath: string, httpClient?: HttpClient) {
         this.httpClient = new HttpClient(basePath);
+        if (httpClient)
+            this.httpClient = httpClient;
     }
 
 }
 
-export class HttpCRUDService extends HttpService{
+export class HttpCRUDService extends HttpService {
 
     public persist<T>(value: any): Observable<AppResponse<T>> {
-        return this.httpClient.doPost("", value);
+        return this.httpClient.post("", value);
     }
 
     public merge<T>(value: any): Observable<AppResponse<T>> {
-        return this.httpClient.doPut("", value);
+        return this.httpClient.put("", value);
     }
 
     public remove<T>(id: any): Observable<AppResponse<T>> {
-        return this.httpClient.doDelete(`/${id}`);
+        return this.httpClient.delete(`/${id}`);
     }
 
     public find<T>(id: any): Observable<AppResponse<T>> {
-        return this.httpClient.doGet(`/${id}`);
+        return this.httpClient.get(`/${id}`);
     }
 
     public findAll<T>(): Observable<AppResponse<T>> {
-        return this.httpClient.doGet();
+        return this.httpClient.get();
     }
 
 }

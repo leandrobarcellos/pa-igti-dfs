@@ -5,6 +5,7 @@ import {Request, Response} from 'express';
 export class ErrorFilter implements ExceptionFilter {
     catch(error: Error, host: ArgumentsHost) {
         let status = 500;
+        console.log(`error:`, error);
         if (error instanceof HttpException) {
             let message = error["response"].message;
             if (Array.isArray(message))

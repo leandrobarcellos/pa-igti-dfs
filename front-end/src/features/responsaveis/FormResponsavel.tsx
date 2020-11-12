@@ -1,15 +1,16 @@
 import {useHistory} from "react-router-dom";
-import {Grid, TextField} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
-import {Field} from "../../components/core/Field";
 import {FormProps} from "../../components/core/FormProps";
 import Button from "@material-ui/core/Button";
 import {Responsavel} from "./responsavel";
 import {SessionUtil} from "../../components/core/session.util";
+import ResponsaveisService from "./ResponsaveisService";
+import {InputText, SelectParentesco, SelectSimNao} from "../../components/inputs/AppInputs";
 
 interface DadosResponsavelProps extends FormProps<Responsavel> {
     title?: string,
-    labelNome?: string,
+    labelNome: string | 'Nome',
     setState?: (e: any) => void,
     children?: any,
 }
@@ -17,8 +18,10 @@ interface DadosResponsavelProps extends FormProps<Responsavel> {
 export function FormResponsavel(props: DadosResponsavelProps) {
     const history = useHistory();
     let r = props.formData;
+    const responsavelDispatcher = new ResponsaveisService();
     const [id, setId] = useState(r ? r.id : 0);
     const [nome, setNome] = useState(r ? r.nome : "");
+    const [parentesco, setParentesco] = useState(r ? r.parentesco : "");
     const [endereco, setEndereco] = useState(r ? r.endereco : "");
     const [cep, setCep] = useState(r ? r.cep : "");
     const [telefoneFixo, setTelefoneFixo] = useState(r ? r.telefoneFixo : "");
@@ -30,18 +33,21 @@ export function FormResponsavel(props: DadosResponsavelProps) {
     const responsavel = {
         id,
         nome,
+        parentesco,
         endereco,
         cep,
         telefoneFixo,
         telefoneMovel,
         email,
         religiao,
-        praticante
+        praticante,
+        idUsuario: SessionUtil.isResponsavel() ? SessionUtil.getUser().id : undefined
     };
 
     const configurarForm = (r: Responsavel | null) => {
         setId(r ? r.id : 0);
         setNome(r ? r.nome : "");
+        setParentesco(r ? r.parentesco : "");
         setTelefoneFixo(r ? r.telefoneFixo : "");
         setCep(r ? r.cep : "");
         setEmail(r ? r.email : "");
@@ -54,61 +60,63 @@ export function FormResponsavel(props: DadosResponsavelProps) {
     useEffect(() => {
         if (r)
             configurarForm(r)
-    });
+    }, []);
 
 
     function handleCancelar() {
         if (!SessionUtil.isAuthenticated()) {
             history.push("/login");
         }
+        configurarForm(null);
+        props.onCancelar();
     }
 
     function handleSalvar() {
+        console.log("function handleSalvar()", responsavel);
+        responsavelDispatcher.persist(responsavel).subscribe(next => {
+            console.log(next);
+            props.onSaveComplete();
+            configurarForm(null);
+        });
     }
 
     return (
 
         <Grid container spacing={3} id={props.id}>
-            <Grid item xs={12} sm={12}>
-                <TextField fullWidth={true} id={props.id + "Nome"} label={props.labelNome}
-                           value={nome}
-                           onChange={e => Field.change(e, setNome)}/>
-            </Grid>
             <Grid item xs={12} sm={8}>
-                <TextField fullWidth={true} id={props.id + "Endereco"} label="Endereço"
-                           value={endereco}
-                           onChange={e => Field.change(e, setEndereco)}/>
+                <InputText id={props.id + "Nome"} label={props.labelNome} value={nome} set={setNome}></InputText>
             </Grid>
             <Grid item xs={12} sm={4}>
-                <TextField fullWidth={true} id={props.id + "Cep"} label="CEP"
-                           value={cep}
-                           onChange={e => Field.change(e, setCep)}/>
+                <SelectParentesco id={props.id + "Parentesco"} label="Parentesco" value={parentesco}
+                                  set={setParentesco}></SelectParentesco>
+            </Grid>
+            <Grid item xs={12} sm={8}>
+                <InputText id={props.id + "Endereco"} label="Endereço" value={endereco} set={setEndereco}></InputText>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+                <InputText id={props.id + "Cep"} label="CEP"
+                           value={cep} set={setCep}></InputText>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextField fullWidth={true} id={props.id + "TelRes"}
+                <InputText id={props.id + "TelRes"}
                            label="Telefone Residencial"
-                           value={telefoneFixo}
-                           onChange={e => Field.change(e, setTelefoneFixo)}/>
+                           value={telefoneFixo} set={setTelefoneFixo}></InputText>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextField fullWidth={true} id={props.id + "CelRes"} label="Celular"
-                           value={telefoneMovel}
-                           onChange={e => Field.change(e, setTelefoneMovel)}/>
+                <InputText id={props.id + "CelRes"} label="Celular"
+                           value={telefoneMovel} set={setTelefoneMovel}></InputText>
             </Grid>
             <Grid item xs={12} sm={12}>
-                <TextField fullWidth={true} id={props.id + "Email"} label="E-mail"
-                           value={email}
-                           onChange={e => Field.change(e, setEmail)}/>
+                <InputText id={props.id + "Email"} label="E-mail"
+                           value={email} set={setEmail}></InputText>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextField fullWidth={true} id={props.id + "Religiao"} label="Religião"
-                           value={religiao}
-                           onChange={e => Field.change(e, setReligiao)}/>
+                <InputText id={props.id + "Religiao"} label="Religião"
+                           value={religiao} set={setReligiao}></InputText>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <TextField fullWidth={true} id={props.id + "Praticante"} label="Praticante"
-                           value={praticante}
-                           onChange={e => Field.change(e, setPraticante)}/>
+                <SelectSimNao id={props.id + "Praticante"} label="Praticante" value={praticante}
+                              set={setPraticante}></SelectSimNao>
             </Grid>
             <Button variant="contained"
                     color="default"

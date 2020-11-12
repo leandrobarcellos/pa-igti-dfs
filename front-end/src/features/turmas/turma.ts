@@ -10,5 +10,5 @@ export interface Turma {
     catequista: Catequista,
     etapa: Etapa,
     catequizandos: Catequizando[],
-    inicio: Date
+    dataInicio: Date
 }

@@ -27,4 +27,8 @@ export class TurmaCatequizandoService {
         }
         return this.repository.findAll();
     }
+
+    findByIdTurma(idTurma: number): TurmaCatequizando[] {
+        return this.repository.filter(t => t.id.idTurma == idTurma);
+    }
 }

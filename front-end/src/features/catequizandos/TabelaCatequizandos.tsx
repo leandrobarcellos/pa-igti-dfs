@@ -11,6 +11,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import {TableProps} from "../../components/core/CRUDProps";
 import {Catequizando} from "./catequizando";
+import {AppUtil} from "../../components/core/AppUtil";
 
 const useStyles = makeStyles({
     table: {
@@ -40,20 +41,11 @@ export default function TabelaCatequizandos(props: TableProps<Catequizando>) {
             }
         });
     }
-    const getTurmaDesejada = (row: any) => {
-        let toShow = "";
-        let turmaDesejada = row?.turmaDesejada;
-        if(!turmaDesejada)
-            toShow = "Eucaristia";
-        if ("PE" === turmaDesejada)
-            toShow = "Pré-Eucaristia";
-        if ("EU" === turmaDesejada)
-            toShow = "Eucaristia";
-        if ("PR" === turmaDesejada)
-            toShow = "Perseverança";
-        if ("CR" === turmaDesejada)
-            toShow = "Crisma";
-        return toShow;
+
+    const getFormattedDate = (dtNascimentoCtqzndo: any) => {
+        if (dtNascimentoCtqzndo)
+            return AppUtil.getFormattedDate(dtNascimentoCtqzndo);
+        return "";
     };
 
     return (
@@ -76,10 +68,10 @@ export default function TabelaCatequizandos(props: TableProps<Catequizando>) {
                             <TableCell component="th" scope="row">
                                 {row?.nome}
                             </TableCell>
-                            <TableCell align="right">{row?.dtNascimento}</TableCell>
+                            <TableCell align="right">{getFormattedDate(row?.dtNascimento)}</TableCell>
                             <TableCell align="right">{row?.email}</TableCell>
                             <TableCell align="right">{row?.telefoneFixo}</TableCell>
-                            <TableCell align="right">{getTurmaDesejada(row)}</TableCell>
+                            <TableCell align="right">{row?.etapa?.nome}</TableCell>
                             <TableCell align="right">
                                 <EditIcon className={classes.actionIcon} onClick={() => props.onEditing(row)}/>
                             </TableCell>

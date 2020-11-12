@@ -2,6 +2,7 @@
 export interface Responsavel{
     id?: number,
     nome: string,
+    parentesco: 'PAI' | 'MAE';
     endereco: string,
     cep: string,
     telefoneFixo: string,

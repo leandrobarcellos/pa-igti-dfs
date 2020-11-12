@@ -1,5 +1,6 @@
-import {AppResponse, HttpService} from "../../components/core/HttpCRUDService";
+import {AppResponse} from "../../components/core/HttpCRUDService";
 import {Observable} from "rxjs";
+import HttpClient, {_} from "../../components/core/HttpClient";
 
 export interface Login {
     username: string,
@@ -8,13 +9,13 @@ export interface Login {
     onError?: (err: Error) => void
 }
 
-export class LoginService extends HttpService {
+export class LoginDispatcher extends HttpClient {
     constructor() {
         super("/login");
     }
 
     login(login: Login): Observable<AppResponse<any>> {
-        return this.httpClient.post("", login);
+        return this.post(_, login);
     }
 
 }

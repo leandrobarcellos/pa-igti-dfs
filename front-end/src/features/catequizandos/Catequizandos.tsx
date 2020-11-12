@@ -1,25 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {
-    Container,
-    ExpansionPanel,
-    ExpansionPanelDetails,
-    ExpansionPanelSummary,
-    Grid,
-    Typography
-} from "@material-ui/core";
-import {FormResponsavel} from "../responsaveis/FormResponsavel";
-import CustomizedSteppers from "../../components/Stepper";
-import ExibirDadosCatequizando from "./ExibirDadosCatequizando";
-import ExibirDadosResponsavel from "./ExibirDadosResponsavel";
+import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TabelaCatequizandos from "./TabelaCatequizandos";
 import {CatequizandoPipe} from "./CatequizandoPipe";
 import {AppStyle} from "../../components/core/AppStyle";
 import FormCatequizando from "./FormCatequizando";
 import {Subject} from "rxjs";
-import {ResponsavelPipe} from "../responsaveis/ResponsavelPipe";
 import {Catequizando} from "./catequizando";
 import {Responsavel} from "../responsaveis/responsavel";
+import {SessionUtil} from "../../components/core/session.util";
 
 
 const steps = ['Dados do Catequizando', 'Dados dos Pais', 'Resumo'];
@@ -40,26 +29,30 @@ export default function Catequizandos(props: any) {
 
     const classes = AppStyle.useStyles();
     const catequizandoPipe = new CatequizandoPipe();
-    const responsavelPipe = new ResponsavelPipe();
     const [showResults, setShowResults] = useState(false);
     const [dadosMae, setDadosMae] = React.useState({} as Responsavel);
     const [dadosPai, setDadosPai] = React.useState({} as Responsavel);
     const [rows, setRows] = React.useState([] as Catequizando[]);
 
     const doSetCatequizando = (c: Catequizando) => {
-        console.log(c);
+        console.log("doSetCatequizando", c);
         catequizando = c;
     }
 
-    const onNavigate = {
-        // 0: {set: (flg: boolean) => notificadorCatequizando.next(flg)},
-        // 1: {set: (flg: boolean) => notificadorResponsavel.next(flg)},
-    } as any;
-
     useEffect(() => {
-        catequizandoPipe.findAll.next({
-            callback: (value: Catequizando[]) => setRows(value)
-        })
+        if (SessionUtil.isAuthenticated()) {
+            if (SessionUtil.isAdmin() || SessionUtil.isCatequista()) {
+                catequizandoPipe.findAll.next({
+                    callback: (value: Catequizando[]) => setRows(value)
+                })
+            } else if (SessionUtil.isResponsavel()) {
+                const usr = SessionUtil.getUser();
+                catequizandoPipe.findAllByUser.next({
+                    filter: {idUsuario: usr.id},
+                    callback: (value: Catequizando[]) => setRows(value)
+                })
+            }
+        }
     }, []);
 
     useEffect(() => {
@@ -80,39 +73,15 @@ export default function Catequizandos(props: any) {
         // onNavigate[step].set({touch: true});
     };
 
-    const onPrevious = (step: number) => {
-        // onNavigate[step].set({touch: true});
-    };
-
-    const getFormattedDate = (dtNascimentoCtqzndo: any) => {
-        if (dtNascimentoCtqzndo?.toLocaleDateString)
-            return dtNascimentoCtqzndo?.toLocaleDateString();
-        return "";
-    };
-
-    const handleSubmit = (e: any) => {
-        if (catequizando.id && catequizando.id > 0) {
-            catequizandoPipe.update.next({
-                formData: catequizando
-            });
-        } else {
-            catequizandoPipe.save.next({
-                formData: catequizando
-            });
-        }
-    };
-
-    const handleReset = (e: any) => {
-        // configurarForm(null);
-    };
-
     const handleChangeAccordion = (e: any) => {
         setShowResults(!showResults);
     }
 
     const handleEditing = (row: Catequizando) => {
+        console.log("handleEditing", row);
         doSetCatequizando(row);
         setShowResults(false);
+
     }
 
     const onComplete = () => {
@@ -139,72 +108,16 @@ export default function Catequizandos(props: any) {
                     <Typography className={classes.heading}>Formulário de cadastramento</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <CustomizedSteppers onNext={onNext} onPrevious={onPrevious} steps={steps}
-                                        onFinish={handleSubmit} onReset={handleReset}>
-                        <Container maxWidth="lg">
-                            <FormCatequizando id="fmrCatequizando"
-                                              formData={catequizando}
-                                              saveAction={catequizandoPipe.save}
-                                              updateAction={catequizandoPipe.update}
-                                              onCancelar={onComplete}
-                                              onSaveComplete={onComplete}
-                                              onUpdateComplete={onComplete}
-                                              notificador={notificadorCatequizando}
-                                              sendData={c => doSetCatequizando(c)}>
-                            </FormCatequizando>
-                        </Container>
-                        <Container maxWidth="lg">
-                            <Grid container spacing={3} id="dadosCatequisando">
-                                <Grid item xs={12} sm={6}>
-                                    <Container id={props.id} style={{marginTop: "25px"}}>
-                                        <Typography variant="h5" component="h5">
-                                            {"Dados da Mãe"}
-                                        </Typography>
-                                        <FormResponsavel id="gridMae" title="Dados da Mãe" labelNome="Nome da Mãe"
-                                                         formData={dadosMae}
-                                                         saveAction={responsavelPipe.save}
-                                                         updateAction={responsavelPipe.update}
-                                                         onCancelar={() => onCompleteResponsavel("dadosMae")}
-                                                         onSaveComplete={() => onCompleteResponsavel("dadosMae")}
-                                                         onUpdateComplete={() => onCompleteResponsavel("dadosMae")}
-                                                         setState={setDadosMae}>
-                                        </FormResponsavel>
-                                    </Container>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <Container id={props.id} style={{marginTop: "25px"}}>
-                                        <Typography variant="h5" component="h5">
-                                            {"Dados do Pai"}
-                                        </Typography>
-                                        <FormResponsavel id="gridPai" title="Dados do Pai" labelNome="Nome do Pai"
-                                                         formData={dadosPai}
-                                                         saveAction={responsavelPipe.save}
-                                                         updateAction={responsavelPipe.update}
-                                                         onCancelar={() => onCompleteResponsavel("dadosPai")}
-                                                         onSaveComplete={() => onCompleteResponsavel("dadosPai")}
-                                                         onUpdateComplete={() => onCompleteResponsavel("dadosPai")}
-                                                         setState={setDadosPai}>
-                                        </FormResponsavel>
-                                    </Container>
-                                </Grid>
-                            </Grid>
-                        </Container>
-                        <Container maxWidth="lg">
-                            <Grid container spacing={3} id="exibirDados">
-                                <Grid item xs={12} sm={12}>
-                                    <ExibirDadosCatequizando value={catequizando}/>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <ExibirDadosResponsavel id="dadosMae" labelNome="Nome da Mãe"
-                                                            title="Dados da Mãe" value={dadosMae}/>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <ExibirDadosResponsavel id="dadosPai" labelNome="Nome do Pai"
-                                                            title="Dados do Pai" value={dadosPai}/>
-                                </Grid>
-                            </Grid>
-                        </Container>
-                    </CustomizedSteppers>
+                    <FormCatequizando id="fmrCatequizando"
+                                      formData={catequizando}
+                                      saveAction={catequizandoPipe.save}
+                                      updateAction={catequizandoPipe.update}
+                                      onCancelar={onComplete}
+                                      onSaveComplete={onComplete}
+                                      onUpdateComplete={onComplete}
+                                      notificador={notificadorCatequizando}
+                                      sendData={c => doSetCatequizando(c)}>
+                    </FormCatequizando>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel expanded={showResults}>

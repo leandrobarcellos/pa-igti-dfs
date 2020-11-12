@@ -10,6 +10,7 @@ export class EtapaService {
     }
 
     public findAll(): Etapa[] {
+        console.log("public findAll(): Etapa[]");
         return this.repository.findAll();
     }
 

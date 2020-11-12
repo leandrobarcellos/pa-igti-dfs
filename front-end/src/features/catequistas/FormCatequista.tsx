@@ -2,7 +2,7 @@ import {Grid} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import React, {useEffect} from "react";
 import {FormProps} from "../../components/core/FormProps";
-import {InputEmail, InputNumber, InputSelect, InputText} from "../../components/inputs/AppInputs";
+import {InputEmail, InputNumber, InputText, SelectEtapa, SelectSimNao} from "../../components/inputs/AppInputs";
 import {Catequista} from "./catequista";
 
 export function FormCatequista(props: FormProps<Catequista>) {
@@ -13,20 +13,22 @@ export function FormCatequista(props: FormProps<Catequista>) {
 
     const [optId, setOptId] = React.useState(0);
     const [nome, setNome] = React.useState("");
+    const [idEtapa, setIdEtapa] = React.useState<number>(0);
     const [email, setEmail] = React.useState("");
     const [optTelefoneFixo, setOptTelefoneFixo] = React.useState<string | undefined>("");
     const [telefoneCelular, setTelefoneCelular] = React.useState("");
     const [endereco, setEndereco] = React.useState("");
-    const [casado, setCasado] = React.useState("");
+    const [casado, setCasado] = React.useState<string>("");
 
     const configureForm = (catequista?: Catequista) => {
         setOptId(catequista && catequista.id ? catequista.id : 0);
         setNome(catequista ? catequista.nome : "");
+        setIdEtapa(catequista ? catequista.idEtapa : 0);
         setEmail(catequista ? catequista.email : "");
         setOptTelefoneFixo(catequista ? catequista.telefoneFixo : "");
         setTelefoneCelular(catequista ? catequista.telefoneCelular : "");
         setEndereco(catequista ? catequista.endereco : "");
-        setCasado(catequista ? catequista.casado : "N");
+        setCasado(catequista ? catequista.casado : "");
     }
 
     let getCatequista = function () {
@@ -74,10 +76,18 @@ export function FormCatequista(props: FormProps<Catequista>) {
         }
     }
 
+    const handleCasado = (e: string) => {
+        console.log("setCasado(e)", e);
+        setCasado(e);
+    }
+
     return (
         <Grid container spacing={3} id="gridCat">
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={6}>
                 <InputText id="nmCatequista" label="Nome" value={nome} set={setNome}></InputText>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <SelectEtapa id="etapa" label="Etapa" value={idEtapa} set={setIdEtapa}></SelectEtapa>
             </Grid>
             <Grid item xs={12} sm={8}>
                 <InputText id="enderecoCatequista" label="Endereço" value={endereco} set={setEndereco}></InputText>
@@ -87,17 +97,14 @@ export function FormCatequista(props: FormProps<Catequista>) {
             </Grid>
             <Grid item xs={12} sm={6}>
                 <InputNumber id="telRes" label="Telefone Residencial" value={optTelefoneFixo}
-                           set={setOptTelefoneFixo}></InputNumber>
+                             set={setOptTelefoneFixo}></InputNumber>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <InputNumber id="celRes" label="Telefone Celular" value={telefoneCelular}
-                           set={setTelefoneCelular}></InputNumber>
+                             set={setTelefoneCelular}></InputNumber>
             </Grid>
             <Grid item xs={12} sm={12}>
-                <InputSelect items={[{value: "S", label: "Sim"}, {value: "N", label: "Não"}]}
-                             toValue={(i: any) => i.value}
-                             toLabel={(i: any) => i.label}
-                             id="casado" label="Casada(o)" value={casado} set={setCasado}></InputSelect>
+                <SelectSimNao id="casado" label="Casada(o)" value={casado} set={e => handleCasado(e)}></SelectSimNao>
             </Grid>
             <Button variant="contained"
                     color="default"

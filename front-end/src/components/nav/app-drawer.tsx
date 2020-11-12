@@ -65,11 +65,9 @@ function AppDrawer(props: AppDrawerProps) {
     }
 
     const drawerItemResponsaveis = () => {
-        if (SessionUtil.isAdmin() || SessionUtil.isCatequista())
-            return (<DrawerItem pKey="responsaveis" route="/responsaveis" text="Responsáveis">
-                <PersonAddIcon/>
-            </DrawerItem>);
-        return (<></>);
+        return (<DrawerItem pKey="responsaveis" route="/responsaveis" text="Responsáveis">
+            <PersonAddIcon/>
+        </DrawerItem>);
     }
 
     const drawerItemTurmas = () => {

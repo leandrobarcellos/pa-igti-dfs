@@ -15,4 +15,10 @@ export class ResponsavelRepository extends CrudSequencialRepository<Responsavel>
         } as Responsavel;
         return find;
     }
+
+    findByIdUsuario(idUsuario: any): Responsavel[] {
+        const responsaveis = this.filter(r => r.idUsuario == idUsuario);
+        console.log("this.filter(r => r.idUsuario == idUsuario)", responsaveis)
+        return responsaveis;
+    }
 }

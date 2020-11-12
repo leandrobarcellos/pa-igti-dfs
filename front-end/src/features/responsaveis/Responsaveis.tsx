@@ -1,5 +1,6 @@
 import {Container, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography} from "@material-ui/core";
 import React, {useEffect} from "react";
+import {useHistory} from "react-router-dom";
 import {FormResponsavel} from "./FormResponsavel";
 import {ResponsavelPipe} from "./ResponsavelPipe";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -11,29 +12,44 @@ import {SessionUtil} from "../../components/core/session.util";
 
 
 export default function Responsaveis() {
+    const history = useHistory();
     const classes = AppStyle.useStyles();
     const responsavelPipe = new ResponsavelPipe();
     const [responsavel, setResponsavel] = React.useState({} as Responsavel);
     const [showResults, setShowResults] = React.useState(false);
     const [rows, setRows] = React.useState<Responsavel[]>([]);
 
-    useEffect(() => {
-        let item = localStorage.getItem("emailUsuario");
-        if (item)
-            responsavelPipe.findByEmail.next({
-                filter: item,
-                callback: r => setResponsavel(r)
-            });
-        responsavelPipe.findAll.next({
-            callback: (n: Responsavel[]) => {
-                console.log("responsavelPipe.findAllShoes.next", n);
-                setRows(n);
+    const carregarResponsaveis = () => {
+        let user = SessionUtil.getUser();
+        if (user) {
+            if (user.roles && (user.roles.includes("CATEQUISTA") || user.roles.includes("ADMIN"))) {
+                responsavelPipe.findAll.next({
+                    callback: (n: Responsavel[]) => {
+                        console.log("responsavelPipe.findAll.next", n);
+                        setRows(n);
+                    }
+                });
+            } else {
+                responsavelPipe.findAllByIdUsuario.next({
+                    filter: {idUsuario: user.id},
+                    callback: (n: Responsavel[]) => {
+                        console.log("responsavelPipe.findAllByIdUsuario.next", n);
+                        setRows(n);
+                    }
+                });
             }
-        })
+        } else {
+            history.push('/');
+        }
+    };
+
+    useEffect(() => {
+        carregarResponsaveis();
     }, []);
 
-    const onComplete = () => {
 
+    const onComplete = () => {
+        carregarResponsaveis();
     }
 
     const handleChangeAccordion = () => {
@@ -45,7 +61,7 @@ export default function Responsaveis() {
     return (
         <Container maxWidth="lg" style={{marginTop: "25px"}}>
             <Typography variant="h5" component="h5">
-                {SessionUtil.isAuthenticated()? 'Responsável pelo Catequizando': 'Novo registro'}
+                {SessionUtil.isAuthenticated() ? 'Responsável pelo Catequizando' : 'Novo registro'}
             </Typography>
             <ExpansionPanel expanded={!showResults}>
                 <ExpansionPanelSummary onClick={handleChangeAccordion}
@@ -66,7 +82,7 @@ export default function Responsaveis() {
                 </ExpansionPanelDetails>
             </ExpansionPanel>
 
-            {SessionUtil.isAuthenticated()? (<ExpansionPanel expanded={showResults}>
+            {SessionUtil.isAuthenticated() ? (<ExpansionPanel expanded={showResults}>
                 <ExpansionPanelSummary onClick={handleChangeAccordion}
                                        expandIcon={<ExpandMoreIcon/>}
                                        aria-controls="panel1a-content"
@@ -76,16 +92,16 @@ export default function Responsaveis() {
                 <ExpansionPanelDetails>
                     <AppTable columns={[
                         {label: "Nome", attribute: "nome"},
+                        {label: "Parentesco", attribute: "parentesco"},
                         {label: "Residência", attribute: "endereco"},
                         {label: "E-mail", attribute: "email"},
-                        {label: "Telefone Celular", attribute: "telefoneMovel"},
-                    ]}
+                        {label: "Telefone Celular", attribute: "telefoneMovel"}]}
                               actions={[
                                   {label: "teste", icon: (<PeopleIcon/>), call: row => console.log(row)}
                               ]}
                               dataSource={rows}></AppTable>
                 </ExpansionPanelDetails>
-            </ExpansionPanel>): (<></>)}
+            </ExpansionPanel>) : (<></>)}
         </Container>
     );
 }

@@ -2,21 +2,23 @@ import {CatequizandoRepository} from "./catequizando.repository";
 import {Catequizando} from "./catequizando";
 import {Util} from "../../core/util/Util";
 import {ResponsavelService} from "../responsavel/responsavel.service";
-import {Responsavel} from "../responsavel/responsavel";
-import {TurmaCatequizandoRepository} from "../turma/turma-catequizando.repository";
 import {BadRequestException} from "@nestjs/common";
 import {FieldChecker} from "../../core/infra/field.checker";
+import {TurmaCatequizandoRepository} from "../turma/turma-catequizando.repository";
+import {EtapaRepository} from "../dominios/etapa/etapa.repository";
 
 export class CatequizandoService {
 
     private readonly repository: CatequizandoRepository;
     private readonly turmaCatequizandoRepo: TurmaCatequizandoRepository;
+    private readonly etapaRepo: EtapaRepository;
     private readonly responsavelService: ResponsavelService;
 
     constructor() {
         this.repository = new CatequizandoRepository();
         this.turmaCatequizandoRepo = new TurmaCatequizandoRepository();
         this.responsavelService = new ResponsavelService();
+        this.etapaRepo = new EtapaRepository();
     }
 
     public consultarCatequizandosPorIdTurma(idTurma: number): Catequizando[] {
@@ -24,26 +26,10 @@ export class CatequizandoService {
         return this.repository.findByIdsCatequizandos(idsCatequizandos);
     }
 
-    public salvarCatequizando(catequizando: Catequizando): void {
-        const mae = this.salvarResponsavel(catequizando.dadosMae);
-        const pai = this.salvarResponsavel(catequizando.dadosPai);
-        catequizando.idPai = pai.id;
-        catequizando.idMae = mae.id;
+    public salvarCatequizando(catequizando: Catequizando): Catequizando {
         const validated = this.getValidated(catequizando);
         this.repository.save(validated);
-    }
-
-    private salvarResponsavel(responsavel?: Responsavel): Responsavel {
-        let toReturn = {};
-        if (responsavel) {
-            if (!responsavel.id) {
-                toReturn = this.responsavelService.salvar(responsavel);
-            } else {
-                const found = this.responsavelService.consultarPorId(responsavel.id);
-                Object.assign(toReturn, found);
-            }
-        }
-        return toReturn as Responsavel;
+        return validated;
     }
 
     public atualizarCatequizando(id: number, catequizando: Catequizando): void {
@@ -59,14 +45,28 @@ export class CatequizandoService {
     }
 
     public findAll(): Catequizando[] {
-        return this.repository.findAll();
+        const catequizandos = this.repository.findAll();
+        catequizandos.forEach(c => this.configurarRelacionamentos(c));
+        return catequizandos;
+    }
+
+    private configurarRelacionamentos(c: Catequizando) {
+        c.dadosMae = this.responsavelService.findById(c.idMae);
+        c.dadosPai = this.responsavelService.findById(c.idPai);
+        c.etapa = this.etapaRepo.findById(c.idEtapa);
     }
 
     public findById(id: number): Catequizando {
-        return this.repository.findById(id);
+        const c = this.repository.findById(id);
+        this.configurarRelacionamentos(c);
+        return c;
     }
 
     public deleteCatequizando(id: number): void {
+        const turmaCatequizando = this.turmaCatequizandoRepo.findByIdCatequizando(id);
+        if (turmaCatequizando && 0 < turmaCatequizando.length) {
+            throw new BadRequestException("O Catequizando já foi inscrito em turmas.");
+        }
         this.repository.delete(id);
     }
 
@@ -77,6 +77,7 @@ export class CatequizandoService {
             idEtapa, idPai, idMae, cep, nome, cidadeDioceseBatismo
         } = catequizando;
 
+        console.log(catequizando);
         FieldChecker.begin()
             .checkIfNull(ufDioceseBatismo, 'Informe a UF da diocese de batismo.')
             .checkIfNull(resideCom, 'Informe com quem o catequizando reside.')
@@ -90,20 +91,24 @@ export class CatequizandoService {
             .checkIfNull(cep, 'Informe o CEP.')
             .checkIfNull(nome, 'Informe o nome.')
             .checkIfNull(cidadeDioceseBatismo, 'Informe a cidade da diocese de batismo.')
+            .checkIf(c => !Util.isTelefoneOk(telefoneFixo, 8)
+                && Util.isTelefoneOk(telefoneMovel, 9), 'Informe ao menos um telefone: Movel ou Fixo.')
+            .checkIf(c => !idPai && !idMae, 'O pai ou a mãe devem ser informados.')
             .validate();
-        if (!Util.isTelefoneOk(telefoneFixo, 8)
-            && Util.isTelefoneOk(telefoneMovel, 9)) {
-            throw new BadRequestException('Informe ao menos um telefone: Movel ou Fixo.');
-        }
-
-        if (!idPai && !idMae) {
-            throw new BadRequestException('O pai ou a mãe devem ser informados.');
-        }
 
         return {
             id, ufDioceseBatismo, resideCom, cidadeNascimento, arquidioceseBatismo,
             paroquiaBatismo, email, telefoneMovel, telefoneFixo, endereco, dtNascimento,
             idEtapa, idPai, idMae, cep, nome, cidadeDioceseBatismo
         };
+    }
+
+    findByIdEtapa(idEtapa: number) {
+        const catequizandos = this.repository.filter(c=> c.idEtapa == idEtapa);
+        catequizandos.forEach(c=> {
+            c.dadosMae = this.responsavelService.findById(c.idMae);
+            c.dadosPai = this.responsavelService.findById(c.idPai);
+        });
+        return catequizandos;
     }
 }

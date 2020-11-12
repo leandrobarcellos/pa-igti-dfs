@@ -14,21 +14,32 @@ export abstract class Repository<K, T extends Entity<K>> {
             sequence: 1,
             rows: []
         };
-        fs.readFile(this.dbJson, (err: any | null, data: Buffer) => {
-            if (err) {
-                this.updateDB();
-            } else {
-                this._db = JSON.parse(data.toString());
-            }
-        });
+        this.refreshDB();
     }
 
     protected updateDB(): void {
         const data = JSON.stringify(this.db);
         fs.writeFileSync(this.dbJson, data);
+        this.refreshDB();
+    }
+
+
+    private refreshDB() {
+        fs.readFile(this.dbJson, (err: any | null, data: Buffer) => {
+            if (err) {
+                console.log("error reading DB", this.dbJson);
+                const data = JSON.stringify(this._db);
+                fs.writeFileSync(this.dbJson, data);
+            } else {
+                this._db = JSON.parse(data.toString());
+            }
+        });
+        setTimeout(() => {
+        }, 300);
     }
 
     protected get db(): EntityDb<K, T> {
+        this.refreshDB();
         return this._db;
     }
 

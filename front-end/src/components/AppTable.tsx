@@ -77,14 +77,32 @@ export default function AppTable(props: AppTableProps<any>) {
         return remove;
     }
 
-    let randomInt = function () {
+    const randomInt = () => {
         return AppUtil.randomIntFromInterval(0, 9999);
     };
 
-    function getKey(row: any) {
+    const getKey = (row: any) => {
         if (row && columns && columns.length > 0)
             return `${row[columns[0].attribute]}_${(randomInt())}`;
         return undefined;
+    }
+
+    const getRowValue = (row: any, attribute: string) => {
+        const discover = attribute.split('.');
+        let value = row;
+        if (discover && 0 < discover.length) {
+            for (let a of discover) {
+                value = value[a];
+            }
+        } else {
+            value = row[attribute];
+        }
+        try{
+            value = Intl.DateTimeFormat('pt-BR').format(new Date(value));
+        }catch (e) {
+            //ignoring...
+        }
+        return value;
     }
 
     return (
@@ -92,7 +110,7 @@ export default function AppTable(props: AppTableProps<any>) {
             <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        {columns.map(c => (<TableCell key={`${c.attribute}_${(randomInt())}`} align="left">{c.label}</TableCell>))}
+                        {columns.map(c => (<TableCell key={`th_${c.attribute}_${(randomInt())}`} align="left">{c.label}</TableCell>))}
                         {
                             props.actions?.map(a => (<TableCell key={a.label}
                                                                 className={classes.actionColumn}
@@ -105,8 +123,8 @@ export default function AppTable(props: AppTableProps<any>) {
                         <TableRow key={getKey(row)}>
                             {
                                 columns.map(c => (
-                                    <TableCell key={`${row[c.attribute]}_row_${(randomInt())}`} component="th" scope="row" align="left">
-                                        {row[c.attribute]}
+                                    <TableCell key={`td_${row[c.attribute]}_${(randomInt())}`} component="th" scope="row" align="left">
+                                        {getRowValue(row, c.attribute)}
                                     </TableCell>
                                 ))
                             }

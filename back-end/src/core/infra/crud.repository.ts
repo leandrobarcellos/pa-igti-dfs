@@ -35,7 +35,7 @@ export abstract class CrudRepository<K, T extends Entity<K>> extends Repository<
     protected configurarNovoIdSequencial(entity: T): void {
         const e = entity as any;
         console.log("if (typeof entity.id === 'number') {", typeof entity.id === 'number');
-        if (typeof entity.id === 'number') {
+        if (typeof entity.id === 'number' || typeof entity.id === 'undefined') {
             const next = ++this.db.sequence;
             (entity as any).id = next;
         }

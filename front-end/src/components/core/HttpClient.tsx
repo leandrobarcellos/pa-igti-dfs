@@ -18,26 +18,29 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
     return config;
 })
 
+export const _ = '';
+
 export default class HttpClient {
-    private baseUrl: string;
+
+    private readonly baseUrl: string;
 
     constructor(url: string) {
         this.baseUrl = url;
     }
 
-    public doGet(endpoint?: string): Observable<any> {
+    public get(endpoint?: string): Observable<any> {
         return this.doRequest(axios.get, endpoint);
     }
 
-    public doPost(endpoint?: string, value?: any): Observable<any> {
+    public post(endpoint?: string, value?: any): Observable<any> {
         return this.doRequest(axios.post, endpoint, value);
     }
 
-    public doPut(endpoint?: string, value?: any): Observable<any> {
+    public put(endpoint?: string, value?: any): Observable<any> {
         return this.doRequest(axios.put, endpoint, value);
     }
 
-    public doDelete(endpoint?: string): Observable<any> {
+    public delete(endpoint?: string): Observable<any> {
         return this.doRequest(axios.delete, endpoint);
     }
 
@@ -87,7 +90,6 @@ export default class HttpClient {
                     resolve(result);
                 })
             });
-
         }
 
         return new Promise<any>((resolve, reject) => {
@@ -103,6 +105,5 @@ export default class HttpClient {
                 }
             });
         });
-
     }
 }

@@ -5,9 +5,10 @@ import {RolesGuard} from "../../core/security/guards/roles.guard";
 import {RolesAllowed} from "../../core/security/guards/roles-allowed.decorator";
 import {Response} from "../../core/infra/response";
 import {response} from "express";
+import {Path} from "../../core/infra/app.decorators";
 
 @UseGuards(RolesGuard)
-@Controller('e-catequese/catequistas')
+@Path('/catequistas')
 export class CatequistaController {
 
     constructor(private readonly catequistaService: CatequistaService) {

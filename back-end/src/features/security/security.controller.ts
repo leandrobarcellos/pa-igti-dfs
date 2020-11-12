@@ -3,8 +3,9 @@ import {LocalGuard} from "../../core/security/guards/local.guard";
 import {SecurityService} from "../../core/security/security.service";
 import {UserService} from "../../core/security/user/user.service";
 import {User} from "../../core/security/user/user";
+import {Path} from "../../core/infra/app.decorators";
 
-@Controller()
+@Path()
 export class SecurityController {
 
     constructor(
@@ -13,13 +14,13 @@ export class SecurityController {
     ) {
     }
 
-    @Post('/e-catequese/login')
+    @Post('/login')
     @UseGuards(LocalGuard)
     async signIn(@Request() req: any): Promise<any | undefined> {
         return this.securityService.login(req.user);
     }
 
-    @Post('/e-catequese/signup')
+    @Post('/signup')
     async signUp(@Request() req: any): Promise<any | undefined> {
         try {
             const usr = req.body;

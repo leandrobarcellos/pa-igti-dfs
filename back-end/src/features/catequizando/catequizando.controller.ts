@@ -1,8 +1,9 @@
-import {Controller, Delete, Get, Post, Put, Request} from '@nestjs/common';
+import {Delete, Get, Post, Put, Request} from '@nestjs/common';
 import {Catequizando} from "./catequizando";
 import {CatequizandoService} from "./catequizando.service";
+import {Path} from "../../core/infra/app.decorators";
 
-@Controller('e-catequese/catequizandos')
+@Path('/catequizandos')
 export class CatequizandoController {
 
     constructor(private readonly catequizandoService: CatequizandoService) {
@@ -20,7 +21,7 @@ export class CatequizandoController {
 
     @Post()
     async createCatequizando(@Request() req: any): Promise<Catequizando | undefined> {
-        return null;
+        return this.catequizandoService.salvarCatequizando(req.body as Catequizando);
     }
 
     @Put('/:idCatequizando')

@@ -1,7 +1,13 @@
 export interface User {
-    username: string,
-    roles: string[]
+    id: number;
+    email: string;
+    name: string;
+    surname: string;
+    password?: string;
+    gender?: 'M' | 'F';
+    roles?: string[]
 }
+
 
 export class SessionUtil {
 
@@ -34,7 +40,7 @@ export class SessionUtil {
     public static getUser(): User {
         let jsonUser = sessionStorage.getItem("catequese:user") as string;
         let usr = undefined;
-        if(!jsonUser || jsonUser === 'undefined') {
+        if (!jsonUser || jsonUser === 'undefined') {
             SessionUtil.logout();
         } else {
             usr = JSON.parse(jsonUser);

@@ -1,4 +1,5 @@
 import { Controller } from '@nestjs/common';
+import {Path} from "../../core/infra/app.decorators";
 
-@Controller('encontros')
+@Path('/encontros')
 export class EncontroCatequeseController {}

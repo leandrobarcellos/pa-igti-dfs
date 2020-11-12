@@ -1,24 +1,31 @@
-{"sequence":1,"rows":[
-  {
-    "id": 1,
-    "nome": "Fernanda de Deus Dutra Barcellos",
-    "endereco": "Rua de Cima 33",
-    "cep": "70000-000",
-    "telefoneFixo": "61 3223-4445",
-    "telefoneMovel": "61 98989-8888",
-    "email": "fernanda@mail.com",
-    "religiao": "Católica",
-    "praticante": "S"
-  },
-  {
-    "id": 2,
-    "nome": "Leandro Marinho Barcellos",
-    "endereco": "Rua de Cima 33",
-    "cep": "70000-000",
-    "telefoneFixo": "61 3223-4445",
-    "telefoneMovel": "61 99898-9999",
-    "email": "leandro@mail.com",
-    "religiao": "Católica",
-    "praticante": "S"
-  }
-]}
+{
+  "sequence": 2,
+  "rows": [
+    {
+      "id": 1,
+      "telefoneFixo": "6184476348",
+      "telefoneMovel": "984476348",
+      "endereco": "AOS 8 Bloco B",
+      "cep": "70660082",
+      "email": "lmb.leandro@gmail.com",
+      "idUsuario": 3,
+      "nome": "LEANDRO MARINHO BARCELLOS",
+      "parentesco": "PAI",
+      "praticante": "Sim",
+      "religiao": "Católica"
+    },
+    {
+      "id": 2,
+      "telefoneFixo": "6184028431",
+      "telefoneMovel": "984028431",
+      "endereco": "AOS 8 Bloco B",
+      "cep": "70660082",
+      "email": "feddutra@gmail.com",
+      "idUsuario": 3,
+      "nome": "FERNANDA DE DEUS DUTRA BARCELLOS",
+      "parentesco": "MAE",
+      "praticante": "Sim",
+      "religiao": "Católica"
+    }
+  ]
+}

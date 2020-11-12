@@ -28,4 +28,8 @@ export class TurmaCatequizandoRepository extends CrudRepository<TurmaCatequizand
         });
         return result;
     }
+
+    findByIdCatequizando(idCatequizando: number): TurmaCatequizando[] {
+        return this.filter(t => t.id.idCatequizando == idCatequizando);
+    }
 }

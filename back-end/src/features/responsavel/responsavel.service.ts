@@ -2,13 +2,16 @@ import {ResponsavelRepository} from "./responsavel.repository";
 import {Responsavel} from "./responsavel";
 import {BadRequestException, Injectable} from "@nestjs/common";
 import {FieldChecker} from "../../core/infra/field.checker";
+import {CatequizandoRepository} from "../catequizando/catequizando.repository";
 
 @Injectable()
 export class ResponsavelService {
     private readonly repository: ResponsavelRepository;
+    private catequizandoRepo: CatequizandoRepository;
 
     constructor() {
         this.repository = new ResponsavelRepository();
+        this.catequizandoRepo = new CatequizandoRepository();
     }
 
     public salvar(responsavel: Responsavel): Responsavel {
@@ -39,18 +42,16 @@ export class ResponsavelService {
         return this.repository.findById(idResponsavel);
     }
 
-    public excluir(idResponsavel: number) {
-        this.repository.delete(idResponsavel);
-    }
-
     private getValidated(responsavel: Responsavel) {
+        console.log("private getValidated(responsavel: Responsavel)", responsavel);
         const {
             id, telefoneFixo, telefoneMovel, endereco, cep,
-            email, idUsuario, nome, praticante, religiao
+            email, idUsuario, nome, parentesco, praticante, religiao
         } = responsavel;
         FieldChecker.begin()
             .checkIfNull(endereco, 'Informe o telefone fixo.')
             .checkIfNull(cep, 'Informe o CEP')
+            .checkIfNull(parentesco, 'Informe o Parentesco')
             .checkIfNull(email, 'Informe um email válido')
             .checkIfNull(idUsuario, 'Para realizar a operação é necessário um usuário válido.')
             .checkIfNull(nome, 'Informe o nome')
@@ -63,7 +64,15 @@ export class ResponsavelService {
         }
         return {
             id, telefoneFixo, telefoneMovel, endereco, cep,
-            email, idUsuario, nome, praticante, religiao
+            email, idUsuario, nome, parentesco, praticante, religiao
         };
+    }
+
+    public excluir(idResponsavel: number) {
+        const catequizandos = this.catequizandoRepo.findCatequizandosByIdResponsavel(idResponsavel);
+        if (catequizandos || 0 < catequizandos.length) {
+            throw new BadRequestException("Existem catequizandos associados ao responsável.");
+        }
+        this.repository.delete(idResponsavel);
     }
 }

@@ -1,17 +1,19 @@
 import React from "react";
-import {Container, Grid} from "@material-ui/core";
+import {useHistory} from "react-router-dom";
+import {Container, Grid, Link} from "@material-ui/core";
 import {InputEmail, InputPassword, InputText} from "../../components/inputs/AppInputs";
 import Button from "@material-ui/core/Button";
 import {AppStyle} from "../../components/core/AppStyle";
 import {NovaSubscricao} from "./NovaSubscricao";
 import {SubscricaoService} from "./SubscricaoService";
-import { Alert, AlertTitle } from '@material-ui/lab';
+import {Alert, AlertTitle} from '@material-ui/lab';
 import {SessionUtil} from "../../components/core/session.util";
 
 
 export default function Subscricao() {
-    const subscricaoService = new SubscricaoService();
     const classes = AppStyle.useStyles();
+    const history = useHistory();
+    const subscricaoService = new SubscricaoService();
     const [nome, setNome] = React.useState<string>('');
     const [sobrenome, setSobrenome] = React.useState<string>('');
     const [email, setEmail] = React.useState<string>('');
@@ -22,7 +24,7 @@ export default function Subscricao() {
         const usr: NovaSubscricao = {
             nome, sobrenome, email, senha
         };
-        subscricaoService.novoRegistro(usr).subscribe((next:any) => {
+        subscricaoService.novoRegistro(usr).subscribe((next: any) => {
                 SessionUtil.setToken(next.data.object["access_token"]);
                 SessionUtil.setUser(next.data.object["user"]);
                 window.location.reload();
@@ -60,13 +62,21 @@ export default function Subscricao() {
                                    value={senhaConfirmada}
                                    set={setSenhaConfirmada} errorText="Senha não confere"></InputPassword>
                 </Grid>
-                <Button variant="contained"
-                        color="primary"
-                        onClick={handleRegistrar}>
-                    Confirmar registro
-                </Button>
             </Grid>
-            {errorMessages.map(msg=>
+            <Grid container spacing={3} id="gridButtons">
+                <Grid item xs={6} sm={6}>
+                    <Button variant="contained"
+                            color="primary"
+                            onClick={handleRegistrar}>
+                        Confirmar registro
+                    </Button>
+                </Grid>
+                <Grid item xs={6} sm={6}>
+                    ou então, <Link className={classes.link} onClick={()=> history.push('/login')}>clique aqui para logar-se.</Link>
+                </Grid>
+            </Grid>
+
+            {errorMessages.map(msg =>
                 <Alert severity="error">
                     <AlertTitle>Erro</AlertTitle>
                     {msg}

@@ -1,35 +1,15 @@
-import {Container, Grid, TextField, Typography} from "@material-ui/core";
-import {Field} from "../../components/core/Field";
+import {Container, Grid, Typography} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import {FormProps} from "../../components/core/FormProps";
 import {AppStyle} from "../../components/core/AppStyle";
 import {Subject} from "rxjs";
-import {InputDate, InputEmail, InputSelect, InputText} from "../../components/inputs/AppInputs";
+import {InputDate, InputEmail, InputText, SelectEtapa} from "../../components/inputs/AppInputs";
 import {Catequizando} from "./catequizando";
 import {Responsavel} from "../responsaveis/responsavel";
-
-const etapas = [
-    {
-        "id": 1,
-        "codigo": "PE",
-        "nome": "Pré-Eucaristia"
-    },
-    {
-        "id": 2,
-        "codigo": "EU",
-        "nome": "Eucaristia"
-    },
-    {
-        "id": 3,
-        "codigo": "PR",
-        "nome": "Perseverança"
-    },
-    {
-        "id": 4,
-        "codigo": "CR",
-        "nome": "Crisma"
-    }
-];
+import {SessionUtil} from "../../components/core/session.util";
+import Button from "@material-ui/core/Button";
+import CatequizandosService from "./CatequizandosService";
+import {CatequizandoPipe} from "./CatequizandoPipe";
 
 interface FormCatequizandosProps extends FormProps<Catequizando> {
     children: any,
@@ -39,40 +19,30 @@ interface FormCatequizandosProps extends FormProps<Catequizando> {
 
 export default function FormCatequizando(props: FormCatequizandosProps) {
     const classes = AppStyle.useStyles();
-    // let c = props.formData;
+    const catequizandoService = new CatequizandosService();
+    const catequizandoPipe = new CatequizandoPipe();
 
-    const setCatequizando = (c:any) => {
-        c = getFormData();
-        props.notificador.next(c);
-        let strCatequizando = JSON.stringify(c);
-        let item = localStorage.getItem("catequizandos");
-        if (item) {
-            localStorage.removeItem("catequizandos");
-            localStorage.setItem("catequizandos", strCatequizando);
-        } else {
-            localStorage.setItem("catequizandos", strCatequizando);
-        }
-    }
-
-    let configurarForm =  (c: Catequizando) => {
-        setId(c ? c.id : 0);
-        setIdEtapa(c ? c.idEtapa : 0);
-        setIdPai(c ? c.idPai : 0);
-        setIdMae(c ? c.idMae : 0);
-        setCidadeNascimento(c ? c.cidadeNascimento : "");
-        setDtNascimento(c ? c.dtNascimento : null);
-        setEndereco(c ? c.endereco : "");
-        setCep(c ? c.cep : "");
-        setTelefoneFixo(c ? c.telefoneFixo : "");
-        setTelefoneMovel(c ? c.telefoneMovel : "");
-        setEmail(c ? c.email : "");
-        setParoquiaBatismo(c ? c.paroquiaBatismo : "");
-        setArquidioceseBatismo(c ? c.arquidioceseBatismo : "");
-        setUfDioceseBatismo(c ? c.ufDioceseBatismo : "");
-        setCidadeNascimento(c ? c.cidadeNascimento : "");
-        setResideCom(c ? c.resideCom : "");
-        setDadosPai(c ? c.dadosPai : {} as Responsavel);
-        setDadosMae(c ? c.dadosMae : {} as Responsavel);
+    let configurarForm = (c: Catequizando | null) => {
+        setId(c && c.id && c.id ? c.id : 0);
+        setNome(c && c.nome ? c.nome : "");
+        setIdEtapa(c && c.idEtapa ? c.idEtapa : 0);
+        setIdPai(c && c.idPai ? c.idPai : 0);
+        setIdMae(c && c.idMae ? c.idMae : 0);
+        setCidadeNascimento(c && c.cidadeNascimento ? c.cidadeNascimento : "");
+        setDtNascimento(c && c.dtNascimento ? c.dtNascimento : null);
+        setEndereco(c && c.endereco ? c.endereco : "");
+        setCep(c && c.cep ? c.cep : "");
+        setTelefoneFixo(c && c.telefoneFixo ? c.telefoneFixo : "");
+        setTelefoneMovel(c && c.telefoneMovel ? c.telefoneMovel : "");
+        setEmail(c && c.email ? c.email : "");
+        setParoquiaBatismo(c && c.paroquiaBatismo ? c.paroquiaBatismo : "");
+        setArquidioceseBatismo(c && c.arquidioceseBatismo ? c.arquidioceseBatismo : "");
+        setUfDioceseBatismo(c && c.ufDioceseBatismo ? c.ufDioceseBatismo : "");
+        setCidadeDioceseBatismo(c && c.cidadeDioceseBatismo ? c.cidadeDioceseBatismo : "");
+        setCidadeNascimento(c && c.cidadeNascimento ? c.cidadeNascimento : "");
+        setResideCom(c && c.resideCom ? c.resideCom : "");
+        setDadosPai(c && c.dadosMae ? c.dadosMae : {} as Responsavel);
+        setDadosMae(c && c.dadosPai ? c.dadosPai : {} as Responsavel);
     };
 
     useEffect(() => {
@@ -80,6 +50,27 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
         return () => {
         };
     }, [props.formData]);
+
+    useEffect(() => {
+        const user = SessionUtil.getUser();
+        if (SessionUtil.isResponsavel()) {
+            catequizandoService.findResponsaveisByIdUsuario(user.id)
+                .subscribe(next => {
+                    console.log("next.data.object", next.data.object);
+                    next.data.object.forEach((r: Responsavel) => {
+                        if ('MAE' == r.parentesco) {
+                            setIdMae(r.id);
+                            setDadosMae(r);
+                        } else if ('PAI' == r.parentesco) {
+                            setIdPai(r.id);
+                            setDadosPai(r);
+                        }
+                    })
+                });
+        }
+        return () => {
+        };
+    }, []);
 
     const [showResults, setShowResults] = useState(false);
     const [id, setId] = useState<number | unknown>(0);
@@ -99,12 +90,14 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
     const [cidadeDioceseBatismo, setCidadeDioceseBatismo] = React.useState("");
     const [ufDioceseBatismo, setUfDioceseBatismo] = React.useState("");
     const [resideCom, setResideCom] = React.useState("");
-    const [dadosMae, setDadosMae] = React.useState<Responsavel | unknown>({} as Responsavel);
-    const [dadosPai, setDadosPai] = React.useState<Responsavel | unknown>({} as Responsavel);
+    const [dadosMae, setDadosMae] = React.useState<Responsavel>({} as Responsavel);
+    const [dadosPai, setDadosPai] = React.useState<Responsavel>({} as Responsavel);
 
     const getFormData = () => {
         return {
             id,
+            idPai,
+            idMae,
             nome,
             idEtapa,
             cidadeNascimento,
@@ -124,18 +117,48 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
         } as Catequizando;
     };
 
+    const handleCancelar = (e: any) => {
+
+    }
+
+    const handleSalvar = (e: any) => {
+        const catequizando = getFormData();
+        if (catequizando.id && catequizando.id > 0) {
+            catequizandoPipe.update.next({
+                formData: catequizando
+            });
+        } else {
+            catequizandoPipe.save.next({
+                formData: catequizando
+            });
+        }
+        const {idPai, idMae, dadosPai, dadosMae, ...rest} = catequizando;
+        configurarForm({idPai, idMae, dadosPai, dadosMae} as Catequizando);
+    };
+
     return (
         <Container maxWidth="lg">
             <Typography variant="h5" component="h5">
                 Dados do catequizando
             </Typography>
             <Grid container spacing={3} id="dadosCatequizando">
+                <Grid item xs={12} sm={12}>
+                    <Grid container spacing={3} id="responsaveis">
+                        <Grid item xs={12} sm={6}>
+                            <label>Nome da mãe</label>
+                            <h5 id="nomeMae">{dadosMae ? dadosMae.nome : 'Não encontrado'}</h5>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <label>Nome do pai</label>
+                            <h5 id="nomePai">{dadosPai ? dadosPai.nome : 'Não encontrado'}</h5>
+                        </Grid>
+                    </Grid>
+                </Grid>
                 <Grid item xs={12} sm={8}>
                     <InputText id="nomeCtqzndo" label="Nome do Catequizando" value={nome} set={setNome}/>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <InputSelect items={etapas} toValue={(e: any)=> e?.id} toLabel={(e: any)=> e.nome}
-                                 id="etapa" label="Turma Desejada" value={idEtapa} set={setIdEtapa}></InputSelect>
+                    <SelectEtapa id="etapa" label="Turma Desejada" value={idEtapa} set={setIdEtapa}></SelectEtapa>
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <InputText id="localNascimentoCtqzndo" label="Local Nascimento"
@@ -163,7 +186,7 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <InputEmail id="emailCtqzndo" label="E-mail"
-                               value={email} set={setEmail}/>
+                                value={email} set={setEmail}/>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <InputText id="paroquiBatismoCtqzndo" label="Paróquia onde foi batizado"
@@ -184,6 +207,20 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
                 <Grid item xs={12} sm={12}>
                     <InputText id="resideCom" label="Catequizando reside com:"
                                value={resideCom} set={setResideCom}/>
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                    <Button variant="contained"
+                            color="default"
+                            onClick={handleCancelar}>
+                        Cancelar
+                    </Button>
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                    <Button variant="contained"
+                            color="primary"
+                            onClick={handleSalvar}>
+                        Salvar
+                    </Button>
                 </Grid>
             </Grid>
         </Container>

@@ -1,4 +1,5 @@
 import {Responsavel} from "../responsaveis/responsavel";
+import {Etapa} from "../../util/domain/etapa";
 
 export interface Catequizando {
     id?: number,
@@ -19,5 +20,6 @@ export interface Catequizando {
     ufDioceseBatismo: string,
     resideCom: string,
     dadosMae?: Responsavel,
-    dadosPai?: Responsavel
+    dadosPai?: Responsavel,
+    etapa?: Etapa
 }

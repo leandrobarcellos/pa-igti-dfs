@@ -37,7 +37,6 @@ export class TurmaPipe extends CRUDPipe<Turma, FiltroTurma> {
         return update.pipe();
     }
 
-    protected initPipes(): void {
-        throw new Error("Method not implemented.");
+    protected initPipes() {
     }
 }
