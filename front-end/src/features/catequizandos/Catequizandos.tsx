@@ -24,56 +24,47 @@ notificadorCatequizando.subscribe((c: Catequizando) => {
 
 export default function Catequizandos(props: any) {
 
-    const notificadorDadosPai = new Subject<Responsavel>();
-    const notificadorDadosMae = new Subject<Responsavel>();
-
     const classes = AppStyle.useStyles();
     const catequizandoPipe = new CatequizandoPipe();
     const [showResults, setShowResults] = useState(false);
-    const [dadosMae, setDadosMae] = React.useState({} as Responsavel);
-    const [dadosPai, setDadosPai] = React.useState({} as Responsavel);
+    const [catequizando, setCatequizando] = React.useState({} as Catequizando);
     const [rows, setRows] = React.useState([] as Catequizando[]);
 
     const doSetCatequizando = (c: Catequizando) => {
         console.log("doSetCatequizando", c);
-        catequizando = c;
+        setCatequizando(c);
     }
 
-    useEffect(() => {
-        if (SessionUtil.isAuthenticated()) {
-            if (SessionUtil.isAdmin() || SessionUtil.isCatequista()) {
-                catequizandoPipe.findAll.next({
-                    callback: (value: Catequizando[]) => setRows(value)
-                })
-            } else if (SessionUtil.isResponsavel()) {
-                const usr = SessionUtil.getUser();
-                catequizandoPipe.findAllByUser.next({
-                    filter: {idUsuario: usr.id},
-                    callback: (value: Catequizando[]) => setRows(value)
-                })
-            }
-        }
-    }, []);
-
-    useEffect(() => {
-        notificadorDadosMae.subscribe((dadosMae: Responsavel) => {
-            setDadosMae(dadosMae);
-        });
-        notificadorDadosPai.subscribe((dadosPai: Responsavel) => {
-            setDadosPai(dadosPai);
-        });
-        return () => {
-            catequizandoPipe.unsubscribe();
-        };
-    }, []);
-
-    const onNext = (step: number) => {
-        console.log(catequizando);
-        console.log("storage", localStorage.getItem("catequizandos"));
-        // onNavigate[step].set({touch: true});
+    const carregarCatequizandosByUsuarioSessao = () => {
+        const usr = SessionUtil.getUser();
+        catequizandoPipe.findAllByUser.next({
+            filter: {idUsuario: usr.id},
+            callback: (value: Catequizando[]) => setRows(value)
+        })
     };
 
+    const carregarTodosCatequizandos = () => {
+        catequizandoPipe.findAll.next({
+            callback: (value: Catequizando[]) => setRows(value)
+        })
+    };
+
+    const carregarCatequizandos = () => {
+        if (SessionUtil.isAuthenticated()) {
+            if (SessionUtil.isAdmin() || SessionUtil.isCatequista()) {
+                carregarTodosCatequizandos();
+            } else if (SessionUtil.isResponsavel()) {
+                carregarCatequizandosByUsuarioSessao();
+            }
+        }
+    };
+
+    useEffect(() => {
+        carregarCatequizandos();
+    }, []);
+
     const handleChangeAccordion = (e: any) => {
+        carregarCatequizandos();
         setShowResults(!showResults);
     }
 
@@ -81,18 +72,10 @@ export default function Catequizandos(props: any) {
         console.log("handleEditing", row);
         doSetCatequizando(row);
         setShowResults(false);
-
     }
 
     const onComplete = () => {
-
-    }
-
-    const onCompleteResponsavel = (tipoResponsavel: "dadosPai" | "dadosMae") => {
-        if (tipoResponsavel === "dadosPai")
-            setDadosPai({} as Responsavel);
-        if (tipoResponsavel === "dadosMae")
-            setDadosMae({} as Responsavel);
+        carregarCatequizandos();
     }
 
     return (

@@ -5,7 +5,7 @@ export interface Catequista extends Entity<number> {
     nome: string,
     email: string,
     telefoneFixo?: string | undefined,
-    telefoneCelular: string,
+    telefoneMovel: string,
     endereco: string,
     casado: 'S' | 'N'
 }

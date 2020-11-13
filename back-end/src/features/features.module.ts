@@ -14,6 +14,13 @@ import {CoreModule} from "../core/core.module";
 import {EncontroCatequeseController} from './encontro-catequese/encontro-catequese.controller';
 import {FrequenciaCatequizandoController} from './frequencia-catequizando/frequencia-catequizando.controller';
 import {UsuarioController} from './usuario/usuario.controller';
+import {TurmaCatequizandoService} from "./turma/turma-catequizando.service";
+import {TurmaCatequizandoRepository} from "./turma/turma-catequizando.repository";
+import {EtapaRepository} from "./dominios/etapa/etapa.repository";
+import {TurmaRepository} from "./turma/turma.repository";
+import {CatequizandoRepository} from "./catequizando/catequizando.repository";
+import {ResponsavelRepository} from "./responsavel/responsavel.repository";
+import {CatequistaRepository} from "./catequista/catequista.repository";
 
 @Module({
     controllers: [
@@ -33,7 +40,15 @@ import {UsuarioController} from './usuario/usuario.controller';
         CatequizandoService,
         TurmaService,
         EtapaService,
+        TurmaCatequizandoService,
+        CatequistaRepository,
+        ResponsavelRepository,
+        CatequizandoRepository,
+        TurmaRepository,
+        EtapaRepository,
+        TurmaCatequizandoRepository,
     ],
+    
     imports: [
         CoreModule,
     ]

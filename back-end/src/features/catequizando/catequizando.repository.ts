@@ -1,6 +1,8 @@
 import {Catequizando} from "./catequizando";
 import {CrudRepository} from "../../core/infra/crud.repository";
+import {Injectable} from "@nestjs/common";
 
+@Injectable()
 export class CatequizandoRepository extends CrudRepository<number, Catequizando> {
 
     constructor() {

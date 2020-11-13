@@ -1,7 +1,8 @@
 import {Etapa} from "./etapa";
 import {Repository} from "../../../core/infra/repository";
-import {NotFoundException} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 
+@Injectable()
 export class EtapaRepository extends Repository<number, Etapa> {
 
     constructor() {

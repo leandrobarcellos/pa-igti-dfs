@@ -2,28 +2,25 @@ import {CatequizandoRepository} from "./catequizando.repository";
 import {Catequizando} from "./catequizando";
 import {Util} from "../../core/util/Util";
 import {ResponsavelService} from "../responsavel/responsavel.service";
-import {BadRequestException} from "@nestjs/common";
+import {BadRequestException, Injectable} from "@nestjs/common";
 import {FieldChecker} from "../../core/infra/field.checker";
 import {TurmaCatequizandoRepository} from "../turma/turma-catequizando.repository";
 import {EtapaRepository} from "../dominios/etapa/etapa.repository";
 
+@Injectable()
 export class CatequizandoService {
 
-    private readonly repository: CatequizandoRepository;
-    private readonly turmaCatequizandoRepo: TurmaCatequizandoRepository;
-    private readonly etapaRepo: EtapaRepository;
-    private readonly responsavelService: ResponsavelService;
-
-    constructor() {
-        this.repository = new CatequizandoRepository();
-        this.turmaCatequizandoRepo = new TurmaCatequizandoRepository();
-        this.responsavelService = new ResponsavelService();
-        this.etapaRepo = new EtapaRepository();
+    constructor(private readonly repository: CatequizandoRepository,
+                private readonly turmaCatequizandoRepo: TurmaCatequizandoRepository,
+                private readonly etapaRepo: EtapaRepository,
+                private readonly responsavelService: ResponsavelService) {
     }
 
     public consultarCatequizandosPorIdTurma(idTurma: number): Catequizando[] {
         const idsCatequizandos = this.turmaCatequizandoRepo.findIdsCatequizandosByIdTurma(idTurma);
-        return this.repository.findByIdsCatequizandos(idsCatequizandos);
+        const catequizandos = this.repository.findByIdsCatequizandos(idsCatequizandos);
+        catequizandos.forEach(c => this.configurarRelacionamentos(c));
+        return catequizandos;
     }
 
     public salvarCatequizando(catequizando: Catequizando): Catequizando {
@@ -32,16 +29,18 @@ export class CatequizandoService {
         return validated;
     }
 
-    public atualizarCatequizando(id: number, catequizando: Catequizando): void {
+    public atualizarCatequizando(id: number, catequizando: Catequizando): Catequizando {
         const validated = this.getValidated(catequizando);
         if (id && validated) {
             if (validated.id && (validated.id != id)) {
                 throw new BadRequestException("Não foi possível definir o identificador a ser utilizado na atualização");
             }
             if (!Util.isUndefinedOrNull(id)) {
+                console.log("this.repository.update", validated);
                 this.repository.update(validated);
             }
         }
+        return validated;
     }
 
     public findAll(): Catequizando[] {
@@ -51,8 +50,14 @@ export class CatequizandoService {
     }
 
     private configurarRelacionamentos(c: Catequizando) {
-        c.dadosMae = this.responsavelService.findById(c.idMae);
-        c.dadosPai = this.responsavelService.findById(c.idPai);
+        try{
+            c.dadosMae = this.responsavelService.findById(c.idMae);
+            c.dadosPai = this.responsavelService.findById(c.idPai);
+        }catch (e){
+            if(!c.dadosMae && !c.dadosPai){
+                throw new BadRequestException("Inconsistência nos dados do catequizando.");
+            }
+        }
         c.etapa = this.etapaRepo.findById(c.idEtapa);
     }
 
@@ -104,11 +109,23 @@ export class CatequizandoService {
     }
 
     findByIdEtapa(idEtapa: number) {
-        const catequizandos = this.repository.filter(c=> c.idEtapa == idEtapa);
-        catequizandos.forEach(c=> {
-            c.dadosMae = this.responsavelService.findById(c.idMae);
-            c.dadosPai = this.responsavelService.findById(c.idPai);
-        });
+        const catequizandos = this.repository.filter(c => c.idEtapa == idEtapa);
+        catequizandos.forEach(c => this.configurarRelacionamentos(c));
+        return catequizandos;
+    }
+
+    findByIdsResponsaveis(idsResponsaveis: number[]) {
+        const catequizandos = this.repository.findByIdsResponsaveis(idsResponsaveis);
+        catequizandos.forEach(c => this.configurarRelacionamentos(c));
+        return catequizandos;
+    }
+
+    findByIdUsuario(idUsuario: number) {
+        const responsaveis = this.responsavelService.findByIdUsuario(idUsuario);
+        const idsResponsaveis = responsaveis.map(r => Number(r.id));
+        console.log("idsResponsaveis", idsResponsaveis);
+        const catequizandos = this.repository.findByIdsResponsaveis(idsResponsaveis);
+        catequizandos.forEach(c => this.configurarRelacionamentos(c));
         return catequizandos;
     }
 }

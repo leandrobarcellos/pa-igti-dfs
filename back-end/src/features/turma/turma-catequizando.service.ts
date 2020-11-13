@@ -1,12 +1,13 @@
 import {TurmaCatequizandoRepository} from "./turma-catequizando.repository";
 import {TurmaCatequizando, TurmaCatequizandoPK} from "./turma-catequizando";
+import {Injectable} from "@nestjs/common";
 
+@Injectable()
 export class TurmaCatequizandoService {
 
-    private readonly repository: TurmaCatequizandoRepository;
-
-    constructor() {
-        this.repository = new TurmaCatequizandoRepository();
+    constructor(
+        private readonly repository: TurmaCatequizandoRepository
+    ) {
     }
 
     public incluir(turmaCatequizando: TurmaCatequizando): void {

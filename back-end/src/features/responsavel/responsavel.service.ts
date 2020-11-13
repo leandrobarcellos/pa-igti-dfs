@@ -58,8 +58,8 @@ export class ResponsavelService {
             .checkIfNull(praticante, 'Informe se o responsável é praticante ou não.')
             .checkIfNull(religiao, 'Informe a religião do responsável.')
             .validate();
-        if ((!telefoneFixo || 8 < telefoneFixo.length) &&
-            (!telefoneMovel || 9 < telefoneMovel.length)) {
+        if ((!telefoneFixo || 8 > telefoneFixo.length) &&
+            (!telefoneMovel || 9 > telefoneMovel.length)) {
             throw new BadRequestException('Informe um telefone válido para Movel ou Fixo');
         }
         return {
@@ -74,5 +74,9 @@ export class ResponsavelService {
             throw new BadRequestException("Existem catequizandos associados ao responsável.");
         }
         this.repository.delete(idResponsavel);
+    }
+
+    public findByIdUsuario(idUsuario: number): Responsavel[] {
+        return this.repository.findByIdUsuario(idUsuario);
     }
 }

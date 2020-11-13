@@ -53,6 +53,7 @@ export default function Responsaveis() {
     }
 
     const handleChangeAccordion = () => {
+        carregarResponsaveis();
         if (SessionUtil.isAuthenticated())
             setShowResults(!showResults);
     }

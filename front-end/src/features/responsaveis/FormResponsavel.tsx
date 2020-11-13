@@ -118,16 +118,20 @@ export function FormResponsavel(props: DadosResponsavelProps) {
                 <SelectSimNao id={props.id + "Praticante"} label="Praticante" value={praticante}
                               set={setPraticante}></SelectSimNao>
             </Grid>
-            <Button variant="contained"
-                    color="default"
-                    onClick={handleCancelar}>
-                Cancelar
-            </Button>
-            <Button variant="contained"
-                    color="primary"
-                    onClick={handleSalvar}>
-                Salvar
-            </Button>
+            <Grid item xs={12} sm={2}>
+                <Button variant="contained"
+                        color="default"
+                        onClick={handleCancelar}>
+                    Cancelar
+                </Button>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+                <Button variant="contained"
+                        color="primary"
+                        onClick={handleSalvar}>
+                    Salvar
+                </Button>
+            </Grid>
         </Grid>
     );
 }

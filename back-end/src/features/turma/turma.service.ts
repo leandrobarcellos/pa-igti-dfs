@@ -3,25 +3,19 @@ import {Turma} from "./turma";
 import {CatequistaRepository} from "../catequista/catequista.repository";
 import {CatequizandoRepository} from "../catequizando/catequizando.repository";
 import {TurmaCatequizandoService} from "./turma-catequizando.service";
-import {BadRequestException} from "@nestjs/common";
+import {BadRequestException, Injectable} from "@nestjs/common";
 import {FieldChecker} from "../../core/infra/field.checker";
 import {TurmaCatequizando, TurmaCatequizandoPK} from "./turma-catequizando";
 import {EtapaRepository} from "../dominios/etapa/etapa.repository";
 
+@Injectable()
 export class TurmaService {
 
-    private repo: TurmaRepository;
-    private turmaCatequizandoService: TurmaCatequizandoService;
-    private catequistaRepo: CatequistaRepository;
-    private catequizandoRepo: CatequizandoRepository;
-    private etapaRepo: EtapaRepository;
-
-    constructor() {
-        this.repo = new TurmaRepository();
-        this.catequistaRepo = new CatequistaRepository();
-        this.catequizandoRepo = new CatequizandoRepository();
-        this.turmaCatequizandoService = new TurmaCatequizandoService();
-        this.etapaRepo = new EtapaRepository();
+    constructor(private readonly repo: TurmaRepository,
+                private readonly turmaCatequizandoService: TurmaCatequizandoService,
+                private readonly catequistaRepo: CatequistaRepository,
+                private readonly catequizandoRepo: CatequizandoRepository,
+                private readonly etapaRepo: EtapaRepository) {
     }
 
     public incluir(turma: Turma): void {
@@ -57,7 +51,7 @@ export class TurmaService {
 
     public findAll(): Turma[] {
         const turmas = this.repo.findAll();
-        turmas.forEach(t=> {
+        turmas.forEach(t => {
             try {
                 console.log("turmas.forEach", t);
                 t.catequista = this.catequistaRepo.findById(t.idCatequista);
@@ -69,7 +63,7 @@ export class TurmaService {
                 const ids = turmaCatequizandos.map(tc => tc.id.idCatequizando);
                 t.catequizandos = this.catequizandoRepo.findByIdsCatequizandos(ids);
                 console.log("this.catequizandoRepo.findByIdsCatequizandos", t.catequizandos);
-            }catch (e){
+            } catch (e) {
                 //nobody see it
             }
         })
@@ -90,5 +84,9 @@ export class TurmaService {
             .checkIfHasItens(catequizandos, 'Selecione um ou mais catequizandos.')
             .validate();
         return {id, nome, idEtapa, idCatequista, dataInicio, catequizandos};
+    }
+
+    findByIdCatequista(catequistaId: number): Turma[] {
+        return this.repo.filter(t => t.idCatequista == catequistaId);
     }
 }

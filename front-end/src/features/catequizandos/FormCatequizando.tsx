@@ -41,8 +41,8 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
         setCidadeDioceseBatismo(c && c.cidadeDioceseBatismo ? c.cidadeDioceseBatismo : "");
         setCidadeNascimento(c && c.cidadeNascimento ? c.cidadeNascimento : "");
         setResideCom(c && c.resideCom ? c.resideCom : "");
-        setDadosPai(c && c.dadosMae ? c.dadosMae : {} as Responsavel);
-        setDadosMae(c && c.dadosPai ? c.dadosPai : {} as Responsavel);
+        setDadosMae(c && c.dadosMae ? c.dadosMae : {} as Responsavel);
+        setDadosPai(c && c.dadosPai ? c.dadosPai : {} as Responsavel);
     };
 
     useEffect(() => {
@@ -118,21 +118,23 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
     };
 
     const handleCancelar = (e: any) => {
-
+        configurarForm({dadosPai, dadosMae} as Catequizando);
     }
 
     const handleSalvar = (e: any) => {
         const catequizando = getFormData();
         if (catequizando.id && catequizando.id > 0) {
             catequizandoPipe.update.next({
-                formData: catequizando
+                formData: catequizando,
+                actionCompleted: () => props.onUpdateComplete()
             });
         } else {
             catequizandoPipe.save.next({
-                formData: catequizando
+                formData: catequizando,
+                actionCompleted: () => props.onSaveComplete()
             });
         }
-        const {idPai, idMae, dadosPai, dadosMae, ...rest} = catequizando;
+        const {idPai, idMae, dadosPai, dadosMae} = catequizando;
         configurarForm({idPai, idMae, dadosPai, dadosMae} as Catequizando);
     };
 
@@ -146,11 +148,11 @@ export default function FormCatequizando(props: FormCatequizandosProps) {
                     <Grid container spacing={3} id="responsaveis">
                         <Grid item xs={12} sm={6}>
                             <label>Nome da mãe</label>
-                            <h5 id="nomeMae">{dadosMae ? dadosMae.nome : 'Não encontrado'}</h5>
+                            <h5 id="nomeMae">{dadosMae && dadosMae.nome ? dadosMae.nome : 'Não encontrado'}</h5>
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <label>Nome do pai</label>
-                            <h5 id="nomePai">{dadosPai ? dadosPai.nome : 'Não encontrado'}</h5>
+                            <h5 id="nomePai">{dadosPai && dadosPai.nome? dadosPai.nome : 'Não encontrado'}</h5>
                         </Grid>
                     </Grid>
                 </Grid>

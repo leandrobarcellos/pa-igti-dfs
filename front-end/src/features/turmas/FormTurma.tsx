@@ -3,7 +3,7 @@ import {Button, Grid, TextField} from "@material-ui/core";
 import {Field} from "../../components/core/Field";
 import {FormProps} from "../../components/core/FormProps";
 import {AppStyle} from "../../components/core/AppStyle";
-import {InputDate, InputSelect} from "../../components/inputs/AppInputs";
+import {InputDate, InputSelect, SelectEtapa} from "../../components/inputs/AppInputs";
 import {CatequistaPipe} from "../catequistas/CatequistaPipe";
 import TransferList from "../../components/core/TransferList";
 import {EtapaPipe} from "../../util/domain/EtapaPipe";
@@ -56,16 +56,20 @@ export default function FormTurma(props: FormProps<Turma>) {
                 callback: (next: Catequista[]) => {
                     console.log(next);
                     setCatequistas(next);
+                    setCatequizandos([]);
+                    const idCtq = idCatequista;
+                    setIdCatequista(0);
+                    setIdCatequista(idCtq);
                 }
             });
     }, [idEtapa]);
 
     const configurarForm = (t: Turma) => {
+        console.log("configurarForm", t);
         setId(t && t.id ? t.id : 0);
         setIdCatequista(t && t.idCatequista ? t.idCatequista : 0);
         setIdEtapa(t && t.idEtapa ? t.idEtapa : 0);
         setNome(t && t.nome ? t.nome : "");
-        // setCatequista(t && t.catequista ? t.catequista : {} as Catequista);
         setCatequizandos(t && t.catequizandos ? t.catequizandos : []);
         setDataInicio(t && t.dataInicio ? t.dataInicio : new Date());
     }
@@ -106,10 +110,7 @@ export default function FormTurma(props: FormProps<Turma>) {
                            format="dd/MM/yyyy" value={dataInicio} set={setDtinicio}/>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <InputSelect id="selectEtapa" label="Etapa"
-                             className={classes.formControl} selectClass={classes.selectClass}
-                             items={etapas} toValue={(e: Etapa) => e.id} toLabel={(e: Etapa) => e.nome}
-                             value={idEtapa} set={setIdEtapa}/>
+                <SelectEtapa id="selectEtapa" label="Etapa" value={idEtapa} set={setIdEtapa}></SelectEtapa>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <InputSelect items={catequistas} toValue={c => c.id} toLabel={c => c.nome}
@@ -121,16 +122,20 @@ export default function FormTurma(props: FormProps<Turma>) {
                 <TransferList idEtapa={idEtapa} toLabel={(c: Catequizando) => c.nome}
                               set={setCatequizandos} preSelecao={catequizandos}></TransferList>
             </Grid>
-            <Button variant="contained"
-                    color="default"
-                    onClick={handleCancelar}>
-                Cancelar
-            </Button>
-            <Button variant="contained"
-                    color="primary"
-                    onClick={handleSalvar}>
-                Salvar
-            </Button>
+            <Grid item xs={12} sm={2}>
+                <Button variant="contained"
+                        color="default"
+                        onClick={handleCancelar}>
+                    Cancelar
+                </Button>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+                <Button variant="contained"
+                        color="primary"
+                        onClick={handleSalvar}>
+                    Salvar
+                </Button>
+            </Grid>
         </Grid>
     );
 }

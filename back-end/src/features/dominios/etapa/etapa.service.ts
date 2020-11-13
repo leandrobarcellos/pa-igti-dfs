@@ -1,6 +1,8 @@
 import {EtapaRepository} from "./etapa.repository";
 import {Etapa} from "./etapa";
+import {Injectable} from "@nestjs/common";
 
+@Injectable()
 export class EtapaService {
 
     private readonly repository: EtapaRepository;

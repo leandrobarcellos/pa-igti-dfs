@@ -1,7 +1,8 @@
 import {Catequista} from "./catequista";
-import {NotFoundException} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {CrudRepository} from "../../core/infra/crud.repository";
 
+@Injectable()
 export class CatequistaRepository extends CrudRepository<number, Catequista> {
 
     constructor() {

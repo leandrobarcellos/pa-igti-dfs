@@ -1,6 +1,8 @@
 import {TurmaCatequizando, TurmaCatequizandoPK} from "./turma-catequizando";
 import {CrudRepository} from "../../core/infra/crud.repository";
+import {Injectable} from "@nestjs/common";
 
+@Injectable()
 export class TurmaCatequizandoRepository extends CrudRepository<TurmaCatequizandoPK, TurmaCatequizando> {
 
     constructor() {

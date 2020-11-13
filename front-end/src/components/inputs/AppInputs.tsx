@@ -6,6 +6,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {Etapa} from "../../util/domain/etapa";
 import {EtapasService} from "../../util/domain/EtapasService";
+import {AppStyle} from "../core/AppStyle";
 
 interface AppInputProps<T> {
     id: string,
@@ -106,17 +107,19 @@ export function InputDate(props: AppInputDateProps) {
 }
 
 export function InputSelect(props: AppInputSelectProps) {
+    const classes = AppStyle.useStyles();
     useEffect(() => {
         props.set("");
     }, [props.items]);
 
+    const [shrinkLabel, setShrinkLabel] = React.useState<boolean>(false);
     return (
-        <FormControl className={props.className} fullWidth={true}>
+        <FormControl className={props.className ? props.className : classes.formControl} fullWidth={true}>
             <InputLabel id={`${props.id}_label`}>{props.label}</InputLabel>
             <Select
                 labelId={`${props.id}_label`}
                 id={`${props.id}select`}
-                className={props.selectClass}
+                className={props.selectClass? props.selectClass: classes.selectClass}
                 value={props.value}
                 onChange={(e: any) => Field.change(e, props.set)}>
                 <MenuItem key={`${props.id}_empty`} value="">Selecione</MenuItem>

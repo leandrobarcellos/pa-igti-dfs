@@ -140,8 +140,8 @@ export default function Catequistas() {
                 </ExpansionPanelDetails>
             </ExpansionPanel>
             <Button onClick={e=> setOpen(!open)}>Modal por favor</Button>
-            <TransitionsModal title="Olá, eu sou o título" message="Qualquer lorem ipsum para servir como exemplo de mensagem."
-                              open={open}></TransitionsModal>
+            {/*<TransitionsModal title="Olá, eu sou o título" message="Qualquer lorem ipsum para servir como exemplo de mensagem."*/}
+            {/*                  open={open}></TransitionsModal>*/}
 
         </Container>
     );

@@ -20,11 +20,16 @@ export default function Turmas() {
 
     const onComplete = () => {
         setTurma({} as Turma);
+        carregarTurmas();
+    }
+
+    const carregarTurmas = ()=> {
+        turmaService.findAll()
+            .subscribe(next=> setRows(next.data.object));
     }
 
     useEffect(()=> {
-        turmaService.findAll()
-            .subscribe(next=> setRows(next.data.object));
+        carregarTurmas();
     },[]);
 
     const togglePanel = () => {
@@ -50,7 +55,7 @@ export default function Turmas() {
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}
                                        aria-controls="panel1a-content"
                                        id="panel1a-header" onClick={togglePanel}>
-                    <Typography className={classes.heading}>Formulário de cadastramento {AppUtil.getFormattedDate(new Date())}</Typography>
+                    <Typography className={classes.heading}>Formulário de cadastramento</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <FormTurma id="fmrCatequizando"

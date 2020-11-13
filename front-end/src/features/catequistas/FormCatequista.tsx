@@ -16,7 +16,7 @@ export function FormCatequista(props: FormProps<Catequista>) {
     const [idEtapa, setIdEtapa] = React.useState<number>(0);
     const [email, setEmail] = React.useState("");
     const [optTelefoneFixo, setOptTelefoneFixo] = React.useState<string | undefined>("");
-    const [telefoneCelular, setTelefoneCelular] = React.useState("");
+    const [telefoneMovel, setTelefoneMovel] = React.useState("");
     const [endereco, setEndereco] = React.useState("");
     const [casado, setCasado] = React.useState<string>("");
 
@@ -26,7 +26,7 @@ export function FormCatequista(props: FormProps<Catequista>) {
         setIdEtapa(catequista ? catequista.idEtapa : 0);
         setEmail(catequista ? catequista.email : "");
         setOptTelefoneFixo(catequista ? catequista.telefoneFixo : "");
-        setTelefoneCelular(catequista ? catequista.telefoneCelular : "");
+        setTelefoneMovel(catequista ? catequista.telefoneMovel : "");
         setEndereco(catequista ? catequista.endereco : "");
         setCasado(catequista ? catequista.casado : "");
     }
@@ -34,9 +34,10 @@ export function FormCatequista(props: FormProps<Catequista>) {
     let getCatequista = function () {
         return {
             id: optId && optId > 0 ? optId : undefined,
+            idEtapa,
             nome,
             email,
-            telefoneCelular,
+            telefoneMovel,
             telefoneFixo: optTelefoneFixo ? optTelefoneFixo : undefined,
             endereco,
             casado
@@ -100,22 +101,26 @@ export function FormCatequista(props: FormProps<Catequista>) {
                              set={setOptTelefoneFixo}></InputNumber>
             </Grid>
             <Grid item xs={12} sm={6}>
-                <InputNumber id="celRes" label="Telefone Celular" value={telefoneCelular}
-                             set={setTelefoneCelular}></InputNumber>
+                <InputNumber id="celRes" label="Telefone Celular" value={telefoneMovel}
+                             set={setTelefoneMovel}></InputNumber>
             </Grid>
             <Grid item xs={12} sm={12}>
-                <SelectSimNao id="casado" label="Casada(o)" value={casado} set={e => handleCasado(e)}></SelectSimNao>
+                <SelectSimNao id="casado" label="Casado(a)" value={casado} set={e => handleCasado(e)}></SelectSimNao>
             </Grid>
-            <Button variant="contained"
-                    color="default"
-                    onClick={handleCancelar}>
-                Cancelar
-            </Button>
-            <Button variant="contained"
-                    color="primary"
-                    onClick={handleSalvar}>
-                Salvar
-            </Button>
+            <Grid item xs={12} sm={2}>
+                <Button variant="contained"
+                        color="default"
+                        onClick={handleCancelar}>
+                    Cancelar
+                </Button>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+                <Button variant="contained"
+                        color="primary"
+                        onClick={handleSalvar}>
+                    Salvar
+                </Button>
+            </Grid>
         </Grid>
     );
 }

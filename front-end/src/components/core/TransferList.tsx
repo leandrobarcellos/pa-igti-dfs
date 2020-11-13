@@ -27,6 +27,7 @@ export default function TransferList(props: {
     set: (cs: Catequizando[]) => void,
     toLabel: (e: any) => string,
 }) {
+
     const catequizandosService = new CatequizandosService();
     const classes = AppStyle.useStyles();
     const [checked, setChecked] = React.useState<any[]>([]);
@@ -36,9 +37,9 @@ export default function TransferList(props: {
     const rightChecked = intersection(checked, right);
 
     useEffect(() => {
-        setRight(right.splice(0));
+        // setRight(right.splice(0));
         setLeft([]);
-        setRight([]);
+        setRight(props.preSelecao as any[]);
         if (props.idEtapa)
             catequizandosService
                 .findAllByIdEtapa(props.idEtapa)
@@ -48,8 +49,7 @@ export default function TransferList(props: {
                             const ids = props.preSelecao.map(c => c.id);
                             left = left.filter((c: Catequizando) => !ids.includes(c.id));
                             setRight(props.preSelecao);
-                        }
-                        if (right) {
+                        }else if (right) {
                             const ids = right.map(c => c.id);
                             left = left.filter((c: Catequizando) => !ids.includes(c.id));
                             setRight(right);
@@ -58,10 +58,6 @@ export default function TransferList(props: {
                     },
                     error => console.log("error.response.object", error.response.object));
     }, [props.idEtapa]);
-
-    useEffect(() => {
-        props.set(right);
-    }, [right]);
 
     const handleToggle = (value: number) => () => {
         const currentIndex = checked.indexOf(value);
@@ -77,25 +73,32 @@ export default function TransferList(props: {
     };
 
     const handleAllRight = () => {
-        setRight(right.concat(left));
+        const toRight = right.concat(left);
+        setRight(toRight);
         setLeft([]);
+        props.set(toRight);
     };
 
     const handleCheckedRight = () => {
-        setRight(right.concat(leftChecked));
+        const toRight = right.concat(leftChecked);
+        setRight(toRight);
         setLeft(not(left, leftChecked));
         setChecked(not(checked, leftChecked));
+        props.set(toRight);
     };
 
     const handleCheckedLeft = () => {
         setLeft(left.concat(rightChecked));
-        setRight(not(right, rightChecked));
+        const toRight = not(right, rightChecked);
+        setRight(toRight);
         setChecked(not(checked, rightChecked));
+        props.set(toRight);
     };
 
     const handleAllLeft = () => {
         setLeft(left.concat(right));
         setRight([]);
+        props.set([]);
     };
 
     const customList = (items: number[], title: string) => (

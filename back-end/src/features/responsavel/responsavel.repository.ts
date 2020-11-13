@@ -1,6 +1,8 @@
 import {Responsavel} from "./responsavel";
 import {CrudSequencialRepository} from "../../core/infra/crud-sequencial.repository";
+import {Injectable} from "@nestjs/common";
 
+@Injectable()
 export class ResponsavelRepository extends CrudSequencialRepository<Responsavel> {
     constructor() {
         super("responsaveis");

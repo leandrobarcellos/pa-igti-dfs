@@ -26,12 +26,13 @@ export class CatequizandoController {
 
     @Put('/:idCatequizando')
     async updateCatequizando(@Request() req: any): Promise<Catequizando | undefined> {
-        return null;
+        return this.catequizandoService.atualizarCatequizando(Number.parseInt(req.params.idCatequizando), req.body as Catequizando);
     }
 
     @Delete('/:idCatequizando')
-    async deleteCatequizando(@Request() req: any): Promise<Catequizando | undefined> {
-        return null;
+    async deleteCatequizando(@Request() req: any): Promise<any | undefined> {
+        this.catequizandoService.deleteCatequizando(req.params.idCatequizando as number);
+        return "Catquizando excluído com sucesso.";
     }
 
 }
